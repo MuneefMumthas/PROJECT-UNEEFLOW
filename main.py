@@ -13,6 +13,7 @@ def center_window(window, width, height):
     window.geometry(f"{width}x{height}+{x_pos}+{y_pos}")
 
 
+
 #creating the main window
 root = tk.Tk()
 root.title("UNEEFLOW")
@@ -50,6 +51,15 @@ splash.destroy()
 root.deiconify()
 
 ##########################################################################################
+
+
+# Buttons
+build_model_button = tk.Button(root, text="Build a Model", font=("Arial", 14), command=None)
+build_model_button.pack(pady=10)
+
+test_model_button = tk.Button(root, text="Test a Model", font=("Arial", 14), command=None)
+test_model_button.pack(pady=10)
+
 
 #running the main window
 root.mainloop()
