@@ -53,8 +53,24 @@ root.deiconify()
 ##########################################################################################
 
 
+#function for the build model button
+def build_model_button_function():
+
+    #removing all widgets from the window
+    for widget in root.winfo_children():
+        widget.destroy()
+    
+    # Step 1 text
+    step_label = tk.Label(root, text="Step 1: Import Dataset", font=("Arial", 16, "bold"))
+    step_label.pack(pady=20)
+
+    #import csv button
+    import_csv_button = tk.Button(root, text="Import CSV", font=("Arial", 12), command=None)
+    import_csv_button.pack()
+
+
 # Buttons
-build_model_button = tk.Button(root, text="Build a Model", font=("Arial", 14), command=None)
+build_model_button = tk.Button(root, text="Build a Model", font=("Arial", 14), command=build_model_button_function)
 build_model_button.pack(pady=10)
 
 test_model_button = tk.Button(root, text="Test a Model", font=("Arial", 14), command=None)
