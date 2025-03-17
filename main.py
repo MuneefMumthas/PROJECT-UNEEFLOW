@@ -1,4 +1,8 @@
 import tkinter as tk
+from tkinter import filedialog, messagebox
+import time
+from PIL import Image, ImageTk
+
 
 def center_window(window, width, height):
     screen_width = window.winfo_screenwidth()
@@ -16,6 +20,34 @@ center_window(root, 500, 500)
 #setting the logo
 root.iconbitmap("U Logo.ico")
 
+#Splash Screen- this will act as a loading screen before the main window
+##########################################################################################
+
+
+root.withdraw()
+
+
+splash = tk.Toplevel()
+center_window(splash, 500, 500)
+splash.overrideredirect(True)  
+
+
+splash_img = Image.open("UNEE FLOW LOGO.png")
+splash_img = splash_img.resize((500, 500), Image.LANCZOS)
+splash_bg = ImageTk.PhotoImage(splash_img)
+
+splash_label = tk.Label(splash, image=splash_bg)
+splash_label.pack()
+
+
+splash.update()
+time.sleep(1)
+
+
+splash.destroy()
+root.deiconify()
+
+##########################################################################################
 
 #running the main window
 root.mainloop()
