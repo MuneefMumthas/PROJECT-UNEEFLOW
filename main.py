@@ -4,6 +4,7 @@ import time
 from PIL import Image, ImageTk
 
 
+#Method  to center a window as tkinter does not have a built-in method for this
 def center_window(window, width, height):
     screen_width = window.winfo_screenwidth()
     screen_height = window.winfo_screenheight()
@@ -23,15 +24,16 @@ root.iconbitmap("U Logo.ico")
 #Splash Screen- this will act as a loading screen before the main window
 ##########################################################################################
 
-
+#hiding the app at the start for the splash screen
 root.withdraw()
 
-
 splash = tk.Toplevel()
+
+#centering the splash window
 center_window(splash, 500, 500)
 splash.overrideredirect(True)  
 
-
+#loading the uneeflow logo as splash
 splash_img = Image.open("UNEE FLOW LOGO.png")
 splash_img = splash_img.resize((500, 500), Image.LANCZOS)
 splash_bg = ImageTk.PhotoImage(splash_img)
@@ -39,11 +41,11 @@ splash_bg = ImageTk.PhotoImage(splash_img)
 splash_label = tk.Label(splash, image=splash_bg)
 splash_label.pack()
 
-
+#waiting time before the main window
 splash.update()
-time.sleep(1)
+time.sleep(1.5)
 
-
+#removing the splash and showing the main window
 splash.destroy()
 root.deiconify()
 
