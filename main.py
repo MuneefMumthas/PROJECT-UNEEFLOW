@@ -2,6 +2,8 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 import time
 from PIL import Image, ImageTk
+import pandas as pd
+from tkinter import ttk
 
 
 #Method  to center a window as tkinter does not have a built-in method for this
@@ -17,7 +19,7 @@ def center_window(window, width, height):
 #creating the main window
 root = tk.Tk()
 root.title("UNEEFLOW")
-center_window(root, 500, 500)
+center_window(root, 800, 800)
 
 #setting the logo
 root.iconbitmap("U Logo.ico")
@@ -60,13 +62,27 @@ def build_model_button_function():
     for widget in root.winfo_children():
         widget.destroy()
     
-    # Step 1 text
-    step_label = tk.Label(root, text="Step 1: Import Dataset", font=("Arial", 16, "bold"))
-    step_label.pack(pady=20)
+    #step 1 label
+    step1_label = tk.Label(root, text="Step 1: Import Dataset", font=("Arial", 16, "bold"))
+    step1_label.pack(pady=20)
 
     #import csv button
-    import_csv_button = tk.Button(root, text="Import CSV", font=("Arial", 12), command=None)
+    import_csv_button = tk.Button(root, text="Import CSV", font=("Arial", 12), command=import_csv)
     import_csv_button.pack()
+
+# Function to import CSV
+def import_csv():
+    file_path = filedialog.askopenfilename(filetypes=[("CSV files", "*.csv")])
+    if not file_path:
+        return
+
+    try:
+        # Read CSV file
+        df = pd.read_csv(file_path)
+
+    except Exception as e:
+        messagebox.showerror("Error", f"Failed to load file: {e}")
+
 
 
 # Buttons
