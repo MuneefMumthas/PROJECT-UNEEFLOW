@@ -70,22 +70,76 @@ def build_model_button_function():
     import_csv_button = tk.Button(root, text="Import CSV", font=("Arial", 12), command=import_csv)
     import_csv_button.pack()
 
-# Function to import CSV
+#function to import CSV and display it
 def import_csv():
     file_path = filedialog.askopenfilename(filetypes=[("CSV files", "*.csv")])
     if not file_path:
         return
 
     try:
-        # Read CSV file
+        #read CSV file
         df = pd.read_csv(file_path)
+
+        #calling the function to display the dataframe
+        show_dataframe(df)
 
     except Exception as e:
         messagebox.showerror("Error", f"Failed to load file: {e}")
 
+#function to display dataframe in a table
+def show_dataframe(df):
 
+    #removing the existing widgets from the screen
+    for widget in root.winfo_children():
+        widget.destroy()
 
-# Buttons
+    #heading lable
+    table_label = tk.Label(root, text="Dataset Preview", font=("Arial", 16, "bold"), bg="white")
+    table_label.pack(pady=10)
+
+    #creating a frame for the table
+    frame = tk.Frame(root)
+    frame.pack(fill="both", expand=True, padx=10, pady=10)
+
+    #adding the scrollbars
+    tree_scroll_vertical = ttk.Scrollbar(frame, orient="vertical")
+    tree_scroll_horizontal = ttk.Scrollbar(frame, orient="horizontal")
+
+    #using the Treeview widget inside the frame to display the dataframe from the CSV
+    tree = ttk.Treeview(frame, yscrollcommand=tree_scroll_vertical.set, xscrollcommand=tree_scroll_horizontal.set)
+    tree_scroll_vertical.config(command=tree.yview)
+    tree_scroll_horizontal.config(command=tree.xview)
+
+    #placing the scrollbars
+    tree_scroll_vertical.pack(side="right", fill="y")
+    tree_scroll_horizontal.pack(side="bottom", fill="x")
+
+    #adding the dataframe columns to the treeview and hiding the first empty columns created by default
+    tree["columns"] = list(df.columns)
+    tree["show"] = "headings"  
+
+    
+    for col in df.columns:
+        #assigning the column names
+        tree.heading(col, text=col)
+
+        #adjusting the column width based on the longest content in a column 
+        max_content_length = max(df[col].astype(str).apply(len).max(), len(col))
+        tree.column(col, anchor="center", width=max_content_length * 10, stretch=False)
+
+    #adding the rows to the treeview one by one
+    for _, row in df.iterrows():
+        tree.insert("", "end", values=list(row))
+
+    #unbinding the left click event on the treeview to stop adjusting the column width manually
+    tree.bind("<Button-1>", lambda event: "break")
+    
+    #packing the treeview
+    tree.pack(fill="both", expand=True)
+
+    
+
+#Buttons
 build_model_button = tk.Button(root, text="Build a Model", font=("Arial", 14), command=build_model_button_function)
 build_model_button.pack(pady=10)
 
