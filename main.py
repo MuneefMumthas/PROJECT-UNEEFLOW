@@ -150,7 +150,7 @@ def show_dataframe(df):
     missing_values = df.isnull().sum().sum() 
 
     #displaying the summary
-    stats_text = f"Rows: {num_rows}   |   Columns: {num_columns}   |   Missing Values: {missing_values}"
+    stats_text = f"📊 Rows: {num_rows}   |   📌 Columns: {num_columns}   |   ❗ Missing Values: {missing_values}"
     stats_label = tk.Label(stats_frame, text=stats_text, font=("Arial", 12), fg="black", padx=10, pady=5)
     stats_label.pack()
 
