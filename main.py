@@ -1,3 +1,4 @@
+import ctypes
 import tkinter as tk
 from tkinter import filedialog, messagebox
 import time
@@ -5,6 +6,7 @@ from PIL import Image, ImageTk
 import pandas as pd
 from tkinter import ttk
 
+ctypes.windll.shcore.SetProcessDpiAwareness(2)
 
 #Method  to center a window as tkinter does not have a built-in method for this
 def center_window(window, width, height):
@@ -19,7 +21,7 @@ def center_window(window, width, height):
 #creating the main window
 root = tk.Tk()
 root.title("UNEEFLOW")
-center_window(root, 800, 800)
+center_window(root, 900, 900)
 
 #setting the logo
 root.iconbitmap("U Logo.ico")
@@ -94,7 +96,7 @@ def show_dataframe(df):
         widget.destroy()
 
     #heading lable
-    table_label = tk.Label(root, text="Dataset Preview", font=("Arial", 16, "bold"), bg="white")
+    table_label = tk.Label(root, text="Dataset Preview", font=("Arial", 16, "bold"))
     table_label.pack(pady=10)
 
     #creating a frame for the table
@@ -125,7 +127,7 @@ def show_dataframe(df):
 
         #adjusting the column width based on the longest content in a column 
         max_content_length = max(df[col].astype(str).apply(len).max(), len(col))
-        tree.column(col, anchor="center", width=max_content_length * 10, stretch=False)
+        tree.column(col, anchor="center", width=max_content_length * 13, stretch=False)
 
     #adding the rows to the treeview one by one
     for _, row in df.iterrows():
@@ -136,6 +138,8 @@ def show_dataframe(df):
     
     #packing the treeview
     tree.pack(fill="both", expand=True)
+
+
 
     
 
