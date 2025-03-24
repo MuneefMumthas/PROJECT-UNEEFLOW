@@ -140,6 +140,19 @@ def show_dataframe(df):
     tree.pack(fill="both", expand=True)
 
 
+    #dataset summary section
+    stats_frame = tk.Frame(root)
+    stats_frame.pack(fill="x", pady=10)
+
+    #calculating the statistics
+    num_rows = df.shape[0] 
+    num_columns = df.shape[1] 
+    missing_values = df.isnull().sum().sum() 
+
+    #displaying the summary
+    stats_text = f"Rows: {num_rows}   |   Columns: {num_columns}   |   Missing Values: {missing_values}"
+    stats_label = tk.Label(stats_frame, text=stats_text, font=("Arial", 12), fg="black", padx=10, pady=5)
+    stats_label.pack()
 
     
 
