@@ -95,9 +95,22 @@ def show_dataframe(df):
     for widget in root.winfo_children():
         widget.destroy()
 
+    top_frame = tk.Frame(root)
+    top_frame.pack(fill="x")
+
+
+    #back button
+    back_button = tk.Button(top_frame, text="Back", font=("Arial", 12), command=build_model_button_function)
+    back_button.pack(side="left",padx=10)
+
     #heading lable
-    table_label = tk.Label(root, text="Dataset Preview", font=("Arial", 16, "bold"))
-    table_label.pack(pady=10)
+    table_label = tk.Label(top_frame, text="Dataset Preview", font=("Arial", 16, "bold"))
+    table_label.pack(side="left", expand=True)
+
+    #Next button
+    next_button = tk.Button(top_frame, text="Next", font=("Arial", 12), command=None)
+    next_button.pack(side="right", padx=10)
+
 
     #creating a frame for the table
     frame = tk.Frame(root)
@@ -141,8 +154,8 @@ def show_dataframe(df):
 
 
     #dataset summary section
-    stats_frame = tk.Frame(root)
-    stats_frame.pack(fill="x", pady=10)
+    summary_frame = tk.Frame(root)
+    summary_frame.pack(fill="x", pady=10)
 
     #calculating the statistics
     num_rows = df.shape[0] 
@@ -150,9 +163,9 @@ def show_dataframe(df):
     missing_values = df.isnull().sum().sum() 
 
     #displaying the summary
-    stats_text = f"📊 Rows: {num_rows}   |   📌 Columns: {num_columns}   |   ❗ Missing Values: {missing_values}"
-    stats_label = tk.Label(stats_frame, text=stats_text, font=("Arial", 12), fg="black", padx=10, pady=5)
-    stats_label.pack()
+    summary_text = f"📊 Rows: {num_rows}   |   📌 Columns: {num_columns}   |   ❗ Missing Values: {missing_values}"
+    summary_label = tk.Label(summary_frame, text=summary_text, font=("Arial", 12), fg="black", padx=10, pady=5)
+    summary_label.pack()
 
     
 
