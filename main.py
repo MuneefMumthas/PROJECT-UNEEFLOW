@@ -86,15 +86,16 @@ def import_csv():
         df = pd.read_csv(file_path)
 
         #calling the function to display the dataframe
-        show_dataframe()
+        show_dataframe(df)
 
     except Exception as e:
         messagebox.showerror("Error", f"Failed to load file: {e}")
 
 #function to display dataframe in a table
-def show_dataframe():
+def show_dataframe(current_df):
 
     global df
+    global df_selected
     #removing the existing widgets from the screen
     for widget in root.winfo_children():
         widget.destroy()
@@ -134,20 +135,20 @@ def show_dataframe():
     tree_scroll_horizontal.pack(side="bottom", fill="x")
 
     #adding the dataframe columns to the treeview and hiding the first empty columns created by default
-    tree["columns"] = list(df.columns)
+    tree["columns"] = list(current_df.columns)
     tree["show"] = "headings"  
 
     
-    for col in df.columns:
+    for col in current_df.columns:
         #assigning the column names
         tree.heading(col, text=col)
 
         #adjusting the column width based on the longest content in a column 
-        max_content_length = max(df[col].astype(str).apply(len).max(), len(col))
+        max_content_length = max(current_df[col].astype(str).apply(len).max(), len(col))
         tree.column(col, anchor="center", width=max_content_length * 13, stretch=False)
 
     #adding the rows to the treeview one by one
-    for _, row in df.iterrows():
+    for _, row in current_df.iterrows():
         tree.insert("", "end", values=list(row))
 
     #unbinding the left click event on the treeview to stop adjusting the column width manually
@@ -162,16 +163,16 @@ def show_dataframe():
     summary_frame.pack(fill="x", pady=10)
 
     #calculating the statistics
-    num_rows = df.shape[0] 
-    num_columns = df.shape[1] 
-    missing_values = df.isnull().sum().sum() 
+    num_rows = current_df.shape[0] 
+    num_columns = current_df.shape[1] 
+    missing_values = current_df.isnull().sum().sum() 
 
     #displaying the summary
     summary_text = f"📊 Rows: {num_rows}   |   📌 Columns: {num_columns}   |   ❗ Missing Values: {missing_values}"
     summary_label = tk.Label(summary_frame, text=summary_text, font=("Arial", 12), fg="black", padx=10, pady=5)
     summary_label.pack()
 
-
+#function to select the target variable
 def select_target_variable():
     global df
     #removing the existing widgets from the screen
@@ -182,7 +183,7 @@ def select_target_variable():
     top_frame.pack(fill="x", pady=10)
 
     #back button to return to Step 1
-    back_button = tk.Button(top_frame, text="Back", font=("Arial", 12), command=lambda: show_dataframe())
+    back_button = tk.Button(top_frame, text="Back", font=("Arial", 12), command=lambda: show_dataframe(df))
     back_button.pack(side="left", padx=10)
 
     #label for Step 2
@@ -200,7 +201,7 @@ def select_target_variable():
     target_dropdown.pack(side="left")
 
     #function to store selection when "Next" is clicked
-    def save_selection():
+    def save_selected_target_var():
 
         global selected_target_variable
         selected_target_variable = target_variable.get()
@@ -214,8 +215,9 @@ def select_target_variable():
         print(f"Selected Target Variable: {selected_target_variable}")
 
     #next button
-    next_button = tk.Button(top_frame, text="Next", font=("Arial", 12), command=save_selection)
+    next_button = tk.Button(top_frame, text="Next", font=("Arial", 12), command=save_selected_target_var)
     next_button.pack(side="right", padx=10)
+
 
 #Buttons
 build_model_button = tk.Button(root, text="Build a Model", font=("Arial", 14), command=build_model_button_function)
