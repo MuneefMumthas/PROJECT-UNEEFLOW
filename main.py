@@ -109,7 +109,7 @@ def show_dataframe_back():
     if current_step == "step 1" or current_step == "step 2":
         build_model_button_function()
     elif current_step == "step 3":
-        select_columns()
+        select_input_variables()
 
 def show_dataframe_next():
     global current_step
@@ -247,7 +247,7 @@ def select_target_variable():
         
         #printting the selected target variable for debugging
         print(f"Selected Target Variable: {selected_target_variable}")
-        select_columns()
+        select_input_variables()
 
     #next button
     next_button = tk.Button(top_frame, text="Next", font=("Arial", 12), command=save_selected_target_var)
@@ -257,7 +257,7 @@ def select_target_variable():
 
 #Step 3: Select Input Variables
 #This function is used to select the input variables from the dataframe
-def select_columns():
+def select_input_variables():
 
     global df
     global selected_target_variable
