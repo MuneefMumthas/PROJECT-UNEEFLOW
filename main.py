@@ -213,9 +213,48 @@ def select_target_variable():
         
         #printting the selected target variable for debugging
         print(f"Selected Target Variable: {selected_target_variable}")
+        select_columns()
 
     #next button
     next_button = tk.Button(top_frame, text="Next", font=("Arial", 12), command=save_selected_target_var)
+    next_button.pack(side="right", padx=10)
+
+def select_columns():
+
+    global df
+    global selected_target_variable
+
+    #removing the existing widgets from the screen
+    for widget in root.winfo_children():
+        widget.destroy()
+
+    top_frame = tk.Frame(root)
+    top_frame.pack(fill="x")
+
+
+    #back button
+    back_button = tk.Button(top_frame, text="Back", font=("Arial", 12), command=select_target_variable)
+    back_button.pack(side="left",padx=10)
+
+    #heading lable
+    table_label = tk.Label(top_frame, text="Step 3: Select Columns", font=("Arial", 16, "bold"))
+    table_label.pack(side="left", expand=True)
+
+    #displaying the columns except the target variable
+
+    selected_columns = {col: tk.BooleanVar(value=True) for col in df.columns if col != selected_target_variable}
+
+    #checkbox for each column
+    checkbox_frame = tk.Frame(root)
+    checkbox_frame.pack(pady=20)
+
+    for col, var in selected_columns.items():
+        checkbox = tk.Checkbutton(checkbox_frame, text=col, variable=var)
+        checkbox.pack(anchor="w")
+
+
+    #Next button
+    next_button = tk.Button(top_frame, text="Next", font=("Arial", 12), command=None)
     next_button.pack(side="right", padx=10)
 
 
