@@ -73,7 +73,10 @@ def build_model_button_function():
     import_csv_button = tk.Button(root, text="Import CSV", font=("Arial", 12), command=import_csv)
     import_csv_button.pack()
 
-#function to import CSV and display it
+
+
+#STEP 1: Importing the dataset
+#This function is used to import CSV and display it
 def import_csv():
 
     global df
@@ -91,7 +94,10 @@ def import_csv():
     except Exception as e:
         messagebox.showerror("Error", f"Failed to load file: {e}")
 
-#function to display dataframe in a table
+
+
+#Dataset preview function
+#This function is used to display dataframe in a table whenever needed to preview the updated dataframe
 def show_dataframe(current_df):
 
     global df
@@ -172,7 +178,10 @@ def show_dataframe(current_df):
     summary_label = tk.Label(summary_frame, text=summary_text, font=("Arial", 12), fg="black", padx=10, pady=5)
     summary_label.pack()
 
-#function to select the target variable
+
+
+#Step 2: Selecting the target variable
+#This function is used to select the target variable from the dataframe
 def select_target_variable():
     global df
     #removing the existing widgets from the screen
@@ -219,6 +228,10 @@ def select_target_variable():
     next_button = tk.Button(top_frame, text="Next", font=("Arial", 12), command=save_selected_target_var)
     next_button.pack(side="right", padx=10)
 
+
+
+#Step 3: Select Input Variables
+#This function is used to select the input variables from the dataframe
 def select_columns():
 
     global df
@@ -237,7 +250,7 @@ def select_columns():
     back_button.pack(side="left",padx=10)
 
     #heading lable
-    table_label = tk.Label(top_frame, text="Step 3: Select Columns", font=("Arial", 16, "bold"))
+    table_label = tk.Label(top_frame, text="Step 3: Select Input Variables", font=("Arial", 16, "bold"))
     table_label.pack(side="left", expand=True)
 
     #displaying the columns except the target variable
@@ -266,7 +279,7 @@ def select_columns():
             return
 
         #show confirmation dialog 
-        confirmation = messagebox.askyesno("Confirm", f"Selected columns: {', '.join(selected)}\nDo you want to proceed?")
+        confirmation = messagebox.askyesno("Confirm", f"You have selected: {', '.join(selected)}\nDo you want to proceed?")
         if confirmation:
             #drop unselected columns 
             df_selected = df[selected + [selected_target_variable]]
