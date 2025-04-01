@@ -8,6 +8,7 @@ from tkinter import ttk
 
 ctypes.windll.shcore.SetProcessDpiAwareness(2)
 
+
 #Method  to center a window as tkinter does not have a built-in method for this
 def center_window(window, width, height):
     screen_width = window.winfo_screenwidth()
@@ -74,6 +75,8 @@ def build_model_button_function():
 
 #function to import CSV and display it
 def import_csv():
+
+    global df
     file_path = filedialog.askopenfilename(filetypes=[("CSV files", "*.csv")])
     if not file_path:
         return
@@ -83,14 +86,15 @@ def import_csv():
         df = pd.read_csv(file_path)
 
         #calling the function to display the dataframe
-        show_dataframe(df)
+        show_dataframe()
 
     except Exception as e:
         messagebox.showerror("Error", f"Failed to load file: {e}")
 
 #function to display dataframe in a table
-def show_dataframe(df):
+def show_dataframe():
 
+    global df
     #removing the existing widgets from the screen
     for widget in root.winfo_children():
         widget.destroy()
@@ -108,7 +112,7 @@ def show_dataframe(df):
     table_label.pack(side="left", expand=True)
 
     #Next button
-    next_button = tk.Button(top_frame, text="Next", font=("Arial", 12), command=None)
+    next_button = tk.Button(top_frame, text="Next", font=("Arial", 12), command=select_target_variable)
     next_button.pack(side="right", padx=10)
 
 
@@ -167,7 +171,37 @@ def show_dataframe(df):
     summary_label = tk.Label(summary_frame, text=summary_text, font=("Arial", 12), fg="black", padx=10, pady=5)
     summary_label.pack()
 
-    
+
+def select_target_variable():
+    global df
+    #removing the existing widgets from the screen
+    for widget in root.winfo_children():
+        widget.destroy()
+
+    top_frame = tk.Frame(root)
+    top_frame.pack(fill="x", pady=10)
+
+    #back button to return to Step 1
+    back_button = tk.Button(top_frame, text="Back", font=("Arial", 12), command=lambda: show_dataframe())
+    back_button.pack(side="left", padx=10)
+
+    #label for Step 2
+    step2_label = tk.Label(top_frame, text="Step 2: Select Target Variable", font=("Arial", 16, "bold"))
+    step2_label.pack(side="left", expand=True)
+
+    #dropdown selection for the target variable
+    dropdown_frame = tk.Frame(root)
+    dropdown_frame.pack(pady=20)
+
+    tk.Label(dropdown_frame, text="Select Target Variable:", font=("Arial", 12)).pack(side="left", padx=10)
+
+    target_variable = tk.StringVar()
+    target_dropdown = ttk.Combobox(dropdown_frame, textvariable=target_variable, values=list(df.columns), state="readonly")
+    target_dropdown.pack(side="left")
+
+    #next button
+    next_button = tk.Button(top_frame, text="Next", font=("Arial", 12), command=None)
+    next_button.pack(side="right", padx=10)
 
 #Buttons
 build_model_button = tk.Button(root, text="Build a Model", font=("Arial", 14), command=build_model_button_function)
