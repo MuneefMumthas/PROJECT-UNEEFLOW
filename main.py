@@ -252,9 +252,32 @@ def select_columns():
         checkbox = tk.Checkbutton(checkbox_frame, text=col, variable=var)
         checkbox.pack(anchor="w")
 
+    def save_selected_columns_df():
 
+        global df
+        global df_selected
+        #get the selected columns
+        selected = [col for col, var in selected_columns.items() if var.get()]
+        
+        #check if at least one column is selected
+        if len(selected) == 0:
+            #show error message if no column is selected
+            messagebox.showerror("Error", "Please select at least one column.")
+            return
+
+        #show confirmation dialog 
+        confirmation = messagebox.askyesno("Confirm", f"Selected columns: {', '.join(selected)}\nDo you want to proceed?")
+        if confirmation:
+            #drop unselected columns 
+            df_selected = df[selected + [selected_target_variable]]
+            #show updated dataframe
+            show_dataframe(df_selected)
+        else:
+            #allow user to modify selection
+            return
+        
     #Next button
-    next_button = tk.Button(top_frame, text="Next", font=("Arial", 12), command=None)
+    next_button = tk.Button(top_frame, text="Next", font=("Arial", 12), command=save_selected_columns_df)
     next_button.pack(side="right", padx=10)
 
 
