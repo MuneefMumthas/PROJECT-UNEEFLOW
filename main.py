@@ -59,6 +59,11 @@ root.deiconify()
 
 
 #function for the build model button
+
+
+
+#STEP 1: Importing the dataset
+#This function is used to import CSV and display it
 def build_model_button_function():
 
     #removing all widgets from the window
@@ -73,13 +78,13 @@ def build_model_button_function():
     import_csv_button = tk.Button(root, text="Import CSV", font=("Arial", 12), command=import_csv)
     import_csv_button.pack()
 
-
-
-#STEP 1: Importing the dataset
-#This function is used to import CSV and display it
 def import_csv():
 
     global df
+
+    global current_step
+    current_step = "step 1"
+
     file_path = filedialog.askopenfilename(filetypes=[("CSV files", "*.csv")])
     if not file_path:
         return
@@ -95,8 +100,24 @@ def import_csv():
         messagebox.showerror("Error", f"Failed to load file: {e}")
 
 
-
 #Dataset preview function
+
+#methods to generalize the back and next buttons in the dataframe preview screen
+def show_dataframe_back():
+    global current_step
+
+    if current_step == "step 1" or current_step == "step 2":
+        build_model_button_function()
+    elif current_step == "step 3":
+        select_columns()
+
+def show_dataframe_next():
+    global current_step
+    if current_step == "step 1" or current_step == "step 2":
+        select_target_variable()
+    elif current_step == "step 3":
+        None
+
 #This function is used to display dataframe in a table whenever needed to preview the updated dataframe
 def show_dataframe(current_df):
 
@@ -111,7 +132,7 @@ def show_dataframe(current_df):
 
 
     #back button
-    back_button = tk.Button(top_frame, text="Back", font=("Arial", 12), command=build_model_button_function)
+    back_button = tk.Button(top_frame, text="Back", font=("Arial", 12), command=show_dataframe_back)
     back_button.pack(side="left",padx=10)
 
     #heading lable
@@ -119,7 +140,7 @@ def show_dataframe(current_df):
     table_label.pack(side="left", expand=True)
 
     #Next button
-    next_button = tk.Button(top_frame, text="Next", font=("Arial", 12), command=select_target_variable)
+    next_button = tk.Button(top_frame, text="Next", font=("Arial", 12), command=show_dataframe_next)
     next_button.pack(side="right", padx=10)
 
 
@@ -183,7 +204,11 @@ def show_dataframe(current_df):
 #Step 2: Selecting the target variable
 #This function is used to select the target variable from the dataframe
 def select_target_variable():
+
     global df
+    global current_step
+    current_step = "step 2"
+
     #removing the existing widgets from the screen
     for widget in root.winfo_children():
         widget.destroy()
@@ -236,6 +261,9 @@ def select_columns():
 
     global df
     global selected_target_variable
+
+    global current_step
+    current_step = "step 3"
 
     #removing the existing widgets from the screen
     for widget in root.winfo_children():
