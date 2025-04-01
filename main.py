@@ -199,8 +199,22 @@ def select_target_variable():
     target_dropdown = ttk.Combobox(dropdown_frame, textvariable=target_variable, values=list(df.columns), state="readonly")
     target_dropdown.pack(side="left")
 
+    #function to store selection when "Next" is clicked
+    def save_selection():
+
+        global selected_target_variable
+        selected_target_variable = target_variable.get()
+
+        if not selected_target_variable:
+            #showing an error message if next button clicked without selecting a target variable
+            messagebox.showerror("Error", "Please select a target variable!")
+            return
+        
+        #printting the selected target variable for debugging
+        print(f"Selected Target Variable: {selected_target_variable}")
+
     #next button
-    next_button = tk.Button(top_frame, text="Next", font=("Arial", 12), command=None)
+    next_button = tk.Button(top_frame, text="Next", font=("Arial", 12), command=save_selection)
     next_button.pack(side="right", padx=10)
 
 #Buttons
