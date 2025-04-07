@@ -63,7 +63,7 @@ root.deiconify()
 
 
 #STEP 1: Importing the dataset
-#This function is used to import CSV and display it
+#This function is used to import dataset files and display it
 def build_model_button_function():
 
     #removing all widgets from the window
@@ -78,6 +78,7 @@ def build_model_button_function():
     import_csv_button = tk.Button(root, text="Import CSV", font=("Arial", 12), command=import_csv)
     import_csv_button.pack()
 
+#Importing csv files
 def import_csv():
 
     global df
@@ -109,12 +110,12 @@ def show_dataframe_back():
     if current_step == "step 1" or current_step == "step 2":
         build_model_button_function()
     elif current_step == "step 3":
-        select_input_variables()
+        step_3_select_input_variables()
 
 def show_dataframe_next():
     global current_step
     if current_step == "step 1" or current_step == "step 2":
-        select_target_variable()
+        step_2_select_target_variable()
     elif current_step == "step 3":
         None
 
@@ -128,7 +129,7 @@ def show_dataframe(current_df):
         widget.destroy()
 
     top_frame = tk.Frame(root)
-    top_frame.pack(fill="x")
+    top_frame.pack(fill="x", pady=10)
 
 
     #back button
@@ -203,7 +204,7 @@ def show_dataframe(current_df):
 
 #Step 2: Selecting the target variable
 #This function is used to select the target variable from the dataframe
-def select_target_variable():
+def step_2_select_target_variable():
 
     global df
     global current_step
@@ -247,7 +248,7 @@ def select_target_variable():
         
         #printting the selected target variable for debugging
         print(f"Selected Target Variable: {selected_target_variable}")
-        select_input_variables()
+        step_3_select_input_variables()
 
     #next button
     next_button = tk.Button(top_frame, text="Next", font=("Arial", 12), command=save_selected_target_var)
@@ -257,7 +258,7 @@ def select_target_variable():
 
 #Step 3: Select Input Variables
 #This function is used to select the input variables from the dataframe
-def select_input_variables():
+def step_3_select_input_variables():
 
     global df
     global selected_target_variable
@@ -270,11 +271,11 @@ def select_input_variables():
         widget.destroy()
 
     top_frame = tk.Frame(root)
-    top_frame.pack(fill="x")
+    top_frame.pack(fill="x", pady=10)
 
 
     #back button
-    back_button = tk.Button(top_frame, text="Back", font=("Arial", 12), command=select_target_variable)
+    back_button = tk.Button(top_frame, text="Back", font=("Arial", 12), command=step_2_select_target_variable)
     back_button.pack(side="left",padx=10)
 
     #heading lable
@@ -321,6 +322,8 @@ def select_input_variables():
     next_button = tk.Button(top_frame, text="Next", font=("Arial", 12), command=save_selected_columns_df)
     next_button.pack(side="right", padx=10)
 
+
+ 
 
 #Buttons
 build_model_button = tk.Button(root, text="Build a Model", font=("Arial", 14), command=build_model_button_function)
