@@ -324,6 +324,7 @@ def step_3_select_input_variables():
 
 
 #Step 4 - Preprocessing the data
+#This function will be used to preprocess the data 
 def step_4_data_preprocessing():
     
     global df
@@ -340,7 +341,17 @@ def step_4_data_preprocessing():
     top_frame.pack(fill="x", pady=10)
 
 
+    #back button
+    back_button = tk.Button(top_frame, text="Back", font=("Arial", 12), command=step_3_select_input_variables)
+    back_button.pack(side="left",padx=10)
 
+    #heading lable
+    table_label = tk.Label(top_frame, text="Step 4: Data Preprocessing", font=("Arial", 16, "bold"))
+    table_label.pack(side="left", expand=True)
+
+    #Next button
+    next_button = tk.Button(top_frame, text="Next", font=("Arial", 12), command=None)
+    next_button.pack(side="right", padx=10)
 
     
 
