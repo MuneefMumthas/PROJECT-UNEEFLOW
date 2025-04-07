@@ -117,7 +117,7 @@ def show_dataframe_next():
     if current_step == "step 1" or current_step == "step 2":
         step_2_select_target_variable()
     elif current_step == "step 3":
-        None
+        step_4_data_preprocessing()
 
 #This function is used to display dataframe in a table whenever needed to preview the updated dataframe
 def show_dataframe(current_df):
@@ -323,7 +323,26 @@ def step_3_select_input_variables():
     next_button.pack(side="right", padx=10)
 
 
- 
+#Step 4 - Preprocessing the data
+def step_4_data_preprocessing():
+    
+    global df
+    global selected_target_variable
+
+    global current_step
+    current_step = "step 4"
+
+    #removing the existing widgets from the screen
+    for widget in root.winfo_children():
+        widget.destroy()
+
+    top_frame = tk.Frame(root)
+    top_frame.pack(fill="x", pady=10)
+
+
+
+
+    
 
 #Buttons
 build_model_button = tk.Button(root, text="Build a Model", font=("Arial", 14), command=build_model_button_function)
