@@ -357,15 +357,16 @@ def step_4_data_preprocessing():
     middle_frame = tk.Frame(root)
     middle_frame.pack(pady=40)
 
-    missing_label = tk.Label(middle_frame, text="Missing values:", font=("Arial", 14))
-    missing_label.pack(side="left", padx=10)
+    #Missing values section
+    missing_values_label = tk.Label(middle_frame, text="Missing values:", font=("Arial", 14))
+    missing_values_label.pack(side="left", padx=10)
 
     if df_selected.isnull().sum().sum() == 0:
         result_label = tk.Label(middle_frame, text="No missing values found", font=("Arial", 14), fg="green")
         result_label.pack(side="left", padx=10)
     else:
         #Combobox to select what to do with missing values
-        options = ["Fill with Mean", "Remove Rows"]
+        options = ["Fill with Mean/Average values", "Remove Rows with missing values", "Remove Columns with missing values"]
         action_combo = ttk.Combobox(middle_frame, values=options, font=("Arial", 12), state="readonly")
         action_combo.set("Choose Action")
         action_combo.pack(side="left", padx=10)
