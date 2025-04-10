@@ -328,6 +328,7 @@ def step_3_select_input_variables():
 def step_4_data_preprocessing():
     
     global df
+    global df_selected
     global selected_target_variable
 
     global current_step
@@ -353,6 +354,21 @@ def step_4_data_preprocessing():
     next_button = tk.Button(top_frame, text="Next", font=("Arial", 12), command=None)
     next_button.pack(side="right", padx=10)
 
+    middle_frame = tk.Frame(root)
+    middle_frame.pack(pady=40)
+
+    missing_label = tk.Label(middle_frame, text="Missing values:", font=("Arial", 14))
+    missing_label.pack(side="left", padx=10)
+
+    if df_selected.isnull().sum().sum() == 0:
+        result_label = tk.Label(middle_frame, text="No missing values found", font=("Arial", 14), fg="green")
+        result_label.pack(side="left", padx=10)
+    else:
+        #Combobox to select what to do with missing values
+        options = ["Fill with Mean", "Remove Rows"]
+        action_combo = ttk.Combobox(middle_frame, values=options, font=("Arial", 12), state="readonly")
+        action_combo.set("Choose Action")
+        action_combo.pack(side="left", padx=10)
     
 
 #Buttons
