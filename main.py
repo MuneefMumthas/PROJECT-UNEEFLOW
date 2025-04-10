@@ -76,7 +76,7 @@ def build_model_button_function():
 
     #import csv button
     import_csv_button = tk.Button(root, text="Import CSV", font=("Arial", 12), command=import_csv)
-    import_csv_button.pack()
+    import_csv_button.place(relx=0.5, rely=0.15, anchor="center")
 
 #Importing csv files
 def import_csv():
