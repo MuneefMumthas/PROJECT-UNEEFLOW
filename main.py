@@ -10,6 +10,8 @@ import customtkinter as ctk
 
 ctypes.windll.shcore.SetProcessDpiAwareness(2)
 
+ctk.set_appearance_mode("Dark")
+ctk.set_default_color_theme("UneeFlow_theme.json")
 
 #Method  to center a window as tkinter does not have a built-in method for this
 def center_window(window, width, height):
@@ -145,7 +147,7 @@ def show_dataframe(current_df):
     for widget in main_window.winfo_children():
         widget.destroy()
 
-    top_frame = ctk.CTkFrame(main_window)
+    top_frame = ctk.CTkFrame(main_window, fg_color="gray10")
     top_frame.pack(fill="x", pady=10)
 
     #back button
@@ -161,7 +163,7 @@ def show_dataframe(current_df):
     next_button.pack(side="right", padx=10)
 
     #creating a frame for the table
-    frame = ctk.CTkFrame(main_window)
+    frame = ctk.CTkFrame(main_window, fg_color="gray10")
     frame.pack(fill="both", expand=True, padx=10, pady=10)
 
     #adding the scrollbars
@@ -225,7 +227,7 @@ def show_dataframe(current_df):
     style.map("Treeview", background=[("selected", "#4B4B4B")])
 
     #dataset summary section
-    summary_frame = ctk.CTkFrame(main_window)
+    summary_frame = ctk.CTkFrame(main_window, fg_color="gray10")
     summary_frame.pack(fill="x", pady=10)
 
     #calculating the statistics
@@ -252,7 +254,7 @@ def step_2_select_target_variable():
     for widget in main_window.winfo_children():
         widget.destroy()
 
-    top_frame = ctk.CTkFrame(main_window)
+    top_frame = ctk.CTkFrame(main_window, fg_color="gray10")
     top_frame.pack(fill="x", pady=10)
 
     #back button to return to Step 1
@@ -308,7 +310,7 @@ def step_3_select_input_variables():
     for widget in main_window.winfo_children():
         widget.destroy()
 
-    top_frame = ctk.CTkFrame(main_window)
+    top_frame = ctk.CTkFrame(main_window, fg_color="gray10")
     top_frame.pack(fill="x", pady=10)
 
 
@@ -376,7 +378,7 @@ def step_4_data_preprocessing():
     for widget in main_window.winfo_children():
         widget.destroy()
 
-    top_frame = ctk.CTkFrame(main_window)
+    top_frame = ctk.CTkFrame(main_window, fg_color="gray10")
     top_frame.pack(fill="x", pady=10)
 
 
