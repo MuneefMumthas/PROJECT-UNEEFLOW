@@ -32,7 +32,7 @@ def center_window(window, width, height):
     #adjusting the x and y position to get it right (i got adhd and i need it to be perfect)
     y_pos = y_pos - int(40 * scaling)
     x_pos = x_pos - int(15 * scaling)
-    
+
     window.geometry(f"{width}x{height}+{x_pos}+{y_pos}")
     window.resizable(False, False)
 
@@ -88,11 +88,11 @@ def build_model_button_function():
         widget.destroy()
     
     #step 1 label
-    step1_label = tk.Label(main_window, text="Step 1: Import Dataset", font=("Arial", 16, "bold"))
+    step1_label = ctk.CTkLabel(main_window, text="Step 1: Import Dataset", font=("Arial", 20, "bold"))
     step1_label.pack(pady=20)
 
     #import csv button
-    import_csv_button = tk.Button(main_window, text="Import CSV", font=("Arial", 12), command=import_csv)
+    import_csv_button = ctk.CTkButton(main_window, text="Import CSV", font=("Arial", 14), command=import_csv)
     import_csv_button.place(relx=0.5, rely=0.15, anchor="center")
 
 #Importing csv files
@@ -145,45 +145,42 @@ def show_dataframe(current_df):
     for widget in main_window.winfo_children():
         widget.destroy()
 
-    top_frame = tk.Frame(main_window)
+    top_frame = ctk.CTkFrame(main_window)
     top_frame.pack(fill="x", pady=10)
 
-
     #back button
-    back_button = tk.Button(top_frame, text="Back", font=("Arial", 12), command=show_dataframe_back)
+    back_button = ctk.CTkButton(top_frame, text="Back", font=("Arial", 14), command=show_dataframe_back)
     back_button.pack(side="left",padx=10)
 
     #heading lable
-    table_label = tk.Label(top_frame, text="Dataset Preview", font=("Arial", 16, "bold"))
+    table_label = ctk.CTkLabel(top_frame, text="Dataset Preview", font=("Arial", 20, "bold"))
     table_label.pack(side="left", expand=True)
 
     #Next button
-    next_button = tk.Button(top_frame, text="Next", font=("Arial", 12), command=show_dataframe_next)
+    next_button = ctk.CTkButton(top_frame, text="Next", font=("Arial", 14), command=show_dataframe_next)
     next_button.pack(side="right", padx=10)
 
-
     #creating a frame for the table
-    frame = tk.Frame(main_window)
+    frame = ctk.CTkFrame(main_window)
     frame.pack(fill="both", expand=True, padx=10, pady=10)
 
     #adding the scrollbars
-    tree_scroll_vertical = ttk.Scrollbar(frame, orient="vertical")
-    tree_scroll_horizontal = ttk.Scrollbar(frame, orient="horizontal")
-
-    #using the Treeview widget inside the frame to display the dataframe from the CSV
-    tree = ttk.Treeview(frame, yscrollcommand=tree_scroll_vertical.set, xscrollcommand=tree_scroll_horizontal.set)
-    tree_scroll_vertical.config(command=tree.yview)
-    tree_scroll_horizontal.config(command=tree.xview)
-
+    tree_scroll_vertical = ctk.CTkScrollbar(frame, orientation="vertical")
+    tree_scroll_horizontal = ctk.CTkScrollbar(frame, orientation="horizontal")
+    
     #placing the scrollbars
     tree_scroll_vertical.pack(side="right", fill="y")
-    tree_scroll_horizontal.pack(side="bottom", fill="x")
+    tree_scroll_horizontal.pack(fill="x", side="bottom")
+
+    #using the Treeview widget inside the frame to display the dataframe from the CSV
+    tree = ttk.Treeview(frame, yscrollcommand=tree_scroll_vertical.set, xscrollcommand=tree_scroll_horizontal.set, selectmode="none")
+    tree_scroll_vertical.configure(command=tree.yview)
+    tree_scroll_horizontal.configure(command=tree.xview)
 
     #adding the dataframe columns to the treeview and hiding the first empty columns created by default
     tree["columns"] = list(current_df.columns)
     tree["show"] = "headings"  
 
-    
     for col in current_df.columns:
         #assigning the column names
         tree.heading(col, text=col)
@@ -196,15 +193,11 @@ def show_dataframe(current_df):
     for _, row in current_df.iterrows():
         tree.insert("", "end", values=list(row))
 
-    #unbinding the left click event on the treeview to stop adjusting the column width manually
-    tree.bind("<Button-1>", lambda event: "break")
-    
     #packing the treeview
     tree.pack(fill="both", expand=True)
 
-
     #dataset summary section
-    summary_frame = tk.Frame(main_window)
+    summary_frame = ctk.CTkFrame(main_window)
     summary_frame.pack(fill="x", pady=10)
 
     #calculating the statistics
@@ -214,7 +207,7 @@ def show_dataframe(current_df):
 
     #displaying the summary
     summary_text = f"📊 Rows: {num_rows}   |   📌 Columns: {num_columns}   |   ❗ Missing Values: {missing_values}"
-    summary_label = tk.Label(summary_frame, text=summary_text, font=("Arial", 12), fg="black", padx=10, pady=5)
+    summary_label = ctk.CTkLabel(summary_frame, text=summary_text, font=("Arial", 16), text_color="white", padx=10, pady=5)
     summary_label.pack()
 
 
@@ -231,25 +224,25 @@ def step_2_select_target_variable():
     for widget in main_window.winfo_children():
         widget.destroy()
 
-    top_frame = tk.Frame(main_window)
+    top_frame = ctk.CTkFrame(main_window)
     top_frame.pack(fill="x", pady=10)
 
     #back button to return to Step 1
-    back_button = tk.Button(top_frame, text="Back", font=("Arial", 12), command=lambda: show_dataframe(df))
+    back_button = ctk.CTkButton(top_frame, text="Back", font=("Arial", 12), command=lambda: show_dataframe(df))
     back_button.pack(side="left", padx=10)
 
     #label for Step 2
-    step2_label = tk.Label(top_frame, text="Step 2: Select Target Variable", font=("Arial", 16, "bold"))
+    step2_label = ctk.CTkLabel(top_frame, text="Step 2: Select Target Variable", font=("Arial", 16, "bold"))
     step2_label.pack(side="left", expand=True)
 
     #dropdown selection for the target variable
-    dropdown_frame = tk.Frame(main_window)
+    dropdown_frame = ctk.CTkFrame(main_window)
     dropdown_frame.pack(pady=20)
 
-    tk.Label(dropdown_frame, text="Select Target Variable:", font=("Arial", 12)).pack(side="left", padx=10)
+    ctk.CTkLabel(dropdown_frame, text="Select Target Variable:", font=("Arial", 12)).pack(side="left", padx=10)
 
     target_variable = tk.StringVar()
-    target_dropdown = ttk.Combobox(dropdown_frame, textvariable=target_variable, values=list(df.columns), state="readonly")
+    target_dropdown = ctk.CTkComboBox(dropdown_frame, textvariable=target_variable, values=list(df.columns), state="readonly")
     target_dropdown.pack(side="left")
 
     #function to store selection when "Next" is clicked
@@ -268,7 +261,7 @@ def step_2_select_target_variable():
         step_3_select_input_variables()
 
     #next button
-    next_button = tk.Button(top_frame, text="Next", font=("Arial", 12), command=save_selected_target_var)
+    next_button = ctk.CTkButton(top_frame, text="Next", font=("Arial", 12), command=save_selected_target_var)
     next_button.pack(side="right", padx=10)
 
 
@@ -287,16 +280,16 @@ def step_3_select_input_variables():
     for widget in main_window.winfo_children():
         widget.destroy()
 
-    top_frame = tk.Frame(main_window)
+    top_frame = ctk.CTkFrame(main_window)
     top_frame.pack(fill="x", pady=10)
 
 
     #back button
-    back_button = tk.Button(top_frame, text="Back", font=("Arial", 12), command=step_2_select_target_variable)
+    back_button = ctk.CTkButton(top_frame, text="Back", font=("Arial", 12), command=step_2_select_target_variable)
     back_button.pack(side="left",padx=10)
 
     #heading lable
-    table_label = tk.Label(top_frame, text="Step 3: Select Input Variables", font=("Arial", 16, "bold"))
+    table_label = ctk.CTkLabel(top_frame, text="Step 3: Select Input Variables", font=("Arial", 16, "bold"))
     table_label.pack(side="left", expand=True)
 
     #displaying the columns except the target variable
@@ -304,11 +297,11 @@ def step_3_select_input_variables():
     selected_columns = {col: tk.BooleanVar(value=True) for col in df.columns if col != selected_target_variable}
 
     #checkbox for each column
-    checkbox_frame = tk.Frame(main_window)
+    checkbox_frame = ctk.CTkFrame(main_window)
     checkbox_frame.pack(pady=20)
 
     for col, var in selected_columns.items():
-        checkbox = tk.Checkbutton(checkbox_frame, text=col, variable=var)
+        checkbox = ctk.CTkCheckBox(checkbox_frame, text=col, variable=var)
         checkbox.pack(anchor="w")
 
     def save_selected_columns_df():
@@ -336,7 +329,7 @@ def step_3_select_input_variables():
             return
         
     #Next button
-    next_button = tk.Button(top_frame, text="Next", font=("Arial", 12), command=save_selected_columns_df)
+    next_button = ctk.CTkButton(top_frame, text="Next", font=("Arial", 12), command=save_selected_columns_df)
     next_button.pack(side="right", padx=10)
 
 
@@ -355,45 +348,45 @@ def step_4_data_preprocessing():
     for widget in main_window.winfo_children():
         widget.destroy()
 
-    top_frame = tk.Frame(main_window)
+    top_frame = ctk.CTkFrame(main_window)
     top_frame.pack(fill="x", pady=10)
 
 
     #back button
-    back_button = tk.Button(top_frame, text="Back", font=("Arial", 12), command=step_3_select_input_variables)
+    back_button = ctk.CTkButton(top_frame, text="Back", font=("Arial", 12), command=step_3_select_input_variables)
     back_button.pack(side="left",padx=10)
 
     #heading lable
-    table_label = tk.Label(top_frame, text="Step 4: Data Preprocessing", font=("Arial", 16, "bold"))
+    table_label = ctk.CTkLabel(top_frame, text="Step 4: Data Preprocessing", font=("Arial", 16, "bold"))
     table_label.pack(side="left", expand=True)
 
     #Next button
-    next_button = tk.Button(top_frame, text="Next", font=("Arial", 12), command=None)
+    next_button = ctk.CTkButton(top_frame, text="Next", font=("Arial", 12), command=None)
     next_button.pack(side="right", padx=10)
 
-    middle_frame = tk.Frame(main_window)
+    middle_frame = ctk.CTkFrame(main_window)
     middle_frame.pack(pady=40)
 
     #Missing values section
-    missing_values_label = tk.Label(middle_frame, text="Missing values:", font=("Arial", 14))
+    missing_values_label = ctk.CTkLabel(middle_frame, text="Missing values:", font=("Arial", 14))
     missing_values_label.pack(side="left", padx=10)
 
     if df_selected.isnull().sum().sum() == 0:
-        result_label = tk.Label(middle_frame, text="No missing values found", font=("Arial", 14), fg="green")
+        result_label = ctk.CTkLabel(middle_frame, text="No missing values found", font=("Arial", 14), fg="green")
         result_label.pack(side="left", padx=10)
     else:
         #Combobox to select what to do with missing values
         options = ["Fill with Mean/Average values", "Remove Rows with missing values", "Remove Columns with missing values"]
-        action_combo = ttk.Combobox(middle_frame, values=options, font=("Arial", 12), state="readonly")
+        action_combo = ctk.CTkOptionMenu(middle_frame, values=options, font=("Arial", 12), state="readonly")
         action_combo.set("Choose Action")
         action_combo.pack(side="left", padx=10)
     
 
 #Buttons
-build_model_button = tk.Button(main_window, text="Build a Model", font=("Arial", 14), command=build_model_button_function)
+build_model_button = ctk.CTkButton(main_window, text="Build a Model", font=("Arial", 14), command=build_model_button_function)
 build_model_button.pack(pady=10)
 
-test_model_button = tk.Button(main_window, text="Test a Model", font=("Arial", 14), command=None)
+test_model_button = ctk.CTkButton(main_window, text="Test a Model", font=("Arial", 14), command=None)
 test_model_button.pack(pady=10)
 
 
