@@ -5,27 +5,38 @@ import time
 from PIL import Image, ImageTk
 import pandas as pd
 from tkinter import ttk
-
+from customtkinter import CTkImage
 import customtkinter as ctk
-
 
 ctypes.windll.shcore.SetProcessDpiAwareness(2)
 
 
 #Method  to center a window as tkinter does not have a built-in method for this
 def center_window(window, width, height):
+
+    #getiing the wndow scaling
+    scaling = window._get_window_scaling()
+    
+    #getting the window size
     screen_width = window.winfo_screenwidth()
     screen_height = window.winfo_screenheight()
-    x_pos = (screen_width - width) // 2
-    y_pos = (screen_height - height) // 2
+
+    #converting the width and height to scaled values
+    scaled_width = int(width * scaling)
+    scaled_height = int(height * scaling)
+
+    #calculating the x and y position to center the window
+    x_pos = (screen_width - scaled_width) // 2
+    y_pos = (screen_height - scaled_height) // 2
+
     window.geometry(f"{width}x{height}+{x_pos}+{y_pos}")
     window.resizable(False, False)
 
 
 #creating the main window
-main_window = tk.Tk()
+main_window = ctk.CTk()
 main_window.title("UNEEFLOW")
-center_window(main_window, 900, 900)
+center_window(main_window, 750, 750)
 
 #setting the logo
 main_window.iconbitmap("U Logo.ico")
@@ -36,7 +47,7 @@ main_window.iconbitmap("U Logo.ico")
 #hiding the app at the start for the splash screen
 main_window.withdraw()
 
-splash = tk.Toplevel()
+splash = ctk.CTkToplevel()
 
 #centering the splash window
 center_window(splash, 500, 500)
@@ -45,18 +56,17 @@ splash.overrideredirect(True)
 #loading the uneeflow logo as splash
 splash_img = Image.open("UNEE FLOW LOGO.png")
 splash_img = splash_img.resize((500, 500), Image.LANCZOS)
-splash_bg = ImageTk.PhotoImage(splash_img)
+splash_bg = CTkImage(splash_img, size=(500, 500))
 
-splash_label = tk.Label(splash, image=splash_bg)
+splash_label = ctk.CTkLabel(splash, image=splash_bg, text="")
 splash_label.pack()
 
-#waiting time before the main window
-splash.update()
-time.sleep(1.5)
-
 #removing the splash and showing the main window
-splash.destroy()
-main_window.deiconify()
+def close_splash():
+    splash.destroy()
+    main_window.deiconify()
+
+splash.after(1500, close_splash)
 
 ##########################################################################################
 
