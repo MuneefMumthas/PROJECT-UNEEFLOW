@@ -173,7 +173,7 @@ def show_dataframe(current_df):
     tree_scroll_horizontal.pack(fill="x", side="bottom")
 
     #using the Treeview widget inside the frame to display the dataframe from the CSV
-    tree = ttk.Treeview(frame, yscrollcommand=tree_scroll_vertical.set, xscrollcommand=tree_scroll_horizontal.set, selectmode="none")
+    tree = ttk.Treeview(frame, yscrollcommand=tree_scroll_vertical.set, xscrollcommand=tree_scroll_horizontal.set, selectmode="browse")
     tree_scroll_vertical.configure(command=tree.yview)
     tree_scroll_horizontal.configure(command=tree.xview)
 
@@ -187,7 +187,7 @@ def show_dataframe(current_df):
 
         #adjusting the column width based on the longest content in a column 
         max_content_length = max(current_df[col].astype(str).apply(len).max(), len(col))
-        tree.column(col, anchor="center", width=max_content_length * 13, stretch=False)
+        tree.column(col, anchor="center", stretch=True, width=(max_content_length * 13))
 
     #adding the rows to the treeview one by one
     for _, row in current_df.iterrows():
@@ -195,6 +195,17 @@ def show_dataframe(current_df):
 
     #packing the treeview
     tree.pack(fill="both", expand=True)
+
+    #creating a style for the treeview
+    style = ttk.Style()
+    style.theme_use("default")
+    style.configure("Treeview",
+                    background="#707070",
+                    foreground="black",
+                    rowheight=25,
+                    fieldbackground="#707070")
+    
+    style.map("Treeview", background=[("selected", "#4B4B4B")])
 
     #dataset summary section
     summary_frame = ctk.CTkFrame(main_window)
