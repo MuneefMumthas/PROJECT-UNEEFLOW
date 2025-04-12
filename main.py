@@ -269,8 +269,8 @@ def step_2_select_target_variable():
 
     ctk.CTkLabel(dropdown_frame, text="Select Target Variable:", font=("Arial", 12)).pack(side="left", padx=10)
 
-    target_variable = tk.StringVar()
-    target_dropdown = ctk.CTkComboBox(dropdown_frame, textvariable=target_variable, values=list(df.columns), state="readonly")
+    target_variable = ctk.StringVar()
+    target_dropdown = ctk.CTkComboBox(dropdown_frame, variable=target_variable, values=list(df.columns), state="readonly")
     target_dropdown.pack(side="left")
 
     #function to store selection when "Next" is clicked
@@ -400,7 +400,7 @@ def step_4_data_preprocessing():
     missing_values_label.pack(side="left", padx=10)
 
     if df_selected.isnull().sum().sum() == 0:
-        result_label = ctk.CTkLabel(middle_frame, text="No missing values found", font=("Arial", 14), fg="green")
+        result_label = ctk.CTkLabel(middle_frame, text="No missing values found", font=("Arial", 14), text_color="green")
         result_label.pack(side="left", padx=10)
     else:
         #Combobox to select what to do with missing values
