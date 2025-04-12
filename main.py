@@ -29,6 +29,10 @@ def center_window(window, width, height):
     x_pos = (screen_width - scaled_width) // 2
     y_pos = (screen_height - scaled_height) // 2
 
+    #adjusting the x and y position to get it right (i got adhd and i need it to be perfect)
+    y_pos = y_pos - int(40 * scaling)
+    x_pos = x_pos - int(15 * scaling)
+    
     window.geometry(f"{width}x{height}+{x_pos}+{y_pos}")
     window.resizable(False, False)
 
