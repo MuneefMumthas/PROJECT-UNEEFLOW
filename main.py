@@ -193,18 +193,35 @@ def show_dataframe(current_df):
     for _, row in current_df.iterrows():
         tree.insert("", "end", values=list(row))
 
+    #method to block clicks on the column header and separator to avoid resizing by the user
+    def block_column_resize(event):
+        
+        #geting the region where the click occurred
+        region = tree.identify_region(event.x, event.y)
+        if region == "separator" or region == "heading":
+            return "break"  
+
+    tree.bind("<Button-1>", block_column_resize)
+
     #packing the treeview
     tree.pack(fill="both", expand=True)
 
     #creating a style for the treeview
     style = ttk.Style()
     style.theme_use("default")
+    
+    style.configure("Treeview.Heading",
+                    foreground="black",
+                    font=("Arial", 9, "bold"))
+    
     style.configure("Treeview",
                     background="#707070",
                     foreground="black",
                     rowheight=25,
-                    fieldbackground="#707070")
+                    fieldbackground="#707070",
+                    font=("Arial", 9))
     
+
     style.map("Treeview", background=[("selected", "#4B4B4B")])
 
     #dataset summary section
