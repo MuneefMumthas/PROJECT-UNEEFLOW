@@ -6,6 +6,9 @@ from PIL import Image, ImageTk
 import pandas as pd
 from tkinter import ttk
 
+import customtkinter as ctk
+
+
 ctypes.windll.shcore.SetProcessDpiAwareness(2)
 
 
@@ -20,18 +23,18 @@ def center_window(window, width, height):
 
 
 #creating the main window
-root = tk.Tk()
-root.title("UNEEFLOW")
-center_window(root, 900, 900)
+main_window = tk.Tk()
+main_window.title("UNEEFLOW")
+center_window(main_window, 900, 900)
 
 #setting the logo
-root.iconbitmap("U Logo.ico")
+main_window.iconbitmap("U Logo.ico")
 
 #Splash Screen- this will act as a loading screen before the main window
 ##########################################################################################
 
 #hiding the app at the start for the splash screen
-root.withdraw()
+main_window.withdraw()
 
 splash = tk.Toplevel()
 
@@ -53,7 +56,7 @@ time.sleep(1.5)
 
 #removing the splash and showing the main window
 splash.destroy()
-root.deiconify()
+main_window.deiconify()
 
 ##########################################################################################
 
@@ -67,15 +70,15 @@ root.deiconify()
 def build_model_button_function():
 
     #removing all widgets from the window
-    for widget in root.winfo_children():
+    for widget in main_window.winfo_children():
         widget.destroy()
     
     #step 1 label
-    step1_label = tk.Label(root, text="Step 1: Import Dataset", font=("Arial", 16, "bold"))
+    step1_label = tk.Label(main_window, text="Step 1: Import Dataset", font=("Arial", 16, "bold"))
     step1_label.pack(pady=20)
 
     #import csv button
-    import_csv_button = tk.Button(root, text="Import CSV", font=("Arial", 12), command=import_csv)
+    import_csv_button = tk.Button(main_window, text="Import CSV", font=("Arial", 12), command=import_csv)
     import_csv_button.place(relx=0.5, rely=0.15, anchor="center")
 
 #Importing csv files
@@ -125,10 +128,10 @@ def show_dataframe(current_df):
     global df
     global df_selected
     #removing the existing widgets from the screen
-    for widget in root.winfo_children():
+    for widget in main_window.winfo_children():
         widget.destroy()
 
-    top_frame = tk.Frame(root)
+    top_frame = tk.Frame(main_window)
     top_frame.pack(fill="x", pady=10)
 
 
@@ -146,7 +149,7 @@ def show_dataframe(current_df):
 
 
     #creating a frame for the table
-    frame = tk.Frame(root)
+    frame = tk.Frame(main_window)
     frame.pack(fill="both", expand=True, padx=10, pady=10)
 
     #adding the scrollbars
@@ -187,7 +190,7 @@ def show_dataframe(current_df):
 
 
     #dataset summary section
-    summary_frame = tk.Frame(root)
+    summary_frame = tk.Frame(main_window)
     summary_frame.pack(fill="x", pady=10)
 
     #calculating the statistics
@@ -211,10 +214,10 @@ def step_2_select_target_variable():
     current_step = "step 2"
 
     #removing the existing widgets from the screen
-    for widget in root.winfo_children():
+    for widget in main_window.winfo_children():
         widget.destroy()
 
-    top_frame = tk.Frame(root)
+    top_frame = tk.Frame(main_window)
     top_frame.pack(fill="x", pady=10)
 
     #back button to return to Step 1
@@ -226,7 +229,7 @@ def step_2_select_target_variable():
     step2_label.pack(side="left", expand=True)
 
     #dropdown selection for the target variable
-    dropdown_frame = tk.Frame(root)
+    dropdown_frame = tk.Frame(main_window)
     dropdown_frame.pack(pady=20)
 
     tk.Label(dropdown_frame, text="Select Target Variable:", font=("Arial", 12)).pack(side="left", padx=10)
@@ -267,10 +270,10 @@ def step_3_select_input_variables():
     current_step = "step 3"
 
     #removing the existing widgets from the screen
-    for widget in root.winfo_children():
+    for widget in main_window.winfo_children():
         widget.destroy()
 
-    top_frame = tk.Frame(root)
+    top_frame = tk.Frame(main_window)
     top_frame.pack(fill="x", pady=10)
 
 
@@ -287,7 +290,7 @@ def step_3_select_input_variables():
     selected_columns = {col: tk.BooleanVar(value=True) for col in df.columns if col != selected_target_variable}
 
     #checkbox for each column
-    checkbox_frame = tk.Frame(root)
+    checkbox_frame = tk.Frame(main_window)
     checkbox_frame.pack(pady=20)
 
     for col, var in selected_columns.items():
@@ -335,10 +338,10 @@ def step_4_data_preprocessing():
     current_step = "step 4"
 
     #removing the existing widgets from the screen
-    for widget in root.winfo_children():
+    for widget in main_window.winfo_children():
         widget.destroy()
 
-    top_frame = tk.Frame(root)
+    top_frame = tk.Frame(main_window)
     top_frame.pack(fill="x", pady=10)
 
 
@@ -354,7 +357,7 @@ def step_4_data_preprocessing():
     next_button = tk.Button(top_frame, text="Next", font=("Arial", 12), command=None)
     next_button.pack(side="right", padx=10)
 
-    middle_frame = tk.Frame(root)
+    middle_frame = tk.Frame(main_window)
     middle_frame.pack(pady=40)
 
     #Missing values section
@@ -373,12 +376,12 @@ def step_4_data_preprocessing():
     
 
 #Buttons
-build_model_button = tk.Button(root, text="Build a Model", font=("Arial", 14), command=build_model_button_function)
+build_model_button = tk.Button(main_window, text="Build a Model", font=("Arial", 14), command=build_model_button_function)
 build_model_button.pack(pady=10)
 
-test_model_button = tk.Button(root, text="Test a Model", font=("Arial", 14), command=None)
+test_model_button = tk.Button(main_window, text="Test a Model", font=("Arial", 14), command=None)
 test_model_button.pack(pady=10)
 
 
 #running the main window
-root.mainloop()
+main_window.mainloop()
