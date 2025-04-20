@@ -136,7 +136,7 @@ def show_dataframe_next():
     if current_step == "step 1" or current_step == "step 2":
         step_2_select_target_variable()
     elif current_step == "step 3":
-        step_4_data_preprocessing()
+        step_4_Missing_values()
 
 #This function is used to display dataframe in a table whenever needed to preview the updated dataframe
 def show_dataframe(current_df):
@@ -363,9 +363,9 @@ def step_3_select_input_variables():
     next_button.pack(side="right", padx=10)
 
 
-#Step 4 - Preprocessing the data
-#This function will be used to preprocess the data 
-def step_4_data_preprocessing():
+#Step 4 - Handling Missing Values
+#This function is used to handle missing values in the dataset for both numerical and categorical data
+def step_4_Missing_values():
     
     global df
     global df_selected
@@ -387,7 +387,7 @@ def step_4_data_preprocessing():
     back_button.pack(side="left",padx=10)
 
     #heading lable
-    table_label = ctk.CTkLabel(top_frame, text="Step 4: Data Preprocessing", font=("Arial", 16, "bold"))
+    table_label = ctk.CTkLabel(top_frame, text="Step 4: Handling Missing Values", font=("Arial", 16, "bold"))
     table_label.pack(side="left", expand=True)
 
     #Next button
@@ -397,19 +397,21 @@ def step_4_data_preprocessing():
     middle_frame = ctk.CTkFrame(main_window)
     middle_frame.pack(pady=40)
 
-    #Missing values section
-    missing_values_label = ctk.CTkLabel(middle_frame, text="Missing values:", font=("Arial", 14))
-    missing_values_label.pack(side="left", padx=10)
+    #Numerical data missing values section
+    Numerical_values_label = ctk.CTkLabel(middle_frame, text="Numerical Data:", font=("Arial", 14))
+    Numerical_values_label.pack(side="left", padx=10)
 
     if df_selected.isnull().sum().sum() == 0:
         result_label = ctk.CTkLabel(middle_frame, text="No missing values found", font=("Arial", 14), text_color="green")
         result_label.pack(side="left", padx=10)
     else:
         #Combobox to select what to do with missing values
-        options = ["Fill with Mean/Average values", "Remove Rows with missing values", "Remove Columns with missing values"]
+        options = ["Fill with Mean/Average values", "Remove Rows with missing values"]
         action_combo = ctk.CTkOptionMenu(middle_frame, values=options, font=("Arial", 12), state="readonly")
         action_combo.set("Choose Action")
         action_combo.pack(side="left", padx=10)
+
+    
     
 
 #Buttons
