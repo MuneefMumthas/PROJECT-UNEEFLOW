@@ -423,21 +423,27 @@ def step_4_Missing_values():
     
         if missing_count > 0:
             
+            #column name label
             col_name_lable = ctk.CTkLabel(row_frame, text=f"{col}: ", font=("Arial", 16), text_color="white")
             col_name_lable.pack(side="left", padx=10)
 
+            #missing count label
             missing_count_label = ctk.CTkLabel(row_frame, text=f"{missing_count} missing values", text_color="red", font=("Arial", 16))
             missing_count_label.pack(side="left", padx=10)
-
+            
+            #combo box for handling missing values
             options = ["Fill with Mean", "Fill with Median", "Fill with Mode", "Remove Rows", "Remove Column"]
             combo = ctk.CTkComboBox(row_frame, values=options)
             combo.set("Choose Action")
             combo.pack(side="right", padx=10)
         
         else:
+
+            #column name label
             col_name_lable = ctk.CTkLabel(row_frame, text=f"{col}: ", font=("Arial", 16), text_color="white")
             col_name_lable.pack(side="left", padx=10)
 
+            #missing count label
             missing_count_label = ctk.CTkLabel(row_frame, text="No missing values", text_color="green", font=("Arial", 16))
             missing_count_label.pack(side="left", padx=10)
    
