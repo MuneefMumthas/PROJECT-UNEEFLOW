@@ -7,6 +7,7 @@ import pandas as pd
 from tkinter import ttk
 from customtkinter import CTkImage
 import customtkinter as ctk
+from pandas.api.types import is_numeric_dtype
 
 ctypes.windll.shcore.SetProcessDpiAwareness(2)
 
@@ -138,7 +139,9 @@ def show_dataframe_next():
     elif current_step == "step 3":
         step_4_Missing_values()
 
+
 #This function is used to display dataframe in a table whenever needed to preview the updated dataframe
+#################################################################################################################################### 
 def show_dataframe(current_df):
 
     global df
@@ -239,11 +242,13 @@ def show_dataframe(current_df):
     summary_text = f"📊 Rows: {num_rows}   |   📌 Columns: {num_columns}   |   ❗ Missing Values: {missing_values}"
     summary_label = ctk.CTkLabel(summary_frame, text=summary_text, font=("Arial", 16), text_color="white", padx=10, pady=5)
     summary_label.pack()
+#################################################################################################################################### 
 
 
 
 #Step 2: Selecting the target variable
 #This function is used to select the target variable from the dataframe
+#################################################################################################################################### 
 def step_2_select_target_variable():
 
     global df
@@ -293,11 +298,13 @@ def step_2_select_target_variable():
     #next button
     next_button = ctk.CTkButton(top_frame, text="Next", font=("Arial", 12), command=save_selected_target_var)
     next_button.pack(side="right", padx=10)
+#################################################################################################################################### 
 
 
 
 #Step 3: Select Input Variables
 #This function is used to select the input variables from the dataframe
+#################################################################################################################################### 
 def step_3_select_input_variables():
 
     global df
@@ -361,10 +368,13 @@ def step_3_select_input_variables():
     #Next button
     next_button = ctk.CTkButton(top_frame, text="Next", font=("Arial", 12), command=save_selected_columns_df)
     next_button.pack(side="right", padx=10)
+#################################################################################################################################### 
+
 
 
 #Step 4 - Handling Missing Values
 #This function is used to handle missing values in the dataset for both numerical and categorical data
+#################################################################################################################################### 
 def step_4_Missing_values():
     
     global df
@@ -374,6 +384,8 @@ def step_4_Missing_values():
     global current_step
     current_step = "step 4"
 
+    num_cols = [c for c in df.columns if is_numeric_dtype(df[c])] 
+    non_num_cols = [c for c in df.columns if c not in num_cols] 
     #removing the existing widgets from the screen
     for widget in main_window.winfo_children():
         widget.destroy()
@@ -397,20 +409,42 @@ def step_4_Missing_values():
     middle_frame = ctk.CTkFrame(main_window)
     middle_frame.pack(pady=40)
 
-    #Numerical data missing values section
-    Numerical_values_label = ctk.CTkLabel(middle_frame, text="Numerical Data:", font=("Arial", 14))
-    Numerical_values_label.pack(side="left", padx=10)
+    scroll_frame = ctk.CTkScrollableFrame(middle_frame, width=700, height=400, fg_color="gray8")
+    scroll_frame.pack(padx=10, pady=10, fill="both", expand=True)
 
-    if df_selected.isnull().sum().sum() == 0:
-        result_label = ctk.CTkLabel(middle_frame, text="No missing values found", font=("Arial", 14), text_color="green")
-        result_label.pack(side="left", padx=10)
-    else:
-        #Combobox to select what to do with missing values
-        options = ["Fill with Mean/Average values", "Remove Rows with missing values"]
-        action_combo = ctk.CTkOptionMenu(middle_frame, values=options, font=("Arial", 12), state="readonly")
-        action_combo.set("Choose Action")
-        action_combo.pack(side="left", padx=10)
+    for col in df_selected.columns:
 
+        #counting the missing values in each column
+        missing_count = df_selected[col].isnull().sum()
+
+        #creating a row frame for each column inside the scrollable frame
+        row_frame = ctk.CTkFrame(scroll_frame, fg_color="gray10")
+        row_frame.pack(fill="x", padx=10, pady=5)
+    
+        if missing_count > 0:
+            
+            col_name_lable = ctk.CTkLabel(row_frame, text=f"{col}: ", font=("Arial", 16), text_color="white")
+            col_name_lable.pack(side="left", padx=10)
+
+            missing_count_label = ctk.CTkLabel(row_frame, text=f"{missing_count} missing values", text_color="red", font=("Arial", 16))
+            missing_count_label.pack(side="left", padx=10)
+
+            options = ["Fill with Mean", "Fill with Median", "Fill with Mode", "Remove Rows", "Remove Column"]
+            combo = ctk.CTkComboBox(row_frame, values=options)
+            combo.set("Choose Action")
+            combo.pack(side="right", padx=10)
+        
+        else:
+            col_name_lable = ctk.CTkLabel(row_frame, text=f"{col}: ", font=("Arial", 16), text_color="white")
+            col_name_lable.pack(side="left", padx=10)
+
+            missing_count_label = ctk.CTkLabel(row_frame, text="No missing values", text_color="green", font=("Arial", 16))
+            missing_count_label.pack(side="left", padx=10)
+   
+
+
+
+#################################################################################################################################### 
     
     
 
