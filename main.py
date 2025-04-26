@@ -406,12 +406,17 @@ def step_4_Missing_values():
     next_button = ctk.CTkButton(top_frame, text="Next", font=("Arial", 12), command=None)
     next_button.pack(side="right", padx=10)
 
-    middle_frame = ctk.CTkFrame(main_window)
+    middle_frame = ctk.CTkFrame(main_window, fg_color="gray10")
     middle_frame.pack(pady=40)
 
-    scroll_frame = ctk.CTkScrollableFrame(middle_frame, width=700, height=400, fg_color="gray8")
-    scroll_frame.pack(padx=10, pady=10, fill="both", expand=True)
+    # Count columns with missing values
+    missing_columns = [col for col in df_selected.columns if df_selected[col].isnull().sum() > 0]
 
+    scrollable_frame_height = len(missing_columns) * 30
+
+    scroll_frame = ctk.CTkScrollableFrame(middle_frame, width=700, height=scrollable_frame_height, fg_color="gray8")
+    scroll_frame.pack(padx=10, pady=10, fill="both", expand=True)
+    
     for col in df_selected.columns:
 
         #counting the missing values in each column
@@ -438,8 +443,9 @@ def step_4_Missing_values():
             combo.set("Choose Action")
             combo.pack(side="left", padx=(10, 0), expand=True)
         
-   
-
+    total_missing = df_selected.isnull().sum().sum()
+    total_missing_label = ctk.CTkLabel(middle_frame, text=f"Total Missing Values: {total_missing}", font=("Arial", 16), text_color="white")
+    total_missing_label.pack(pady=10)
 
 
 #################################################################################################################################### 
