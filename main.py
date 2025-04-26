@@ -393,7 +393,6 @@ def step_4_Missing_values():
     top_frame = ctk.CTkFrame(main_window, fg_color="gray10")
     top_frame.pack(fill="x", pady=10)
 
-
     #back button
     back_button = ctk.CTkButton(top_frame, text="Back", font=("Arial", 12), command=step_3_select_input_variables)
     back_button.pack(side="left",padx=10)
@@ -406,42 +405,48 @@ def step_4_Missing_values():
     next_button = ctk.CTkButton(top_frame, text="Next", font=("Arial", 12), command=None)
     next_button.pack(side="right", padx=10)
 
+    #middle fram for content
     middle_frame = ctk.CTkFrame(main_window, fg_color="gray10")
     middle_frame.pack(pady=40)
 
-    # Count columns with missing values
-    missing_columns = [col for col in df_selected.columns if df_selected[col].isnull().sum() > 0]
-
-    scrollable_frame_height = len(missing_columns) * 30
+    #getting the height to adjust scroll frame dynamically
+    scrollable_frame_height = len(df_selected.columns) * 30
 
     scroll_frame = ctk.CTkScrollableFrame(middle_frame, width=700, height=scrollable_frame_height, fg_color="gray8")
     scroll_frame.pack(padx=10, pady=10, fill="both", expand=True)
+
+    #creating 3 columns in the scrollable frame
+    scroll_frame.columnconfigure((0,1,2), weight=1)
     
-    for col in df_selected.columns:
+    for i, col in enumerate(df_selected.columns):
 
         #counting the missing values in each column
         missing_count = df_selected[col].isnull().sum()
 
-        if missing_count > 0:
+        #configuring the rows for each column
+        scroll_frame.rowconfigure(i)
 
-            #creating a row frame for each column inside the scrollable frame
-            row_frame = ctk.CTkFrame(scroll_frame, fg_color="gray10")
-            row_frame.pack(fill="x", padx=10, pady=5, anchor="w")
+        #column name label
+        col_name_label = ctk.CTkLabel(scroll_frame, text=f"{col}: ", font=("Arial", 16), text_color="white")
+        col_name_label.grid(row=i, column=0, sticky="w", padx=10, pady=5)
+        
+        if missing_count == 0:
 
-
-            #column name label
-            col_name_label = ctk.CTkLabel(row_frame, text=f"{col}: ", font=("Arial", 16), text_color="white")
-            col_name_label.pack(side="left", padx=(10, 0), expand=True)
+            #label for no missing values
+            no_missing_label = ctk.CTkLabel(scroll_frame, text="No Missing Values", text_color="green", font=("Arial", 16))
+            no_missing_label.grid(row=i, column=1, sticky="w", padx=10, pady=5)
+        
+        else:
 
             #missing count label
-            missing_count_label = ctk.CTkLabel(row_frame, text=f"{missing_count} missing values", text_color="red", font=("Arial", 16))
-            missing_count_label.pack(side="left", padx=(10, 0), expand=True)
+            missing_count_label = ctk.CTkLabel(scroll_frame, text=f"{missing_count} missing values", text_color="red", font=("Arial", 16))
+            missing_count_label.grid(row=i, column=1, sticky="w", padx=10, pady=5)
             
             #combo box for handling missing values
             options = ["Fill with Mean", "Fill with Median", "Fill with Mode", "Remove Rows", "Remove Column"]
-            combo = ctk.CTkComboBox(row_frame, values=options, state="readonly")
+            combo = ctk.CTkComboBox(scroll_frame, values=options, state="readonly")
             combo.set("Choose Action")
-            combo.pack(side="left", padx=(10, 0), expand=True)
+            combo.grid(row=i, column=2, sticky="w", padx=10, pady=5)
         
     total_missing = df_selected.isnull().sum().sum()
     total_missing_label = ctk.CTkLabel(middle_frame, text=f"Total Missing Values: {total_missing}", font=("Arial", 16), text_color="white")
