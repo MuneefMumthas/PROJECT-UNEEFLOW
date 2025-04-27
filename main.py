@@ -333,13 +333,21 @@ def step_3_select_input_variables():
 
     selected_columns = {col: tk.BooleanVar(value=True) for col in df.columns if col != selected_target_variable}
 
-    #checkbox for each column
-    checkbox_frame = ctk.CTkFrame(main_window)
-    checkbox_frame.pack(pady=20)
+    
+    #middle fram for content
+    middle_frame = ctk.CTkFrame(main_window, fg_color="gray10")
+    middle_frame.pack(pady=40)
 
+
+    scroll_frame = ctk.CTkScrollableFrame(middle_frame, width=700, height=600, fg_color="gray10")
+    scroll_frame.pack(padx=10, pady=10, fill="both", expand=True)
+
+    scroll_frame.columnconfigure((0,1,2), weight=1)
+    
+    #checkbox for each column
     for col, var in selected_columns.items():
-        checkbox = ctk.CTkCheckBox(checkbox_frame, text=col, variable=var)
-        checkbox.pack(anchor="w")
+        checkbox = ctk.CTkCheckBox(scroll_frame, text=col, variable=var)
+        checkbox.grid(column=1, sticky="w", pady=10)
 
     def save_selected_columns_df():
 
