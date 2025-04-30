@@ -339,15 +339,15 @@ def step_3_select_input_variables():
     middle_frame.pack(pady=40)
 
 
-    scroll_frame = ctk.CTkScrollableFrame(middle_frame, width=700, height=600, fg_color="gray10")
+    scroll_frame = ctk.CTkScrollableFrame(middle_frame, width=700, height=600, fg_color="gray8")
     scroll_frame.pack(padx=10, pady=10, fill="both", expand=True)
 
-    scroll_frame.columnconfigure((0,1,2), weight=1)
+    scroll_frame.columnconfigure(0, weight=1)
     
     #checkbox for each column
     for col, var in selected_columns.items():
         checkbox = ctk.CTkCheckBox(scroll_frame, text=col, variable=var)
-        checkbox.grid(column=1, sticky="w", pady=10)
+        checkbox.grid(column=0, sticky="w", pady=10, padx=50)
 
     def save_selected_columns_df():
 
