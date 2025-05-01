@@ -438,10 +438,11 @@ def step_4_Missing_values():
         missing_count = df_selected[col].isnull().sum()
 
         #configuring the rows for each column
-        scroll_frame.rowconfigure(i)
+        scroll_frame.rowconfigure(i, weight=1)
+
 
         #column name label
-        col_name_label = ctk.CTkLabel(scroll_frame, text=f"{col}: ", font=("Arial", 16), text_color="white")
+        col_name_label = ctk.CTkLabel(scroll_frame, text=f"{col}: ", font=("Arial", 16), text_color="white", wraplength=180)
         col_name_label.grid(row=i, column=0, sticky="w", padx=10, pady=5)
         
         if missing_count == 0:
