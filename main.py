@@ -437,13 +437,19 @@ def step_4_Missing_values():
         #counting the missing values in each column
         missing_count = df_selected[col].isnull().sum()
 
+        #creating border for each row using a lower height frame
+        border_frame = ctk.CTkFrame(scroll_frame, fg_color="transparent", border_color="gray10", border_width=1)
+        border_frame.grid(row=i, column=0, columnspan=3, sticky="ew")
+
         #configuring the rows for each column
         scroll_frame.rowconfigure(i, weight=1)
-
 
         #column name label
         col_name_label = ctk.CTkLabel(scroll_frame, text=f"{col}: ", font=("Arial", 16), text_color="white", wraplength=180)
         col_name_label.grid(row=i, column=0, sticky="w", padx=10, pady=5)
+        
+        needed_height = col_name_label.winfo_reqheight() + 20 
+        border_frame.configure(height=needed_height)
         
         if missing_count == 0:
 
