@@ -339,11 +339,17 @@ def step_3_select_input_variables():
     middle_frame.pack(pady=40)
 
 
-    scroll_frame = ctk.CTkScrollableFrame(middle_frame, width=700, height=600, fg_color="gray8")
+    scroll_frame = ctk.CTkScrollableFrame(middle_frame, width=700, height=600, fg_color="gray10")
     scroll_frame.pack(padx=10, pady=10, fill="both", expand=True)
 
+    #turning on the visibility of the scrollbar if there are more than 13 columns
+    if len(selected_columns) > 13:
+        scroll_frame._scrollbar.grid()
+    else:
+        scroll_frame._scrollbar.grid_remove()
+
     scroll_frame.columnconfigure(0, weight=1)
-    
+
     #checkbox for each column
     for col, var in selected_columns.items():
         checkbox = ctk.CTkCheckBox(scroll_frame, text=col, variable=var)
