@@ -472,7 +472,7 @@ def step_4_Missing_values():
             
             #continuous numeric data
             if is_numeric_dtype(column_data) and column_data.nunique() > 10:
-                options = [ "ContinuousN",
+                options = [ "ContinuousN debug",
                     "Fill with Mean/Average",
                     "Fill with Median",
                     "Remove Rows",
@@ -481,7 +481,7 @@ def step_4_Missing_values():
 
             #categorical numeric data
             elif is_numeric_dtype(column_data):
-                options = ["CategoricalN",
+                options = ["CategoricalN debug",
                     "Fill with Mode",
                     "Remove Rows",
                     "Remove Column"
@@ -489,7 +489,7 @@ def step_4_Missing_values():
 
             #object or string dtype
             else:
-                options = ["object or string",
+                options = ["object or string debug",
                     "Fill with Mode",      
                     "Remove Rows",
                     "Remove Column"
@@ -511,13 +511,18 @@ def step_4_Missing_values():
         global df_handled_missing_values
 
         #checking if any action is selected for columns with missing values
-        for col, combo in actions.items():
-            if df_selected[col].isnull().sum() > 0 and combo.get() == "Choose Action":
-                messagebox.showerror(
-                    "Error",
-                    f"Please select an action for column:\n  {col}"
-                )
-                return
+        missing_cols = [
+            col
+            for col, combo in actions.items()
+            if combo.get() == "Choose Action"
+        ]
+        if missing_cols:
+            messagebox.showerror(
+                "Error",
+                "Please select an action for the following columns:\n  "
+                + "\n  ".join(missing_cols)
+            )
+            return
 
         #confirmation dialog for applying actions
         if not messagebox.askyesno(
