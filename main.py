@@ -421,16 +421,19 @@ def step_4_Missing_values():
 
     #middle fram for content
     middle_frame = ctk.CTkFrame(main_window, fg_color="gray10")
-    middle_frame.pack(pady=40)
+    middle_frame.pack(pady=30)
 
-    #getting the height to adjust scroll frame dynamically
-    scrollable_frame_height = len(df_selected.columns) * 30
-
-    scroll_frame = ctk.CTkScrollableFrame(middle_frame, width=700, height=scrollable_frame_height, fg_color="gray8")
+    scroll_frame = ctk.CTkScrollableFrame(middle_frame, width=700, height=500, fg_color="transparent")
     scroll_frame.pack(padx=10, pady=10, fill="both", expand=True)
 
     #creating 3 columns in the scrollable frame
-    scroll_frame.columnconfigure((0,1,2), weight=1)
+    scroll_frame.columnconfigure(0, weight=1)
+
+    #hiding the scrollbar if there are 8 columns or less
+    if len(df_selected.columns) > 8:
+        scroll_frame._scrollbar.grid()
+    else:
+        scroll_frame._scrollbar.grid_remove()
     
     for i, col in enumerate(df_selected.columns):
 
@@ -438,36 +441,36 @@ def step_4_Missing_values():
         missing_count = df_selected[col].isnull().sum()
 
         #creating border for each row using a lower height frame
-        border_frame = ctk.CTkFrame(scroll_frame, fg_color="transparent", border_color="gray10", border_width=1)
+        border_frame = ctk.CTkFrame(scroll_frame, fg_color="gray8", border_color="gray10", border_width=1)
         border_frame.grid(row=i, column=0, columnspan=3, sticky="ew")
+        
+        #making the columns equal width for better alignment
+        for col_idx in (0, 1, 2):
+            border_frame.grid_columnconfigure(col_idx, weight=1, uniform="cols")
 
-        #configuring the rows for each column
-        scroll_frame.rowconfigure(i, weight=1)
 
         #column name label
-        col_name_label = ctk.CTkLabel(scroll_frame, text=f"{col}: ", font=("Arial", 16), text_color="white", wraplength=180)
-        col_name_label.grid(row=i, column=0, sticky="w", padx=10, pady=5)
-        
-        needed_height = col_name_label.winfo_reqheight() + 20 
-        border_frame.configure(height=needed_height)
+        col_name_label = ctk.CTkLabel(border_frame, text=f"{col}: ", font=("Arial", 16), text_color="white", wraplength=180, bg_color="gray8")
+        col_name_label.grid(row=0, column=0, sticky="w", padx=10, pady=(15,15))
+
         
         if missing_count == 0:
 
             #label for no missing values
-            no_missing_label = ctk.CTkLabel(scroll_frame, text="No Missing Values", text_color="green", font=("Arial", 16))
-            no_missing_label.grid(row=i, column=1, sticky="w", padx=10, pady=5)
+            no_missing_label = ctk.CTkLabel(border_frame, text="No Missing Values", text_color="green", font=("Arial", 16), bg_color="gray8")
+            no_missing_label.grid(row=0, column=1, sticky="w", padx=10, pady=5)
         
         else:
 
             #missing count label
-            missing_count_label = ctk.CTkLabel(scroll_frame, text=f"{missing_count} missing values", text_color="red", font=("Arial", 16))
-            missing_count_label.grid(row=i, column=1, sticky="w", padx=10, pady=5)
+            missing_count_label = ctk.CTkLabel(border_frame, text=f"{missing_count} missing values", text_color="red", font=("Arial", 16), bg_color="gray8")
+            missing_count_label.grid(row=0, column=1, sticky="w", padx=10, pady=5)
             
             #combo box for handling missing values
             options = ["Fill with Mean", "Fill with Median", "Fill with Mode", "Remove Rows", "Remove Column"]
-            combo = ctk.CTkComboBox(scroll_frame, values=options, state="readonly")
+            combo = ctk.CTkComboBox(border_frame, values=options, state="readonly")
             combo.set("Choose Action")
-            combo.grid(row=i, column=2, sticky="w", padx=10, pady=5)
+            combo.grid(row=0, column=2, sticky="w", padx=10, pady=5)
         
     total_missing = df_selected.isnull().sum().sum()
     total_missing_label = ctk.CTkLabel(middle_frame, text=f"Total Missing Values: {total_missing}", font=("Arial", 16), text_color="white")
