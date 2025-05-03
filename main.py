@@ -131,6 +131,8 @@ def show_dataframe_back():
         build_model_button_function()
     elif current_step == "step 3":
         step_3_select_input_variables()
+    elif current_step == "step 4":
+        step_4_Missing_values()
 
 def show_dataframe_next():
     global current_step
@@ -415,10 +417,6 @@ def step_4_Missing_values():
     table_label = ctk.CTkLabel(top_frame, text="Step 4: Handling Missing Values", font=("Arial", 16, "bold"))
     table_label.pack(side="left", expand=True)
 
-    #Next button
-    next_button = ctk.CTkButton(top_frame, text="Next", font=("Arial", 12), command=None)
-    next_button.pack(side="right", padx=10)
-
     #middle fram for content
     middle_frame = ctk.CTkFrame(main_window, fg_color="gray10")
     middle_frame.pack(pady=30)
@@ -435,6 +433,9 @@ def step_4_Missing_values():
     else:
         scroll_frame._scrollbar.grid_remove()
     
+    #dictionary to store actions for each option in the combo box
+    actions = {}
+
     for i, col in enumerate(df_selected.columns):
 
         #counting the missing values in each column
@@ -498,10 +499,69 @@ def step_4_Missing_values():
             combo = ctk.CTkComboBox(border_frame, values=options, state="readonly")
             combo.set("Choose Action")
             combo.grid(row=0, column=2, sticky="w", padx=10, pady=5)
+            actions[col] = combo
         
     total_missing = df_selected.isnull().sum().sum()
     total_missing_label = ctk.CTkLabel(middle_frame, text=f"Total Missing Values: {total_missing}", font=("Arial", 16), text_color="white")
     total_missing_label.pack(pady=10)
+
+    def apply_actions():
+
+        global df_selected
+        global df_handled_missing_values
+
+        #checking if any action is selected for columns with missing values
+        for col, combo in actions.items():
+            if df_selected[col].isnull().sum() > 0 and combo.get() == "Choose Action":
+                messagebox.showerror(
+                    "Error",
+                    f"Please select an action for column:\n  {col}"
+                )
+                return
+
+        #confirmation dialog for applying actions
+        if not messagebox.askyesno(
+            "Confirm",
+            "You’ve selected actions for every column.\nProceed to apply them?"
+        ):
+            return
+
+        #creating a copy of the selected DataFrame to avoid modifying the original
+        df_handled_missing_values = df_selected.copy()
+
+        #dropping rows with missing values first
+        to_drop_rows = [
+            c for c, combo in actions.items()
+            if combo.get().startswith("Remove Rows")
+        ]
+        if to_drop_rows:
+            df_handled_missing_values.dropna(subset=to_drop_rows, inplace=True)
+
+        #filling missing values based on selected actions
+        for col, combo in actions.items():
+            act = combo.get()
+            if act == "Fill with Mean/Average":
+                df_handled_missing_values[col].fillna(df_handled_missing_values[col].mean(), inplace=True)
+            elif act == "Fill with Median":
+                df_handled_missing_values[col].fillna(df_handled_missing_values[col].median(), inplace=True)
+            elif act == "Fill with Mode":
+                df_handled_missing_values[col].fillna(df_handled_missing_values[col].mode()[0], inplace=True)
+
+        #droppin columns last to avoid issues with missing values in other columns
+        to_drop_cols = [
+            c for c, combo in actions.items()
+            if combo.get().startswith("Remove Column")
+        ]
+        if to_drop_cols:
+            df_handled_missing_values.drop(columns=to_drop_cols, inplace=True)
+
+        #showing the dataset preview after handling missing values
+        show_dataframe(df_handled_missing_values)
+    
+    #Next button
+    next_button = ctk.CTkButton(top_frame, text="Next", font=("Arial", 12), command=apply_actions)
+    next_button.pack(side="right", padx=10)
+
 
 
 #################################################################################################################################### 
