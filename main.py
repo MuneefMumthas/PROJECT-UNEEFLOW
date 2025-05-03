@@ -466,8 +466,35 @@ def step_4_Missing_values():
             missing_count_label = ctk.CTkLabel(border_frame, text=f"{missing_count} missing values", text_color="red", font=("Arial", 16), bg_color="gray8")
             missing_count_label.grid(row=0, column=1, sticky="w", padx=10, pady=5)
             
+            #actions for handling missing values by data type
+            column_data = df_selected[col]
+            
+            #continuous numeric data
+            if is_numeric_dtype(column_data) and column_data.nunique() > 10:
+                options = [ "ContinuousN",
+                    "Fill with Mean/Average",
+                    "Fill with Median",
+                    "Remove Rows",
+                    "Remove Column"
+                ]
+
+            #categorical numeric data
+            elif is_numeric_dtype(column_data):
+                options = ["CategoricalN",
+                    "Fill with Mode",
+                    "Remove Rows",
+                    "Remove Column"
+                ]
+
+            #object or string dtype
+            else:
+                options = ["object or string",
+                    "Fill with Mode",      
+                    "Remove Rows",
+                    "Remove Column"
+                ]
+
             #combo box for handling missing values
-            options = ["Fill with Mean", "Fill with Median", "Fill with Mode", "Remove Rows", "Remove Column"]
             combo = ctk.CTkComboBox(border_frame, values=options, state="readonly")
             combo.set("Choose Action")
             combo.grid(row=0, column=2, sticky="w", padx=10, pady=5)
