@@ -8,6 +8,7 @@ from tkinter import ttk
 from customtkinter import CTkImage
 import customtkinter as ctk
 from pandas.api.types import is_numeric_dtype
+from tksheet import Sheet
 
 ctypes.windll.shcore.SetProcessDpiAwareness(2)
 
@@ -167,69 +168,36 @@ def show_dataframe(current_df):
     next_button = ctk.CTkButton(top_frame, text="Next", font=("Arial", 14), command=show_dataframe_next)
     next_button.pack(side="right", padx=10)
 
-    #creating a frame for the table
-    frame = ctk.CTkFrame(main_window, fg_color="gray10")
-    frame.pack(fill="both", expand=True, padx=10, pady=10)
+    #container for the table
+    container = ctk.CTkFrame(main_window, fg_color="gray10")
+    container.pack(fill="both", expand=True, padx=10, pady=10)
 
-    #adding the scrollbars
-    tree_scroll_vertical = ctk.CTkScrollbar(frame, orientation="vertical")
-    tree_scroll_horizontal = ctk.CTkScrollbar(frame, orientation="horizontal")
+    # Create Tksheet inside a normal Tk frame
+
+    sheet = Sheet(
+        container,
+        data=current_df.values.tolist(),
+        headers=list(current_df.columns),
+        height=400,
+        width=700,
+        show_x_scrollbar=True,
+        show_y_scrollbar=True,
+        row_select_mode="single",
+        empty_horizontal=0,
+        empty_vertical=0,
+    )
+    sheet.enable_bindings((
+        "single_select",
+        "arrowkeys",
+        "rc_select",
+        "right_click_popup_menu",
+        "copy",
+    ))
+
     
-    #placing the scrollbars
-    tree_scroll_vertical.pack(side="right", fill="y")
-    tree_scroll_horizontal.pack(fill="x", side="bottom")
+    sheet.pack(fill="both", expand=True)
 
-    #using the Treeview widget inside the frame to display the dataframe from the CSV
-    tree = ttk.Treeview(frame, yscrollcommand=tree_scroll_vertical.set, xscrollcommand=tree_scroll_horizontal.set, selectmode="browse")
-    tree_scroll_vertical.configure(command=tree.yview)
-    tree_scroll_horizontal.configure(command=tree.xview)
 
-    #adding the dataframe columns to the treeview and hiding the first empty columns created by default
-    tree["columns"] = list(current_df.columns)
-    tree["show"] = "headings"  
-
-    for col in current_df.columns:
-        #assigning the column names
-        tree.heading(col, text=col)
-
-        #adjusting the column width based on the longest content in a column 
-        max_content_length = max(current_df[col].astype(str).apply(len).max(), len(col))
-        tree.column(col, anchor="center", stretch=True, width=(max_content_length * 13))
-
-    #adding the rows to the treeview one by one
-    for _, row in current_df.iterrows():
-        tree.insert("", "end", values=list(row))
-
-    #method to block clicks on the column header and separator to avoid resizing by the user
-    def block_column_resize(event):
-        
-        #geting the region where the click occurred
-        region = tree.identify_region(event.x, event.y)
-        if region == "separator" or region == "heading":
-            return "break"  
-
-    tree.bind("<Button-1>", block_column_resize)
-
-    #packing the treeview
-    tree.pack(fill="both", expand=True)
-
-    #creating a style for the treeview
-    style = ttk.Style()
-    style.theme_use("default")
-    
-    style.configure("Treeview.Heading",
-                    foreground="black",
-                    font=("Arial", 9, "bold"))
-    
-    style.configure("Treeview",
-                    background="#707070",
-                    foreground="black",
-                    rowheight=25,
-                    fieldbackground="#707070",
-                    font=("Arial", 9))
-    
-
-    style.map("Treeview", background=[("selected", "#4B4B4B")])
 
     #dataset summary section
     summary_frame = ctk.CTkFrame(main_window, fg_color="gray10")
