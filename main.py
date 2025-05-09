@@ -190,13 +190,32 @@ def show_dataframe(current_df):
         "single_select",
         "arrowkeys",
         "rc_select",
-        "right_click_popup_menu",
-        "copy",
     ))
 
     
     sheet.pack(fill="both", expand=True)
 
+
+    #setting the column width to fit the content in each column
+    col_widths = []
+    for col in df.columns:
+        max_len = max(df[col].astype(str).map(len).max(), len(col))
+        col_widths.append(max_len * 15)
+    
+    #applying width based on the content of the column first
+    sheet.set_column_widths(col_widths)
+
+    #updating the column tasks to get the available width of the container
+    #and then distributing the extra width equally among all columns
+    #this is done to make sure that the table fits the container and looks good
+    #even if the content is not too long
+    container.update_idletasks()
+    avail = container.winfo_width()
+    used  = sum(col_widths)
+    extra = max(0, avail - used) // len(col_widths)
+    if extra > 0:
+        new_widths = [w + extra for w in col_widths]
+        sheet.set_column_widths(new_widths)
 
 
     #dataset summary section
