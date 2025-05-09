@@ -190,12 +190,16 @@ def show_dataframe(current_df):
         "single_select",
         "arrowkeys",
         "rc_select",
+        "right_click_popup_menu",
+        "copy",
     ))
 
     
     sheet.pack(fill="both", expand=True)
 
-
+    #center aligning content in the table
+    sheet.align(":", align="center")
+    
     #setting the column width to fit the content in each column
     col_widths = []
     for col in df.columns:
