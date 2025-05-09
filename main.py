@@ -172,8 +172,7 @@ def show_dataframe(current_df):
     container = ctk.CTkFrame(main_window, fg_color="gray10")
     container.pack(fill="both", expand=True, padx=10, pady=10)
 
-    # Create Tksheet inside a normal Tk frame
-
+    #creating the table view using tksheet
     sheet = Sheet(
         container,
         data=current_df.values.tolist(),
@@ -186,6 +185,8 @@ def show_dataframe(current_df):
         empty_horizontal=0,
         empty_vertical=0,
     )
+
+    #featurs of the table
     sheet.enable_bindings((
         "single_select",
         "arrowkeys",
@@ -193,7 +194,6 @@ def show_dataframe(current_df):
         "right_click_popup_menu",
         "copy",
     ))
-
     
     sheet.pack(fill="both", expand=True)
 
@@ -220,7 +220,6 @@ def show_dataframe(current_df):
     if extra > 0:
         new_widths = [w + extra for w in col_widths]
         sheet.set_column_widths(new_widths)
-
 
     #dataset summary section
     summary_frame = ctk.CTkFrame(main_window, fg_color="gray10")
