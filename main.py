@@ -199,11 +199,11 @@ def show_dataframe(current_df):
 
     #center aligning content in the table
     sheet.align(":", align="center")
-    
+
     #setting the column width to fit the content in each column
     col_widths = []
-    for col in df.columns:
-        max_len = max(df[col].astype(str).map(len).max(), len(col))
+    for col in current_df.columns:
+        max_len = max(current_df[col].astype(str).map(len).max(), len(col))
         col_widths.append(max_len * 15)
     
     #applying width based on the content of the column first
