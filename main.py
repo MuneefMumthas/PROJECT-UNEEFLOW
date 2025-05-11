@@ -466,8 +466,6 @@ def step_4_Missing_values():
     global current_step
     current_step = "step 4"
 
-    num_cols = [c for c in df.columns if is_numeric_dtype(df[c])] 
-    non_num_cols = [c for c in df.columns if c not in num_cols] 
     #removing the existing widgets from the screen
     for widget in main_window.winfo_children():
         widget.destroy()
@@ -526,6 +524,10 @@ def step_4_Missing_values():
             #label for no missing values
             no_missing_label = ctk.CTkLabel(border_frame, text="No Missing Values", text_color="green", font=("Arial", 16), bg_color="gray8")
             no_missing_label.grid(row=0, column=1, sticky="w", padx=10, pady=5)
+
+            #lable for no action needed
+            no_action_label = ctk.CTkLabel(border_frame, text="No Action Needed", text_color="gray50", font=("Arial", 16), bg_color="gray8")
+            no_action_label.grid(row=0, column=2, sticky="w", padx=10, pady=5)
         
         else:
 
@@ -566,68 +568,75 @@ def step_4_Missing_values():
             combo.set("Choose Action")
             combo.grid(row=0, column=2, sticky="w", padx=10, pady=5)
             actions[col] = combo
-        
+    
+    global total_missing   
     total_missing = df_selected.isnull().sum().sum()
-    total_missing_label = ctk.CTkLabel(middle_frame, text=f"Total Missing Values: {total_missing}", font=("Arial", 16), text_color="white")
-    total_missing_label.pack(pady=10)
+
+    #showcasing the missing values only if there are any
+    if total_missing > 0:
+        total_missing_label = ctk.CTkLabel(middle_frame, text=f"Total Missing Values: {total_missing}", font=("Arial", 16), text_color="white")
+        total_missing_label.pack(pady=10)
 
     def apply_actions():
 
-        global df_selected
-        global df_handled_missing_values
-
-        #checking if any action is selected for columns with missing values
-        missing_cols = [
-            col
-            for col, combo in actions.items()
-            if combo.get() == "Choose Action"
-        ]
-        if missing_cols:
-            messagebox.showerror(
-                "Error",
-                "Please select an action for the following columns:\n  "
-                + "\n  ".join(missing_cols)
-            )
-            return
-
-        #confirmation dialog for applying actions
-        if not messagebox.askyesno(
-            "Confirm",
-            "You’ve selected actions for every column.\nProceed to apply them?"
-        ):
-            return
-
+        global df_selected, df_handled_missing_values, total_missing
         #creating a copy of the selected DataFrame to avoid modifying the original
         df_handled_missing_values = df_selected.copy()
 
-        #dropping rows with missing values first
-        to_drop_rows = [
-            c for c, combo in actions.items()
-            if combo.get().startswith("Remove Rows")
-        ]
-        if to_drop_rows:
-            df_handled_missing_values.dropna(subset=to_drop_rows, inplace=True)
+        if total_missing == 0:
+            show_dataframe(df_handled_missing_values)
+        else:
+            #checking if any action is selected for columns with missing values
+            missing_cols = [
+                col
+                for col, combo in actions.items()
+                if combo.get() == "Choose Action"
+            ]
+            if missing_cols:
+                messagebox.showerror(
+                    "Error",
+                    "Please select an action for the following columns:\n  "
+                    + "\n  ".join(missing_cols)
+                )
+                return
 
-        #filling missing values based on selected actions
-        for col, combo in actions.items():
-            act = combo.get()
-            if act == "Fill with Mean/Average":
-                df_handled_missing_values[col].fillna(df_handled_missing_values[col].mean(), inplace=True)
-            elif act == "Fill with Median":
-                df_handled_missing_values[col].fillna(df_handled_missing_values[col].median(), inplace=True)
-            elif act == "Fill with Mode":
-                df_handled_missing_values[col].fillna(df_handled_missing_values[col].mode()[0], inplace=True)
+            #confirmation dialog for applying actions
+            if not messagebox.askyesno(
+                "Confirm",
+                "You’ve selected actions for every column.\nProceed to apply them?"
+            ):
+                return
 
-        #droppin columns last to avoid issues with missing values in other columns
-        to_drop_cols = [
-            c for c, combo in actions.items()
-            if combo.get().startswith("Remove Column")
-        ]
-        if to_drop_cols:
-            df_handled_missing_values.drop(columns=to_drop_cols, inplace=True)
+            
 
-        #showing the dataset preview after handling missing values
-        show_dataframe(df_handled_missing_values)
+            #dropping rows with missing values first
+            to_drop_rows = [
+                c for c, combo in actions.items()
+                if combo.get().startswith("Remove Rows")
+            ]
+            if to_drop_rows:
+                df_handled_missing_values.dropna(subset=to_drop_rows, inplace=True)
+
+            #filling missing values based on selected actions
+            for col, combo in actions.items():
+                act = combo.get()
+                if act == "Fill with Mean/Average":
+                    df_handled_missing_values[col].fillna(df_handled_missing_values[col].mean(), inplace=True)
+                elif act == "Fill with Median":
+                    df_handled_missing_values[col].fillna(df_handled_missing_values[col].median(), inplace=True)
+                elif act == "Fill with Mode":
+                    df_handled_missing_values[col].fillna(df_handled_missing_values[col].mode()[0], inplace=True)
+
+            #droppin columns last to avoid issues with missing values in other columns
+            to_drop_cols = [
+                c for c, combo in actions.items()
+                if combo.get().startswith("Remove Column")
+            ]
+            if to_drop_cols:
+                df_handled_missing_values.drop(columns=to_drop_cols, inplace=True)
+
+            #showing the dataset preview after handling missing values
+            show_dataframe(df_handled_missing_values)
     
     #Next button
     next_button = ctk.CTkButton(top_frame, text="Next", font=("Arial", 12), command=apply_actions)
@@ -636,7 +645,6 @@ def step_4_Missing_values():
 
 
 #################################################################################################################################### 
-    
     
 
 main_menu()
