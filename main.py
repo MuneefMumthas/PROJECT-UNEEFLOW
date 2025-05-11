@@ -78,9 +78,27 @@ splash.after(1500, close_splash)
 
 ##########################################################################################
 
+#Method for main menu
+def main_menu():
+    
+    #Buttons
+    build_model_button = ctk.CTkButton(main_window, text="Build a Model", font=("Arial", 14), command=build_model_button_function, width=200, height=50)
+    build_model_button.pack(pady=(250,30))
+
+    test_model_button = ctk.CTkButton(main_window, text="Test a Model", font=("Arial", 14), command=None, width=200, height=50)
+    test_model_button.pack(pady=10)
+
+
+def back_to_main_menu():
+    #removing all widgets from the window
+    for widget in main_window.winfo_children():
+        widget.destroy()
+    
+    #showing the main menu
+    main_menu()
+
 
 #function for the build model button
-
 
 
 #STEP 1: Importing the dataset
@@ -107,7 +125,9 @@ def build_model_button_function():
     import_json_button = ctk.CTkButton(main_window, text="Import JSON", font=("Arial", 16), command=import_json, width=180, height=40)
     import_json_button.place(relx=0.5, rely=0.45, anchor="center")
 
-
+    #back button
+    back_button = ctk.CTkButton(main_window, text="Back", font=("Arial", 16), command=back_to_main_menu, width=100, height=40)
+    back_button.place(relx=0.5, rely=0.55, anchor="center")
 
 
 
@@ -619,13 +639,6 @@ def step_4_Missing_values():
     
     
 
-#Buttons
-build_model_button = ctk.CTkButton(main_window, text="Build a Model", font=("Arial", 14), command=build_model_button_function, width=200, height=50)
-build_model_button.pack(pady=(250,30))
-
-test_model_button = ctk.CTkButton(main_window, text="Test a Model", font=("Arial", 14), command=None, width=200, height=50)
-test_model_button.pack(pady=10)
-
-
+main_menu()
 #running the main window
 main_window.mainloop()
