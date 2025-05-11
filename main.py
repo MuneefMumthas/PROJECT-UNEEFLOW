@@ -96,8 +96,20 @@ def build_model_button_function():
     step1_label.pack(pady=20)
 
     #import csv button
-    import_csv_button = ctk.CTkButton(main_window, text="Import CSV", font=("Arial", 14), command=import_csv)
-    import_csv_button.place(relx=0.5, rely=0.15, anchor="center")
+    import_csv_button = ctk.CTkButton(main_window, text="Import CSV", font=("Arial", 16), command=import_csv, width=180, height=40)
+    import_csv_button.place(relx=0.5, rely=0.25, anchor="center")
+
+    #import excel button
+    import_excel_button = ctk.CTkButton(main_window, text="Import Excel", font=("Arial", 16), command=import_excel, width=180, height=40)
+    import_excel_button.place(relx=0.5, rely=0.35, anchor="center")
+
+    #import json button
+    import_json_button = ctk.CTkButton(main_window, text="Import JSON", font=("Arial", 16), command=import_json, width=180, height=40)
+    import_json_button.place(relx=0.5, rely=0.45, anchor="center")
+
+
+
+
 
 #Importing csv files
 def import_csv():
@@ -114,6 +126,50 @@ def import_csv():
     try:
         #read CSV file
         df = pd.read_csv(file_path)
+
+        #calling the function to display the dataframe
+        show_dataframe(df)
+
+    except Exception as e:
+        messagebox.showerror("Error", f"Failed to load file: {e}")
+
+#Importing excel files
+def import_excel():
+
+    global df
+
+    global current_step
+    current_step = "step 1"
+
+    file_path = filedialog.askopenfilename(filetypes=[("Excel files", "*.xlsx")])
+    if not file_path:
+        return
+
+    try:
+        #read excel file
+        df = pd.read_excel(file_path, sheet_name=0, engine="openpyxl")
+
+        #calling the function to display the dataframe
+        show_dataframe(df)
+
+    except Exception as e:
+        messagebox.showerror("Error", f"Failed to load file: {e}")
+
+#Importing json files
+def import_json():
+
+    global df
+
+    global current_step
+    current_step = "step 1"
+
+    file_path = filedialog.askopenfilename(filetypes=[("JSON files", "*.json")])
+    if not file_path:
+        return
+
+    try:
+        #read json file
+        df = pd.read_json(file_path, orient="records")
 
         #calling the function to display the dataframe
         show_dataframe(df)
@@ -564,10 +620,10 @@ def step_4_Missing_values():
     
 
 #Buttons
-build_model_button = ctk.CTkButton(main_window, text="Build a Model", font=("Arial", 14), command=build_model_button_function)
-build_model_button.pack(pady=10)
+build_model_button = ctk.CTkButton(main_window, text="Build a Model", font=("Arial", 14), command=build_model_button_function, width=200, height=50)
+build_model_button.pack(pady=(250,30))
 
-test_model_button = ctk.CTkButton(main_window, text="Test a Model", font=("Arial", 14), command=None)
+test_model_button = ctk.CTkButton(main_window, text="Test a Model", font=("Arial", 14), command=None, width=200, height=50)
 test_model_button.pack(pady=10)
 
 
