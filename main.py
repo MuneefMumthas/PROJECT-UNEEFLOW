@@ -338,6 +338,10 @@ def step_2_select_target_variable():
     step2_label = ctk.CTkLabel(top_frame, text="Step 2: Select Target Variable", font=("Arial", 16, "bold"))
     step2_label.pack(side="left", expand=True)
 
+    #next button
+    next_button = ctk.CTkButton(top_frame, text="Next", font=("Arial", 12), command=None)
+    next_button.pack(side="right", padx=10)
+
     #dropdown selection for the target variable
     dropdown_frame = ctk.CTkFrame(main_window)
     dropdown_frame.pack(pady=20)
@@ -363,9 +367,7 @@ def step_2_select_target_variable():
         print(f"Selected Target Variable: {selected_target_variable}")
         step_3_select_input_variables()
 
-    #next button
-    next_button = ctk.CTkButton(top_frame, text="Next", font=("Arial", 12), command=save_selected_target_var)
-    next_button.pack(side="right", padx=10)
+    next_button.configure(command=save_selected_target_var)
 #################################################################################################################################### 
 
 
@@ -397,15 +399,16 @@ def step_3_select_input_variables():
     table_label = ctk.CTkLabel(top_frame, text="Step 3: Select Input Variables", font=("Arial", 16, "bold"))
     table_label.pack(side="left", expand=True)
 
-    #displaying the columns except the target variable
+    #Next button
+    next_button = ctk.CTkButton(top_frame, text="Next", font=("Arial", 12), command=None)
+    next_button.pack(side="right", padx=10)
 
+    #displaying the columns except the target variable
     selected_columns = {col: tk.BooleanVar(value=True) for col in df.columns if col != selected_target_variable}
 
-    
-    #middle fram for content
+    #middle frame for content
     middle_frame = ctk.CTkFrame(main_window, fg_color="gray10")
     middle_frame.pack(pady=40)
-
 
     scroll_frame = ctk.CTkScrollableFrame(middle_frame, width=700, height=600, fg_color="gray10")
     scroll_frame.pack(padx=10, pady=10, fill="both", expand=True)
@@ -447,9 +450,7 @@ def step_3_select_input_variables():
             #allow user to modify selection
             return
         
-    #Next button
-    next_button = ctk.CTkButton(top_frame, text="Next", font=("Arial", 12), command=save_selected_columns_df)
-    next_button.pack(side="right", padx=10)
+    next_button.configure(command=save_selected_columns_df)
 #################################################################################################################################### 
 
 
@@ -480,6 +481,10 @@ def step_4_Missing_values():
     #heading lable
     table_label = ctk.CTkLabel(top_frame, text="Step 4: Handling Missing Values", font=("Arial", 16, "bold"))
     table_label.pack(side="left", expand=True)
+
+    #Next button
+    next_button = ctk.CTkButton(top_frame, text="Next", font=("Arial", 12), command=None)
+    next_button.pack(side="right", padx=10)
 
     #middle fram for content
     middle_frame = ctk.CTkFrame(main_window, fg_color="gray10")
@@ -573,8 +578,11 @@ def step_4_Missing_values():
     total_missing = df_selected.isnull().sum().sum()
 
     #showcasing the missing values only if there are any
-    if total_missing > 0:
-        total_missing_label = ctk.CTkLabel(middle_frame, text=f"Total Missing Values: {total_missing}", font=("Arial", 16), text_color="white")
+    if total_missing == 0:
+        total_missing_label = ctk.CTkLabel(middle_frame, text="Click Next to continue", font=("Arial", 18), text_color="white")
+        total_missing_label.pack(pady=10)
+    else:
+        total_missing_label = ctk.CTkLabel(middle_frame, text=f"Total Missing Values: {total_missing}", font=("Arial", 18), text_color="white")
         total_missing_label.pack(pady=10)
 
     def apply_actions():
@@ -638,12 +646,7 @@ def step_4_Missing_values():
             #showing the dataset preview after handling missing values
             show_dataframe(df_handled_missing_values)
     
-    #Next button
-    next_button = ctk.CTkButton(top_frame, text="Next", font=("Arial", 12), command=apply_actions)
-    next_button.pack(side="right", padx=10)
-
-
-
+    next_button.configure(command=apply_actions)
 #################################################################################################################################### 
     
 
