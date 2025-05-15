@@ -345,7 +345,7 @@ def step_2_select_target_variable():
     #removing the existing widgets from the screen
     for widget in main_window.winfo_children():
         widget.destroy()
-
+    
     top_frame = ctk.CTkFrame(main_window, fg_color="gray10")
     top_frame.pack(fill="x", pady=10)
 
@@ -406,7 +406,20 @@ def step_3_select_input_variables():
     for widget in main_window.winfo_children():
         widget.destroy()
 
-    top_frame = ctk.CTkFrame(main_window, fg_color="gray10")
+    #loading frame
+    loading_frame = ctk.CTkFrame(main_window, fg_color="gray10")
+    loading_frame.pack(fill="both", expand=True)
+
+    loading_label = ctk.CTkLabel(loading_frame, text="Loading...", font=("Arial", 20, "bold"), text_color="white")
+    loading_label.pack(pady=40)
+
+    #creating a frame for the entire section
+    entire_inputvariables_section = ctk.CTkFrame(main_window, fg_color="gray10")
+    
+    #forgetting the section to show only after all the widgets are created
+    entire_inputvariables_section.pack_forget()
+
+    top_frame = ctk.CTkFrame(entire_inputvariables_section, fg_color="gray10")
     top_frame.pack(fill="x", pady=10)
 
 
@@ -426,7 +439,7 @@ def step_3_select_input_variables():
     selected_columns = {col: tk.BooleanVar(value=True) for col in df.columns if col != selected_target_variable}
 
     #middle frame for content
-    middle_frame = ctk.CTkFrame(main_window, fg_color="gray10")
+    middle_frame = ctk.CTkFrame(entire_inputvariables_section, fg_color="gray10")
     middle_frame.pack(pady=40)
 
     scroll_frame = ctk.CTkScrollableFrame(middle_frame, width=700, height=600, fg_color="gray10")
@@ -494,6 +507,9 @@ def step_3_select_input_variables():
             return
         
     next_button.configure(command=save_selected_columns_df)
+
+    loading_frame.pack_forget()
+    entire_inputvariables_section.pack(fill="both", expand=True)
 #################################################################################################################################### 
 
 
