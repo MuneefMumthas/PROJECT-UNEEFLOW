@@ -229,7 +229,15 @@ def show_dataframe(current_df):
     for widget in main_window.winfo_children():
         widget.destroy()
 
-    top_frame = ctk.CTkFrame(main_window, fg_color="gray10")
+
+    #creating a frame for the entire dataframe section
+    entire_showdataframe_section = ctk.CTkFrame(main_window, fg_color="gray10")
+    entire_showdataframe_section.pack(fill="both")
+    
+    #forgetting the section to show only after all the widgets are created
+    entire_showdataframe_section.pack_forget()
+
+    top_frame = ctk.CTkFrame(entire_showdataframe_section, fg_color="gray10")
     top_frame.pack(fill="x", pady=10)
 
     #back button
@@ -245,7 +253,7 @@ def show_dataframe(current_df):
     next_button.pack(side="right", padx=10)
 
     #container for the table
-    container = ctk.CTkFrame(main_window, fg_color="gray10")
+    container = ctk.CTkFrame(entire_showdataframe_section, fg_color="gray10")
     container.pack(fill="both", expand=True, padx=10, pady=10)
 
     #creating the table view using tksheet
@@ -298,7 +306,7 @@ def show_dataframe(current_df):
         sheet.set_column_widths(new_widths)
 
     #dataset summary section
-    summary_frame = ctk.CTkFrame(main_window, fg_color="gray10")
+    summary_frame = ctk.CTkFrame(entire_showdataframe_section, fg_color="gray10")
     summary_frame.pack(fill="x", pady=10)
 
     #calculating the statistics
@@ -310,6 +318,10 @@ def show_dataframe(current_df):
     summary_text = f"📊 Rows: {num_rows}   |   📌 Columns: {num_columns}   |   ❗ Missing Values: {missing_values}"
     summary_label = ctk.CTkLabel(summary_frame, text=summary_text, font=("Arial", 16), text_color="white", padx=10, pady=5)
     summary_label.pack()
+
+    
+    #showing the entire dataframe section after all the widgets are created
+    entire_showdataframe_section.pack(fill="both", expand=True)
 #################################################################################################################################### 
 
 
