@@ -239,7 +239,6 @@ def show_dataframe(current_df):
 
     #creating a frame for the entire dataframe section
     entire_showdataframe_section = ctk.CTkFrame(main_window, fg_color="gray10")
-    entire_showdataframe_section.pack(fill="both")
     
     #forgetting the section to show only after all the widgets are created
     entire_showdataframe_section.pack_forget()
