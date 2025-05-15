@@ -426,6 +426,30 @@ def step_3_select_input_variables():
         checkbox = ctk.CTkCheckBox(scroll_frame, text=col, variable=var)
         checkbox.grid(column=0, sticky="w", pady=10, padx=50)
 
+    #creatting a segmented button for select all and deselect all
+    select_all_button = ctk.CTkSegmentedButton(scroll_frame, values=["✅", "❎"], command=None)
+    select_all_button.grid(row=0, column=1, padx=10, pady=10)
+
+    #function for selecting/deselecting all checkboxes
+    def selection_command(value):
+        
+        if value == "✅":
+            #select all checkboxes
+            for var in selected_columns.values():
+                var.set(True)
+
+            #setting the segmented button to None to reuse it
+            select_all_button.set(None)
+
+        elif value == "❎":
+            #deselect all checkboxes
+            for var in selected_columns.values():
+                var.set(False)
+
+            select_all_button.set(None)
+
+    select_all_button.configure(command=selection_command)
+
     def save_selected_columns_df():
 
         global df
