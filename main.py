@@ -229,6 +229,13 @@ def show_dataframe(current_df):
     for widget in main_window.winfo_children():
         widget.destroy()
 
+    #loading frame to show while the entire dataframe section is being created
+    #this is done to avoid flickering of the screen
+    loading_frame = ctk.CTkFrame(main_window, fg_color="gray10")
+    loading_frame.pack(fill="both", expand=True)
+
+    loading_label = ctk.CTkLabel(loading_frame, text="Loading...", font=("Arial", 20, "bold"), text_color="white")
+    loading_label.pack(pady=40)
 
     #creating a frame for the entire dataframe section
     entire_showdataframe_section = ctk.CTkFrame(main_window, fg_color="gray10")
@@ -319,7 +326,8 @@ def show_dataframe(current_df):
     summary_label = ctk.CTkLabel(summary_frame, text=summary_text, font=("Arial", 16), text_color="white", padx=10, pady=5)
     summary_label.pack()
 
-    
+    #forget
+    loading_frame.pack_forget()
     #showing the entire dataframe section after all the widgets are created
     entire_showdataframe_section.pack(fill="both", expand=True)
 #################################################################################################################################### 
