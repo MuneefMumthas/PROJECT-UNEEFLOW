@@ -530,7 +530,21 @@ def step_4_Missing_values():
     for widget in main_window.winfo_children():
         widget.destroy()
 
-    top_frame = ctk.CTkFrame(main_window, fg_color="gray10")
+    #loading frame
+    loading_frame = ctk.CTkFrame(main_window, fg_color="gray10")
+    loading_frame.pack(fill="both", expand=True)
+
+    loading_label = ctk.CTkLabel(loading_frame, text="Loading...", font=("Arial", 20, "bold"), text_color="white")
+    loading_label.pack(pady=40)
+
+    #creating a frame for the entire section
+    
+    entire_missingvalues_section = ctk.CTkFrame(main_window, fg_color="gray10")
+    
+    #forgetting the section to show only after all the widgets are created
+    entire_missingvalues_section.pack_forget()
+
+    top_frame = ctk.CTkFrame(entire_missingvalues_section, fg_color="gray10")
     top_frame.pack(fill="x", pady=10)
 
     #back button
@@ -546,7 +560,7 @@ def step_4_Missing_values():
     next_button.pack(side="right", padx=10)
 
     #middle fram for content
-    middle_frame = ctk.CTkFrame(main_window, fg_color="gray10")
+    middle_frame = ctk.CTkFrame(entire_missingvalues_section, fg_color="gray10")
     middle_frame.pack(pady=30)
 
     scroll_frame = ctk.CTkScrollableFrame(middle_frame, width=700, height=500, fg_color="transparent")
@@ -706,6 +720,9 @@ def step_4_Missing_values():
             show_dataframe(df_handled_missing_values)
     
     next_button.configure(command=apply_actions)
+
+    loading_frame.pack_forget()
+    entire_missingvalues_section.pack(fill="both", expand=True)
 #################################################################################################################################### 
     
 
