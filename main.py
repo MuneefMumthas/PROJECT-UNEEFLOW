@@ -9,6 +9,7 @@ from customtkinter import CTkImage
 import customtkinter as ctk
 from pandas.api.types import is_numeric_dtype
 from tksheet import Sheet
+from CTkScrollableDropdown import *
 
 ctypes.windll.shcore.SetProcessDpiAwareness(2)
 
@@ -299,18 +300,6 @@ def show_dataframe(current_df):
     #applying width based on the content of the column first
     sheet.set_column_widths(col_widths)
 
-    #updating the column tasks to get the available width of the container
-    #and then distributing the extra width equally among all columns
-    #this is done to make sure that the table fits the container and looks good
-    #even if the content is not too long
-    container.update_idletasks()
-    avail = container.winfo_width()
-    used  = sum(col_widths)
-    extra = max(0, avail - used) // len(col_widths)
-    if extra > 0:
-        new_widths = [w + extra for w in col_widths]
-        sheet.set_column_widths(new_widths)
-
     #dataset summary section
     summary_frame = ctk.CTkFrame(entire_showdataframe_section, fg_color="gray10")
     summary_frame.pack(fill="x", pady=10)
@@ -329,6 +318,18 @@ def show_dataframe(current_df):
     loading_frame.pack_forget()
     #showing the entire dataframe section after all the widgets are created
     entire_showdataframe_section.pack(fill="both", expand=True)
+
+    #updating the column tasks to get the available width of the container
+    #and then distributing the extra width equally among all columns
+    #this is done to make sure that the table fits the container and looks good
+    #even if the content is not too long
+    container.update_idletasks()
+    avail = container.winfo_width()
+    used  = sum(col_widths)
+    extra = max(0, avail - used) // len(col_widths)
+    if extra > 0:
+        new_widths = [w + extra for w in col_widths]
+        sheet.set_column_widths(new_widths)
 #################################################################################################################################### 
 
 
@@ -346,7 +347,21 @@ def step_2_select_target_variable():
     for widget in main_window.winfo_children():
         widget.destroy()
     
-    top_frame = ctk.CTkFrame(main_window, fg_color="gray10")
+    #loading frame to show while the section is being created
+    #this is done to avoid flickering of the screen/ delay
+    loading_frame = ctk.CTkFrame(main_window, fg_color="gray10")
+    loading_frame.pack(fill="both", expand=True)
+
+    loading_label = ctk.CTkLabel(loading_frame, text="Loading...", font=("Arial", 20, "bold"), text_color="white")
+    loading_label.pack(pady=40)
+
+    #creating a frame for the entire dataframe section
+    entire_targetvar_section = ctk.CTkFrame(main_window, fg_color="gray10")
+    
+    #forgetting the section to show only after all the widgets are created
+    entire_targetvar_section.pack_forget()
+
+    top_frame = ctk.CTkFrame(entire_targetvar_section, fg_color="gray10")
     top_frame.pack(fill="x", pady=10)
 
     #back button to return to Step 1
@@ -362,14 +377,21 @@ def step_2_select_target_variable():
     next_button.pack(side="right", padx=10)
 
     #dropdown selection for the target variable
-    dropdown_frame = ctk.CTkFrame(main_window)
-    dropdown_frame.pack(pady=20)
+    dropdown_frame = ctk.CTkFrame(entire_targetvar_section, fg_color="gray10")
+    dropdown_frame.pack(pady=50)
 
-    ctk.CTkLabel(dropdown_frame, text="Select Target Variable:", font=("Arial", 12)).pack(side="left", padx=10)
+    ctk.CTkLabel(dropdown_frame, text="Select Target Variable:", font=("Arial", 16), text_color="white").pack(side="left", padx=10)
 
+    values=list(df.columns)
     target_variable = ctk.StringVar()
-    target_dropdown = ctk.CTkComboBox(dropdown_frame, variable=target_variable, values=list(df.columns), state="readonly")
+    target_dropdown = ctk.CTkComboBox(dropdown_frame, variable=target_variable, state="readonly", corner_radius=30, font=("Arial", 14), justify="center", width=180)
     target_dropdown.pack(side="left")
+
+    #attaching the scrollable dropdown to the combo box
+    CTkScrollableDropdown(target_dropdown, values=values, justify="left", button_color="transparent")
+
+    #adjusting the internal entry’s grid padding
+    target_dropdown._entry.grid_configure(padx=(10,45))
 
     #function to store selection when "Next" is clicked
     def save_selected_target_var():
@@ -387,6 +409,11 @@ def step_2_select_target_variable():
         step_3_select_input_variables()
 
     next_button.configure(command=save_selected_target_var)
+
+    #forget
+    loading_frame.pack_forget()
+    #showing the entire section after all the widgets are created
+    entire_targetvar_section.pack(fill="both", expand=True)
 #################################################################################################################################### 
 
 
