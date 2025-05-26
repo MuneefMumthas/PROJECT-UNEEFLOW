@@ -10,6 +10,13 @@ import customtkinter as ctk
 from pandas.api.types import is_numeric_dtype
 from tksheet import Sheet
 from CTkScrollableDropdown import *
+from tkinterweb import HtmlFrame
+from ydata_profiling import ProfileReport
+import threading, webview
+import tempfile
+import os
+from pathlib import Path
+
 
 ctypes.windll.shcore.SetProcessDpiAwareness(2)
 
@@ -263,6 +270,7 @@ def show_dataframe(current_df):
     container = ctk.CTkFrame(entire_showdataframe_section, fg_color="gray10")
     container.pack(fill="both", expand=True, padx=10, pady=10)
 
+    
     #creating the table view using tksheet
     sheet = Sheet(
         container,
@@ -304,6 +312,10 @@ def show_dataframe(current_df):
     summary_frame = ctk.CTkFrame(entire_showdataframe_section, fg_color="gray10")
     summary_frame.pack(fill="x", pady=10)
 
+    #data profile report button
+    data_profile_button = ctk.CTkButton(summary_frame, text="Profile Report", font=("Arial", 14), command=None)
+    data_profile_button.pack(side="right", padx=10)
+
     #calculating the statistics
     num_rows = current_df.shape[0] 
     num_columns = current_df.shape[1] 
@@ -313,6 +325,42 @@ def show_dataframe(current_df):
     summary_text = f"📊 Rows: {num_rows}   |   📌 Columns: {num_columns}   |   ❗ Missing Values: {missing_values}"
     summary_label = ctk.CTkLabel(summary_frame, text=summary_text, font=("Arial", 16), text_color="white", padx=10, pady=5)
     summary_label.pack()
+
+    
+    ##############################################
+    #ydata profiling report section
+
+    #creating the profile report for the current dataframe
+    profile = ProfileReport(current_df, explorative=True, title="UneeFlow Data Profile Report", )
+    
+
+    #saving it to a temporary file as the size of the report can be large
+    #and we don't want to keep it in memory
+    tmp_dir  = tempfile.mkdtemp(prefix="uneeflow_profile_")
+
+    html_path = os.path.join(tmp_dir, "report.html")
+
+
+    profile.to_file(html_path)
+
+    #creating a file URI for the HTML report to open in webview
+    global uri
+    uri = Path(html_path).absolute().as_uri()  
+
+    #function to open the webview in a new window
+    def open_webview():
+
+        webview.create_window(
+            "UneeFlow",
+            url=uri,
+            width=1920,
+            height=1080
+        )
+        webview.start(gui="tk")
+    
+    data_profile_button.configure(command=open_webview)
+
+    ##############################################
 
     #forget
     loading_frame.pack_forget()
