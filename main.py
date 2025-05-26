@@ -1,7 +1,6 @@
 import ctypes
 import tkinter as tk
 from tkinter import filedialog, messagebox
-import time
 from PIL import Image, ImageTk
 import pandas as pd
 from tkinter import ttk
@@ -12,7 +11,7 @@ from tksheet import Sheet
 from CTkScrollableDropdown import *
 from tkinterweb import HtmlFrame
 from ydata_profiling import ProfileReport
-import threading, webview
+import webview
 import tempfile
 import os
 from pathlib import Path
@@ -314,7 +313,7 @@ def show_dataframe(current_df):
 
     #data profile report button
     data_profile_button = ctk.CTkButton(summary_frame, text="Profile Report", font=("Arial", 14), command=None)
-    data_profile_button.pack(side="right", padx=10)
+    data_profile_button.pack()
 
     #calculating the statistics
     num_rows = current_df.shape[0] 
@@ -322,16 +321,16 @@ def show_dataframe(current_df):
     missing_values = current_df.isnull().sum().sum() 
 
     #displaying the summary
-    summary_text = f"📊 Rows: {num_rows}   |   📌 Columns: {num_columns}   |   ❗ Missing Values: {missing_values}"
-    summary_label = ctk.CTkLabel(summary_frame, text=summary_text, font=("Arial", 16), text_color="white", padx=10, pady=5)
-    summary_label.pack()
+    #summary_text = f"📊 Rows: {num_rows}   |   📌 Columns: {num_columns}   |   ❗ Missing Values: {missing_values}"
+    #summary_label = ctk.CTkLabel(summary_frame, text=summary_text, font=("Arial", 16), text_color="white", padx=10, pady=5)
+    #summary_label.pack()
 
     
     ##############################################
     #ydata profiling report section
 
     #creating the profile report for the current dataframe
-    profile = ProfileReport(current_df, explorative=True, title="UneeFlow Data Profile Report", )
+    profile = ProfileReport(current_df, explorative=True, title="UneeFlow Data Profile Report", progress_bar=False)
     
 
     #saving it to a temporary file as the size of the report can be large
@@ -354,9 +353,11 @@ def show_dataframe(current_df):
             "UneeFlow",
             url=uri,
             width=1920,
-            height=1080
+            height=1080,
         )
-        webview.start(gui="tk")
+
+
+        webview.start()
     
     data_profile_button.configure(command=open_webview)
 
