@@ -11,10 +11,12 @@ from tksheet import Sheet
 from CTkScrollableDropdown import *
 from tkinterweb import HtmlFrame
 from ydata_profiling import ProfileReport
-import webview
 import tempfile
 import os
 from pathlib import Path
+import webbrowser
+import base64
+import shutil
 
 
 ctypes.windll.shcore.SetProcessDpiAwareness(2)
@@ -268,7 +270,6 @@ def show_dataframe(current_df):
     #container for the table
     container = ctk.CTkFrame(entire_showdataframe_section, fg_color="gray10")
     container.pack(fill="both", expand=True, padx=10, pady=10)
-
     
     #creating the table view using tksheet
     sheet = Sheet(
@@ -330,7 +331,18 @@ def show_dataframe(current_df):
     #ydata profiling report section
 
     #creating the profile report for the current dataframe
-    profile = ProfileReport(current_df, explorative=True, title="UneeFlow Data Profile Report", progress_bar=False)
+    profile = ProfileReport(current_df, title="Data Profile Report", explorative=True, progress_bar=False,
+                            correlations={
+                                "auto": {"calculate":True},
+                                "pearson": {"calculate":True},
+                                "spearman": {"calculate":True},
+                                "kendall": {"calculate":True},
+                                "phi_k": {"calculate":True},
+                                "cramers": {"calculate":True},
+                            }, 
+                            config_file="config_default.yaml"
+                            )
+    
     
 
     #saving it to a temporary file as the size of the report can be large
@@ -339,27 +351,23 @@ def show_dataframe(current_df):
 
     html_path = os.path.join(tmp_dir, "report.html")
 
-
+    profile.to_widgets
     profile.to_file(html_path)
+    
 
-    #creating a file URI for the HTML report to open in webview
+
+    #creating a file URI for the HTML report
     global uri
     uri = Path(html_path).absolute().as_uri()  
 
-    #function to open the webview in a new window
-    def open_webview():
 
-        webview.create_window(
-            "UneeFlow",
-            url=uri,
-            width=1920,
-            height=1080,
-        )
+    #function to open the html report in a web browser
+    def open_profile_report():
 
+        webbrowser.open(uri)
 
-        webview.start()
     
-    data_profile_button.configure(command=open_webview)
+    data_profile_button.configure(command=open_profile_report)
 
     ##############################################
 
