@@ -354,7 +354,11 @@ def show_dataframe(current_df):
     profile.to_widgets
     profile.to_file(html_path)
     
-
+    #copying the logo to the temporary directory to display it in the report
+    logo_src_path = 'UNEE FLOW LOGO.png'
+    logo_filename = Path(logo_src_path).name
+    logo_dst_path = os.path.join(tmp_dir, logo_filename)
+    shutil.copy2(logo_src_path, logo_dst_path)
 
     #creating a file URI for the HTML report
     global uri
