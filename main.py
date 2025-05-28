@@ -271,6 +271,9 @@ def show_dataframe(current_df):
     #container for the table
     container = ctk.CTkFrame(entire_showdataframe_section, fg_color="gray10")
     container.pack(fill="both", expand=True, padx=10, pady=10)
+
+    #disabling the pack propagation to avoid resizing issues
+    container.pack_propagate(False)
     
     #creating the table view using tksheet
     sheet = Sheet(
@@ -315,7 +318,7 @@ def show_dataframe(current_df):
 
     #data profile report button
     data_profile_button = ctk.CTkButton(summary_frame, text="Profile Report", font=("Arial", 14), command=None)
-    data_profile_button.pack()
+    data_profile_button.pack(pady=(5,15))
 
     #calculating the statistics
     num_rows = current_df.shape[0] 
@@ -380,8 +383,12 @@ def show_dataframe(current_df):
         
         #hiding the button and showing the progress bar
         data_profile_button.pack_forget()
-        progress_bar.pack(pady=10)
+        progress_bar.pack(pady=(15,25))
         progress_bar.start()
+
+        #disabling navigation buttons to avoid glitching
+        back_button.configure(state="disabled")
+        next_button.configure(state="disabled")
 
         #creating a new thread to run the profiling report generation
         #this is done to avoid blocking the main thread and keep the UI responsive
@@ -402,7 +409,11 @@ def show_dataframe(current_df):
 
         #changing the button text and command to open the report
         data_profile_button.configure(text="View Profile Report", command=open_profile_report)
-        data_profile_button.pack(pady=10)
+        data_profile_button.pack(pady=(5,15))
+
+        #re-enabling the navigation buttons
+        back_button.configure(state="normal")
+        next_button.configure(state="normal")
     
     data_profile_button.configure(command=profile_report_button)
 
