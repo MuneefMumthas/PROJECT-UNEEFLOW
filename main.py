@@ -17,6 +17,7 @@ from pathlib import Path
 import webbrowser
 import base64
 import shutil
+import threading
 
 
 ctypes.windll.shcore.SetProcessDpiAwareness(2)
@@ -329,49 +330,81 @@ def show_dataframe(current_df):
     
     ##############################################
     #ydata profiling report section
-
-    #creating the profile report for the current dataframe
-    profile = ProfileReport(current_df, title="Data Profile Report", explorative=True, progress_bar=False,
-                            correlations={
-                                "auto": {"calculate":True},
-                                "pearson": {"calculate":True},
-                                "spearman": {"calculate":True},
-                                "kendall": {"calculate":True},
-                                "phi_k": {"calculate":True},
-                                "cramers": {"calculate":True},
-                            }, 
-                            config_file="config_default.yaml"
-                            )
     
-    
+    def create_profile_report():
+        #creating the profile report for the current dataframe
+        profile = ProfileReport(current_df, title="Data Profile Report", explorative=True, progress_bar=False,
+                                correlations={
+                                    "auto": {"calculate":True},
+                                    "pearson": {"calculate":True},
+                                    "spearman": {"calculate":True},
+                                    "kendall": {"calculate":True},
+                                    "phi_k": {"calculate":True},
+                                    "cramers": {"calculate":True},
+                                }, 
+                                config_file="config_default.yaml"
+                                )
+        
+        
 
-    #saving it to a temporary file as the size of the report can be large
-    #and we don't want to keep it in memory
-    tmp_dir  = tempfile.mkdtemp(prefix="uneeflow_profile_")
+        #saving it to a temporary file as the size of the report can be large
+        #and we don't want to keep it in memory
+        tmp_dir  = tempfile.mkdtemp(prefix="uneeflow_profile_")
 
-    html_path = os.path.join(tmp_dir, "report.html")
+        html_path = os.path.join(tmp_dir, "report.html")
 
-    profile.to_widgets
-    profile.to_file(html_path)
-    
-    #copying the logo to the temporary directory to display it in the report
-    logo_src_path = 'UNEE FLOW LOGO.png'
-    logo_filename = Path(logo_src_path).name
-    logo_dst_path = os.path.join(tmp_dir, logo_filename)
-    shutil.copy2(logo_src_path, logo_dst_path)
+        profile.to_widgets
+        profile.to_file(html_path)
+        
+        #copying the logo to the temporary directory to display it in the report
+        logo_src_path = 'UNEE FLOW LOGO.png'
+        logo_filename = Path(logo_src_path).name
+        logo_dst_path = os.path.join(tmp_dir, logo_filename)
+        shutil.copy2(logo_src_path, logo_dst_path)
 
-    #creating a file URI for the HTML report
-    global uri
-    uri = Path(html_path).absolute().as_uri()  
+        #creating a file URI for the HTML report
+        global uri
+        uri = Path(html_path).absolute().as_uri()  
 
 
     #function to open the html report in a web browser
     def open_profile_report():
-
+        
         webbrowser.open(uri)
-
     
-    data_profile_button.configure(command=open_profile_report)
+    progress_bar = ctk.CTkProgressBar(summary_frame, mode="indeterminate", width=200)
+    
+    data_profile_button.configure(text="Generate Profile Report")
+
+    def profile_report_button():
+        
+        #hiding the button and showing the progress bar
+        data_profile_button.pack_forget()
+        progress_bar.pack(pady=10)
+        progress_bar.start()
+
+        #creating a new thread to run the profiling report generation
+        #this is done to avoid blocking the main thread and keep the UI responsive
+        def report_generator():
+            try:
+                create_profile_report()
+            finally:
+                #back on the main thread
+                main_window.after(0, profile_done)
+
+        threading.Thread(target=report_generator, daemon=True).start()
+
+    def profile_done():
+
+        #stopping and hiding the progress bar
+        progress_bar.stop()
+        progress_bar.pack_forget()
+
+        #changing the button text and command to open the report
+        data_profile_button.configure(text="View Profile Report", command=open_profile_report)
+        data_profile_button.pack(pady=10)
+    
+    data_profile_button.configure(command=profile_report_button)
 
     ##############################################
 
