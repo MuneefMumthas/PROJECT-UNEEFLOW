@@ -336,20 +336,9 @@ def show_dataframe(current_df):
     
     def create_profile_report():
         #creating the profile report for the current dataframe
-        profile = ProfileReport(current_df, title="Data Profile Report", explorative=True, progress_bar=False,
-                                correlations={
-                                    "auto": {"calculate":True},
-                                    "pearson": {"calculate":True},
-                                    "spearman": {"calculate":True},
-                                    "kendall": {"calculate":True},
-                                    "phi_k": {"calculate":True},
-                                    "cramers": {"calculate":True},
-                                }, 
-                                config_file="config_default.yaml"
-                                )
+        profile = ProfileReport(current_df, title="Data Profile Report", explorative=True, progress_bar=False, config_file="config_default.yaml")
         
         
-
         #saving it to a temporary file as the size of the report can be large
         #and we don't want to keep it in memory
         tmp_dir  = tempfile.mkdtemp(prefix="uneeflow_profile_")
