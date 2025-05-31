@@ -139,12 +139,16 @@ def build_model_button_function():
     back_button = ctk.CTkButton(main_window, text="Back", font=("Arial", 16), command=back_to_main_menu, width=100, height=40)
     back_button.place(relx=0.5, rely=0.55, anchor="center")
 
+#saved actions dictionary for handling missing values
+saved_actions = {} 
 
+#this is used to track coloumns that have been processed in previously
+prev_columns = None
 
 #Importing csv files
 def import_csv():
 
-    global df
+    global df,  saved_actions
 
     global current_step
     current_step = "step 1"
@@ -159,6 +163,8 @@ def import_csv():
 
         #calling the function to display the dataframe
         show_dataframe(df)
+        #clearing the saved actions as the dataframe has changed
+        saved_actions.clear()
 
     except Exception as e:
         messagebox.showerror("Error", f"Failed to load file: {e}")
@@ -166,7 +172,7 @@ def import_csv():
 #Importing excel files
 def import_excel():
 
-    global df
+    global df, saved_actions
 
     global current_step
     current_step = "step 1"
@@ -181,6 +187,8 @@ def import_excel():
 
         #calling the function to display the dataframe
         show_dataframe(df)
+        #clearing the saved actions as the dataframe has changed
+        saved_actions.clear()
 
     except Exception as e:
         messagebox.showerror("Error", f"Failed to load file: {e}")
@@ -188,7 +196,7 @@ def import_excel():
 #Importing json files
 def import_json():
 
-    global df
+    global df, saved_actions
 
     global current_step
     current_step = "step 1"
@@ -203,6 +211,8 @@ def import_json():
 
         #calling the function to display the dataframe
         show_dataframe(df)
+        #clearing the saved actions as the dataframe has changed
+        saved_actions.clear()
 
     except Exception as e:
         messagebox.showerror("Error", f"Failed to load file: {e}")
@@ -636,20 +646,32 @@ def step_3_select_input_variables():
 
 
 #Step 4 - Handling Missing Values
+
+#this function is used to handle the change in the combo box selection
+# it saves the selected action for each column in the saved_actions dictionary
+def on_combo_change(col_name: str, combo: ctk.CTkComboBox):
+    saved_actions[col_name] = combo.get()
+
+
 #This function is used to handle missing values in the dataset for both numerical and categorical data
 #################################################################################################################################### 
 def step_4_Missing_values():
     
-    global df
-    global df_selected
-    global selected_target_variable
+    global df, df_selected, selected_target_variable, saved_actions, prev_columns, current_step
 
-    global current_step
     current_step = "step 4"
 
     #removing the existing widgets from the screen
     for widget in main_window.winfo_children():
         widget.destroy()
+
+    #removing the saved actions if the columns have changed
+    #this is done to avoid issues with the saved actions not matching the current columns
+    current_columns = list(df_selected.columns)
+    if prev_columns is None or set(current_columns) != set(prev_columns):
+        saved_actions.clear()
+
+    prev_columns = current_columns.copy()
 
     #loading frame
     loading_frame = ctk.CTkFrame(main_window, fg_color="gray10")
@@ -765,6 +787,12 @@ def step_4_Missing_values():
             #combo box for handling missing values
             combo = ctk.CTkComboBox(border_frame, values=options, state="readonly")
             combo.set("Choose Action")
+
+            if col in saved_actions and saved_actions[col] in options:
+                combo.set(saved_actions[col])
+
+            combo.configure(command=lambda val, c=col, cb=combo: on_combo_change(c, cb))
+
             combo.grid(row=0, column=2, sticky="w", padx=10, pady=5)
             actions[col] = combo
     
