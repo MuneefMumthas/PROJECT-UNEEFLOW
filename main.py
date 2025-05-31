@@ -326,20 +326,21 @@ def show_dataframe(current_df):
     summary_frame = ctk.CTkFrame(entire_showdataframe_section, fg_color="gray10")
     summary_frame.pack(fill="x", pady=10)
 
-    #data profile report button
-    data_profile_button = ctk.CTkButton(summary_frame, text="Profile Report", font=("Arial", 14), command=None)
-    data_profile_button.pack(pady=(5,15))
-
     #calculating the statistics
     num_rows = current_df.shape[0] 
     num_columns = current_df.shape[1] 
     missing_values = current_df.isnull().sum().sum() 
 
     #displaying the summary
-    #summary_text = f"📊 Rows: {num_rows}   |   📌 Columns: {num_columns}   |   ❗ Missing Values: {missing_values}"
-    #summary_label = ctk.CTkLabel(summary_frame, text=summary_text, font=("Arial", 16), text_color="white", padx=10, pady=5)
-    #summary_label.pack()
+    summary_text = f"📊 Rows: {num_rows}   |   📌 Columns: {num_columns}   |   ❗ Missing Values: {missing_values}"
+    summary_label = ctk.CTkLabel(summary_frame, text=summary_text, font=("Arial", 16), text_color="white", padx=10, pady=5)
+    summary_label.pack()
 
+    #data profile report button
+    data_profile_button = ctk.CTkButton(summary_frame, text="Generate Profile Report", font=("Arial", 14), command=None)
+    data_profile_button.pack(pady=(10,10))
+
+    progress_bar = ctk.CTkProgressBar(summary_frame, mode="indeterminate", width=200)
     
     ##############################################
     #ydata profiling report section
@@ -374,15 +375,12 @@ def show_dataframe(current_df):
         
         webbrowser.open(uri)
     
-    progress_bar = ctk.CTkProgressBar(summary_frame, mode="indeterminate", width=200)
-    
-    data_profile_button.configure(text="Generate Profile Report")
 
     def profile_report_button():
         
         #hiding the button and showing the progress bar
         data_profile_button.pack_forget()
-        progress_bar.pack(pady=(15,25))
+        progress_bar.pack(pady=(20,20))
         progress_bar.start()
 
         #disabling navigation buttons to avoid glitching
@@ -408,7 +406,7 @@ def show_dataframe(current_df):
 
         #changing the button text and command to open the report
         data_profile_button.configure(text="View Profile Report", command=open_profile_report)
-        data_profile_button.pack(pady=(5,15))
+        data_profile_button.pack(pady=(10,10))
 
         #re-enabling the navigation buttons
         back_button.configure(state="normal")
