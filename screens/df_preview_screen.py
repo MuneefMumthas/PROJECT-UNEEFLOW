@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
+from tkinter import filedialog
 from tksheet import Sheet
 from pandas.api.types import is_numeric_dtype
 from ydata_profiling import ProfileReport
@@ -10,6 +11,7 @@ import shutil
 import webbrowser
 from pathlib import Path
 import customtkinter as ctk
+
 
 import config
 
@@ -172,14 +174,14 @@ class DFPreviewScreen:
             shutil.copy2(logo_src_path, logo_dst_path)
 
             #creating a file URI for the HTML report
-            global uri
-            uri = Path(html_path).absolute().as_uri()  
+
+            config.uri = Path(html_path).absolute().as_uri()  
 
 
         #function to open the html report in a web browser
         def open_profile_report():
             
-            webbrowser.open(uri)
+            webbrowser.open(config.uri)
         
 
         def profile_report_button():
@@ -204,6 +206,39 @@ class DFPreviewScreen:
 
             threading.Thread(target=report_generator, daemon=True).start()
 
+        def save_profile_report():
+            
+            #deriving the temporary folder path from the saved URI
+            tmp_html_path = Path(config.uri.replace("file:///", ""))
+            tmp_dir = tmp_html_path.parent
+
+            #letting user choose a destination directory
+            destination_parent = filedialog.askdirectory(title="Select folder to save the profile report")
+            if not destination_parent:
+                return
+
+            #giving a name
+            folder_name = "UNEEFLOW Data Profile Report"
+            destination_folder = os.path.join(destination_parent, folder_name)
+
+            #error handling
+            try:
+                shutil.copytree(tmp_dir, destination_folder)
+                messagebox.showinfo("Success", f"Profile report saved to:\n{destination_folder}")
+            except FileExistsError:
+                overwrite = messagebox.askyesno(
+                    "Folder Exists",
+                    f"The folder '{folder_name}' already exists at the destination.\nDo you want to replace it?"
+                )
+                if overwrite:
+                    shutil.rmtree(destination_folder)
+                    shutil.copytree(tmp_dir, destination_folder)
+                    messagebox.showinfo("Success", f"Profile report overwritten at:\n{destination_folder}")
+                else:
+                    messagebox.showwarning("Cancelled", "Save operation was cancelled.")
+            except Exception as e:
+                messagebox.showerror("Error", f"Failed to save profile report:\n{e}")
+
         def profile_done():
 
             #stopping and hiding the progress bar
@@ -211,12 +246,27 @@ class DFPreviewScreen:
             progress_bar.pack_forget()
 
             #changing the button text and command to open the report
-            data_profile_button.configure(text="View Profile Report", command=open_profile_report)
-            data_profile_button.pack(pady=(10,10))
+            #data_profile_button.configure(text="View Profile Report", command=open_profile_report)
+            #data_profile_button.pack(pady=(10,10))
+
+            #save or view button
+            save_view_profile_button = ctk.CTkSegmentedButton(summary_frame, values=["Save Profile Report", "View Profile Report"], command=None, font=("Arial", 14), width=100)
+            save_view_profile_button.pack(pady=(10,10))
+
+            def save_view_selection_command(value):
+                if value == "View Profile Report":
+                    open_profile_report()
+                    save_view_profile_button.set(None)
+
+                elif value == "Save Profile Report":
+                    save_profile_report()
+                    save_view_profile_button.set(None)
 
             #re-enabling the navigation buttons
             back_button.configure(state="normal")
             next_button.configure(state="normal")
+
+            save_view_profile_button.configure(command=save_view_selection_command)
         
         data_profile_button.configure(command=profile_report_button)
 
