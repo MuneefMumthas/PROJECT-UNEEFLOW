@@ -153,7 +153,7 @@ class DFPreviewScreen:
         
         def create_profile_report():
             #creating the profile report for the current dataframe
-            profile = ProfileReport(current_df, title="Data Profile Report", explorative=True, progress_bar=False, config_file="config_default.yaml")
+            profile = ProfileReport(current_df, title="Data Profile Report", explorative=True, progress_bar=False, config_file=config.uneeflow_data_profile_config)
             
             
             #saving it to a temporary file as the size of the report can be large
@@ -166,7 +166,7 @@ class DFPreviewScreen:
             profile.to_file(html_path)
             
             #copying the logo to the temporary directory to display it in the report
-            logo_src_path = 'UNEE FLOW LOGO.png'
+            logo_src_path = config.uneeflow_logo
             logo_filename = Path(logo_src_path).name
             logo_dst_path = os.path.join(tmp_dir, logo_filename)
             shutil.copy2(logo_src_path, logo_dst_path)

@@ -25,7 +25,7 @@ from screens.main_menu_screen import MainMenuScreen
 ctypes.windll.shcore.SetProcessDpiAwareness(2)
 
 ctk.set_appearance_mode("Dark")
-ctk.set_default_color_theme("UneeFlow_theme.json")
+ctk.set_default_color_theme(config.uneeflow_ctk_theme)
 
 #Method  to center a window as tkinter does not have a built-in method for this
 def center_window(window, width, height):
@@ -61,7 +61,7 @@ if __name__ == "__main__":
     center_window(config.main_window, 750, 750)
 
     #setting the logo
-    config.main_window.iconbitmap("U Logo.ico")
+    config.main_window.iconbitmap(config.uneeflow_logo_icon)
 
     #Splash Screen- this will act as a loading screen before the main window
     ##########################################################################################
@@ -76,7 +76,7 @@ if __name__ == "__main__":
     splash.overrideredirect(True)  
 
     #loading the uneeflow logo as splash
-    splash_img = Image.open("UNEE FLOW LOGO.png")
+    splash_img = Image.open(config.uneeflow_logo)
     splash_img = splash_img.resize((500, 500), Image.LANCZOS)
     splash_bg = CTkImage(splash_img, size=(500, 500))
 
