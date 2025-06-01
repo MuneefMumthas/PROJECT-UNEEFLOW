@@ -18,7 +18,9 @@ import webbrowser
 import base64
 import shutil
 import threading
+import config
 
+from screens.main_menu_screen import MainMenuScreen
 
 ctypes.windll.shcore.SetProcessDpiAwareness(2)
 
@@ -51,828 +53,829 @@ def center_window(window, width, height):
     window.resizable(False, False)
 
 
-#creating the main window
-main_window = ctk.CTk()
-main_window.title("UNEEFLOW")
-center_window(main_window, 750, 750)
 
-#setting the logo
-main_window.iconbitmap("U Logo.ico")
-
-#Splash Screen- this will act as a loading screen before the main window
-##########################################################################################
-
-#hiding the app at the start for the splash screen
-main_window.withdraw()
-
-splash = ctk.CTkToplevel()
-
-#centering the splash window
-center_window(splash, 500, 500)
-splash.overrideredirect(True)  
-
-#loading the uneeflow logo as splash
-splash_img = Image.open("UNEE FLOW LOGO.png")
-splash_img = splash_img.resize((500, 500), Image.LANCZOS)
-splash_bg = CTkImage(splash_img, size=(500, 500))
-
-splash_label = ctk.CTkLabel(splash, image=splash_bg, text="")
-splash_label.pack()
-
-#removing the splash and showing the main window
-def close_splash():
-    splash.destroy()
-    main_window.deiconify()
-
-splash.after(1500, close_splash)
 
 ##########################################################################################
 
-#Method for main menu
-def main_menu():
+# #Method for main menu
+# def main_menu():
     
-    #Buttons
-    build_model_button = ctk.CTkButton(main_window, text="Build a Model", font=("Arial", 14), command=build_model_button_function, width=200, height=50)
-    build_model_button.pack(pady=(250,30))
+#     #Buttons
+#     build_model_button = ctk.CTkButton(config.main_window, text="Build a Model", font=("Arial", 14), command=build_model_button_function, width=200, height=50)
+#     build_model_button.pack(pady=(250,30))
 
-    test_model_button = ctk.CTkButton(main_window, text="Test a Model", font=("Arial", 14), command=None, width=200, height=50)
-    test_model_button.pack(pady=10)
+#     test_model_button = ctk.CTkButton(config.main_window, text="Test a Model", font=("Arial", 14), command=None, width=200, height=50)
+#     test_model_button.pack(pady=10)
 
 
-def back_to_main_menu():
-    #removing all widgets from the window
-    for widget in main_window.winfo_children():
-        widget.destroy()
+# def back_to_main_menu():
+#     #removing all widgets from the window
+#     for widget in config.main_window.winfo_children():
+#         widget.destroy()
     
-    #showing the main menu
-    main_menu()
+#     #showing the main menu
+#     main_menu()
 
 
 #function for the build model button
 
 
-#STEP 1: Importing the dataset
-#This function is used to import dataset files and display it
-def build_model_button_function():
+# #STEP 1: Importing the dataset
+# #This function is used to import dataset files and display it
+# def build_model_button_function():
 
-    #removing all widgets from the window
-    for widget in main_window.winfo_children():
-        widget.destroy()
+#     #removing all widgets from the window
+#     for widget in config.main_window.winfo_children():
+#         widget.destroy()
     
-    #step 1 label
-    step1_label = ctk.CTkLabel(main_window, text="Step 1: Import Dataset", font=("Arial", 20, "bold"))
-    step1_label.pack(pady=20)
+#     #step 1 label
+#     step1_label = ctk.CTkLabel(config.main_window, text="Step 1: Import Dataset", font=("Arial", 20, "bold"))
+#     step1_label.pack(pady=20)
 
-    #import csv button
-    import_csv_button = ctk.CTkButton(main_window, text="Import CSV", font=("Arial", 16), command=import_csv, width=180, height=40)
-    import_csv_button.place(relx=0.5, rely=0.25, anchor="center")
+#     #import csv button
+#     import_csv_button = ctk.CTkButton(config.main_window, text="Import CSV", font=("Arial", 16), command=import_csv, width=180, height=40)
+#     import_csv_button.place(relx=0.5, rely=0.25, anchor="center")
 
-    #import excel button
-    import_excel_button = ctk.CTkButton(main_window, text="Import Excel", font=("Arial", 16), command=import_excel, width=180, height=40)
-    import_excel_button.place(relx=0.5, rely=0.35, anchor="center")
+#     #import excel button
+#     import_excel_button = ctk.CTkButton(config.main_window, text="Import Excel", font=("Arial", 16), command=import_excel, width=180, height=40)
+#     import_excel_button.place(relx=0.5, rely=0.35, anchor="center")
 
-    #import json button
-    import_json_button = ctk.CTkButton(main_window, text="Import JSON", font=("Arial", 16), command=import_json, width=180, height=40)
-    import_json_button.place(relx=0.5, rely=0.45, anchor="center")
+#     #import json button
+#     import_json_button = ctk.CTkButton(config.main_window, text="Import JSON", font=("Arial", 16), command=import_json, width=180, height=40)
+#     import_json_button.place(relx=0.5, rely=0.45, anchor="center")
 
-    #back button
-    back_button = ctk.CTkButton(main_window, text="Back", font=("Arial", 16), command=back_to_main_menu, width=100, height=40)
-    back_button.place(relx=0.5, rely=0.55, anchor="center")
+#     #back button
+#     back_button = ctk.CTkButton(config.main_window, text="Back", font=("Arial", 16), command=MainMenuScreen().back_to_main_menu, width=100, height=40)
+#     back_button.place(relx=0.5, rely=0.55, anchor="center")
 
-#saved actions dictionary for handling missing values
-saved_actions = {} 
+# #saved actions dictionary for handling missing values
+# saved_actions = {} 
 
-#this is used to track coloumns that have been processed in previously
-prev_columns = None
-
-#Importing csv files
-def import_csv():
-
-    global df,  saved_actions
-
-    global current_step
-    current_step = "step 1"
-
-    file_path = filedialog.askopenfilename(filetypes=[("CSV files", "*.csv")])
-    if not file_path:
-        return
-
-    try:
-        #read CSV file
-        df = pd.read_csv(file_path)
-
-        #calling the function to display the dataframe
-        show_dataframe(df)
-        #clearing the saved actions as the dataframe has changed
-        saved_actions.clear()
-
-    except Exception as e:
-        messagebox.showerror("Error", f"Failed to load file: {e}")
-
-#Importing excel files
-def import_excel():
-
-    global df, saved_actions
-
-    global current_step
-    current_step = "step 1"
-
-    file_path = filedialog.askopenfilename(filetypes=[("Excel files", "*.xlsx")])
-    if not file_path:
-        return
-
-    try:
-        #read excel file
-        df = pd.read_excel(file_path, sheet_name=0, engine="openpyxl")
-
-        #calling the function to display the dataframe
-        show_dataframe(df)
-        #clearing the saved actions as the dataframe has changed
-        saved_actions.clear()
-
-    except Exception as e:
-        messagebox.showerror("Error", f"Failed to load file: {e}")
-
-#Importing json files
-def import_json():
-
-    global df, saved_actions
-
-    global current_step
-    current_step = "step 1"
-
-    file_path = filedialog.askopenfilename(filetypes=[("JSON files", "*.json")])
-    if not file_path:
-        return
-
-    try:
-        #read json file
-        df = pd.read_json(file_path, orient="records")
-
-        #calling the function to display the dataframe
-        show_dataframe(df)
-        #clearing the saved actions as the dataframe has changed
-        saved_actions.clear()
-
-    except Exception as e:
-        messagebox.showerror("Error", f"Failed to load file: {e}")
+# #this is used to track coloumns that have been processed in previously
 
 
-#Dataset preview function
 
-#methods to generalize the back and next buttons in the dataframe preview screen
-def show_dataframe_back():
-    global current_step
+# #Importing csv files
+# def import_csv():
 
-    if current_step == "step 1" or current_step == "step 2":
-        build_model_button_function()
-    elif current_step == "step 3":
-        step_3_select_input_variables()
-    elif current_step == "step 4":
-        step_4_Missing_values()
+#     global df,  saved_actions
 
-def show_dataframe_next():
-    global current_step
-    if current_step == "step 1" or current_step == "step 2":
-        step_2_select_target_variable()
-    elif current_step == "step 3":
-        step_4_Missing_values()
+#     
+#     config.current_step = "step 1"
+
+#     file_path = filedialog.askopenfilename(filetypes=[("CSV files", "*.csv")])
+#     if not file_path:
+#         return
+
+#     try:
+#         #read CSV file
+#         df = pd.read_csv(file_path)
+
+#         #calling the function to display the dataframe
+#         show_dataframe(df)
+#         #clearing the saved actions as the dataframe has changed
+#         saved_actions.clear()
+
+#     except Exception as e:
+#         messagebox.showerror("Error", f"Failed to load file: {e}")
+
+# #Importing excel files
+# def import_excel():
+
+#     global df, saved_actions
+
+#     
+#     config.current_step = "step 1"
+
+#     file_path = filedialog.askopenfilename(filetypes=[("Excel files", "*.xlsx")])
+#     if not file_path:
+#         return
+
+#     try:
+#         #read excel file
+#         df = pd.read_excel(file_path, sheet_name=0, engine="openpyxl")
+
+#         #calling the function to display the dataframe
+#         show_dataframe(df)
+#         #clearing the saved actions as the dataframe has changed
+#         saved_actions.clear()
+
+#     except Exception as e:
+#         messagebox.showerror("Error", f"Failed to load file: {e}")
+
+# #Importing json files
+# def import_json():
+
+#     global df, saved_actions
+
+#     
+#     config.current_step = "step 1"
+
+#     file_path = filedialog.askopenfilename(filetypes=[("JSON files", "*.json")])
+#     if not file_path:
+#         return
+
+#     try:
+#         #read json file
+#         df = pd.read_json(file_path, orient="records")
+
+#         #calling the function to display the dataframe
+#         show_dataframe(df)
+#         #clearing the saved actions as the dataframe has changed
+#         saved_actions.clear()
+
+#     except Exception as e:
+#         messagebox.showerror("Error", f"Failed to load file: {e}")
 
 
-#This function is used to display dataframe in a table whenever needed to preview the updated dataframe
-#################################################################################################################################### 
-def show_dataframe(current_df):
+# #Dataset preview function
 
-    global df
-    global df_selected
-    #removing the existing widgets from the screen
-    for widget in main_window.winfo_children():
-        widget.destroy()
-
-    #loading frame to show while the entire dataframe section is being created
-    #this is done to avoid flickering of the screen
-    loading_frame = ctk.CTkFrame(main_window, fg_color="gray10")
-    loading_frame.pack(fill="both", expand=True)
-
-    loading_label = ctk.CTkLabel(loading_frame, text="Loading...", font=("Arial", 20, "bold"), text_color="white")
-    loading_label.pack(pady=40)
-
-    #creating a frame for the entire dataframe section
-    entire_showdataframe_section = ctk.CTkFrame(main_window, fg_color="gray10")
+# #methods to generalize the back and next buttons in the dataframe preview screen
+# def show_dataframe_back():
     
-    #forgetting the section to show only after all the widgets are created
-    entire_showdataframe_section.pack_forget()
+#     from screens.import_screen import ImportScreen
+#     if config.current_step == "step 1" or config.current_step == "step 2":
+#         ImportScreen().build_model_button_function()
+#     elif config.current_step == "step 3":
+#         step_3_select_input_variables()
+#     elif config.current_step == "step 4":
+#         step_4_Missing_values()
 
-    top_frame = ctk.CTkFrame(entire_showdataframe_section, fg_color="gray10")
-    top_frame.pack(fill="x", pady=10)
-
-    #back button
-    back_button = ctk.CTkButton(top_frame, text="Back", font=("Arial", 14), command=show_dataframe_back)
-    back_button.pack(side="left",padx=10)
-
-    #heading lable
-    table_label = ctk.CTkLabel(top_frame, text="Dataset Preview", font=("Arial", 20, "bold"))
-    table_label.pack(side="left", expand=True)
-
-    #Next button
-    next_button = ctk.CTkButton(top_frame, text="Next", font=("Arial", 14), command=show_dataframe_next)
-    next_button.pack(side="right", padx=10)
-
-    #container for the table
-    container = ctk.CTkFrame(entire_showdataframe_section, fg_color="gray10")
-    container.pack(fill="both", expand=True, padx=10, pady=10)
-
-    #disabling the pack propagation to avoid resizing issues
-    container.pack_propagate(False)
+# def show_dataframe_next():
     
-    #creating the table view using tksheet
-    sheet = Sheet(
-        container,
-        data=current_df.values.tolist(),
-        headers=list(current_df.columns),
-        height=400,
-        width=700,
-        show_x_scrollbar=True,
-        show_y_scrollbar=True,
-        row_select_mode="single",
-        empty_horizontal=0,
-        empty_vertical=0,
-    )
+#     if config.current_step == "step 1" or config.current_step == "step 2":
+#         step_2_select_target_variable()
+#     elif config.current_step == "step 3":
+#         step_4_Missing_values()
 
-    #featurs of the table
-    sheet.enable_bindings((
-        "single_select",
-        "arrowkeys",
-        "rc_select",
-        "right_click_popup_menu",
-        "copy",
-    ))
+
+# #This function is used to display dataframe in a table whenever needed to preview the updated dataframe
+# #################################################################################################################################### 
+# def show_dataframe(current_df):
+
+#     #removing the existing widgets from the screen
+#     for widget in config.main_window.winfo_children():
+#         widget.destroy()
+
+#     #loading frame to show while the entire dataframe section is being created
+#     #this is done to avoid flickering of the screen
+#     loading_frame = ctk.CTkFrame(config.main_window, fg_color="gray10")
+#     loading_frame.pack(fill="both", expand=True)
+
+#     loading_label = ctk.CTkLabel(loading_frame, text="Loading...", font=("Arial", 20, "bold"), text_color="white")
+#     loading_label.pack(pady=40)
+
+#     #creating a frame for the entire dataframe section
+#     entire_showdataframe_section = ctk.CTkFrame(config.main_window, fg_color="gray10")
     
-    sheet.pack(fill="both", expand=True)
+#     #forgetting the section to show only after all the widgets are created
+#     entire_showdataframe_section.pack_forget()
 
-    #center aligning content in the table
-    sheet.align(":", align="center")
+#     top_frame = ctk.CTkFrame(entire_showdataframe_section, fg_color="gray10")
+#     top_frame.pack(fill="x", pady=10)
 
-    #setting the column width to fit the content in each column
-    col_widths = []
-    for col in current_df.columns:
-        max_len = max(current_df[col].astype(str).map(len).max(), len(col))
-        col_widths.append(max_len * 15)
+#     #back button
+#     back_button = ctk.CTkButton(top_frame, text="Back", font=("Arial", 14), command=show_dataframe_back)
+#     back_button.pack(side="left",padx=10)
+
+#     #heading lable
+#     table_label = ctk.CTkLabel(top_frame, text="Dataset Preview", font=("Arial", 20, "bold"))
+#     table_label.pack(side="left", expand=True)
+
+#     #Next button
+#     next_button = ctk.CTkButton(top_frame, text="Next", font=("Arial", 14), command=show_dataframe_next)
+#     next_button.pack(side="right", padx=10)
+
+#     #container for the table
+#     container = ctk.CTkFrame(entire_showdataframe_section, fg_color="gray10")
+#     container.pack(fill="both", expand=True, padx=10, pady=10)
+
+#     #disabling the pack propagation to avoid resizing issues
+#     container.pack_propagate(False)
     
-    #applying width based on the content of the column first
-    sheet.set_column_widths(col_widths)
+#     #creating the table view using tksheet
+#     sheet = Sheet(
+#         container,
+#         data=current_df.values.tolist(),
+#         headers=list(current_df.columns),
+#         height=400,
+#         width=700,
+#         show_x_scrollbar=True,
+#         show_y_scrollbar=True,
+#         row_select_mode="single",
+#         empty_horizontal=0,
+#         empty_vertical=0,
+#     )
 
-    #dataset summary section
-    summary_frame = ctk.CTkFrame(entire_showdataframe_section, fg_color="gray10")
-    summary_frame.pack(fill="x", pady=10)
-
-    #calculating the statistics
-    num_rows = current_df.shape[0] 
-    num_columns = current_df.shape[1] 
-    missing_values = current_df.isnull().sum().sum() 
-
-    #displaying the summary
-    summary_text = f"📊 Rows: {num_rows}   |   📌 Columns: {num_columns}   |   ❗ Missing Values: {missing_values}"
-    summary_label = ctk.CTkLabel(summary_frame, text=summary_text, font=("Arial", 16), text_color="white", padx=10, pady=5)
-    summary_label.pack()
-
-    #data profile report button
-    data_profile_button = ctk.CTkButton(summary_frame, text="Generate Profile Report", font=("Arial", 14), command=None)
-    data_profile_button.pack(pady=(10,10))
-
-    progress_bar = ctk.CTkProgressBar(summary_frame, mode="indeterminate", width=200)
+#     #featurs of the table
+#     sheet.enable_bindings((
+#         "single_select",
+#         "arrowkeys",
+#         "rc_select",
+#         "right_click_popup_menu",
+#         "copy",
+#     ))
     
-    ##############################################
-    #ydata profiling report section
+#     sheet.pack(fill="both", expand=True)
+
+#     #center aligning content in the table
+#     sheet.align(":", align="center")
+
+#     #setting the column width to fit the content in each column
+#     col_widths = []
+#     for col in current_df.columns:
+#         max_len = max(current_df[col].astype(str).map(len).max(), len(col))
+#         col_widths.append(max_len * 15)
     
-    def create_profile_report():
-        #creating the profile report for the current dataframe
-        profile = ProfileReport(current_df, title="Data Profile Report", explorative=True, progress_bar=False, config_file="config_default.yaml")
+#     #applying width based on the content of the column first
+#     sheet.set_column_widths(col_widths)
+
+#     #dataset summary section
+#     summary_frame = ctk.CTkFrame(entire_showdataframe_section, fg_color="gray10")
+#     summary_frame.pack(fill="x", pady=10)
+
+#     #calculating the statistics
+#     num_rows = current_df.shape[0] 
+#     num_columns = current_df.shape[1] 
+#     missing_values = current_df.isnull().sum().sum() 
+
+#     #displaying the summary
+#     summary_text = f"📊 Rows: {num_rows}   |   📌 Columns: {num_columns}   |   ❗ Missing Values: {missing_values}"
+#     summary_label = ctk.CTkLabel(summary_frame, text=summary_text, font=("Arial", 16), text_color="white", padx=10, pady=5)
+#     summary_label.pack()
+
+#     #data profile report button
+#     data_profile_button = ctk.CTkButton(summary_frame, text="Generate Profile Report", font=("Arial", 14), command=None)
+#     data_profile_button.pack(pady=(10,10))
+
+#     progress_bar = ctk.CTkProgressBar(summary_frame, mode="indeterminate", width=200)
+    
+#     ##############################################
+#     #ydata profiling report section
+    
+#     def create_profile_report():
+#         #creating the profile report for the current dataframe
+#         profile = ProfileReport(current_df, title="Data Profile Report", explorative=True, progress_bar=False, config_file="config_default.yaml")
         
         
-        #saving it to a temporary file as the size of the report can be large
-        #and we don't want to keep it in memory
-        tmp_dir  = tempfile.mkdtemp(prefix="uneeflow_profile_")
+#         #saving it to a temporary file as the size of the report can be large
+#         #and we don't want to keep it in memory
+#         tmp_dir  = tempfile.mkdtemp(prefix="uneeflow_profile_")
 
-        html_path = os.path.join(tmp_dir, "report.html")
+#         html_path = os.path.join(tmp_dir, "report.html")
 
-        profile.to_widgets
-        profile.to_file(html_path)
+#         profile.to_widgets
+#         profile.to_file(html_path)
         
-        #copying the logo to the temporary directory to display it in the report
-        logo_src_path = 'UNEE FLOW LOGO.png'
-        logo_filename = Path(logo_src_path).name
-        logo_dst_path = os.path.join(tmp_dir, logo_filename)
-        shutil.copy2(logo_src_path, logo_dst_path)
+#         #copying the logo to the temporary directory to display it in the report
+#         logo_src_path = 'UNEE FLOW LOGO.png'
+#         logo_filename = Path(logo_src_path).name
+#         logo_dst_path = os.path.join(tmp_dir, logo_filename)
+#         shutil.copy2(logo_src_path, logo_dst_path)
 
-        #creating a file URI for the HTML report
-        global uri
-        uri = Path(html_path).absolute().as_uri()  
+#         #creating a file URI for the HTML report
+#         global uri
+#         uri = Path(html_path).absolute().as_uri()  
 
 
-    #function to open the html report in a web browser
-    def open_profile_report():
+#     #function to open the html report in a web browser
+#     def open_profile_report():
         
-        webbrowser.open(uri)
+#         webbrowser.open(uri)
     
 
-    def profile_report_button():
+#     def profile_report_button():
         
-        #hiding the button and showing the progress bar
-        data_profile_button.pack_forget()
-        progress_bar.pack(pady=(20,20))
-        progress_bar.start()
+#         #hiding the button and showing the progress bar
+#         data_profile_button.pack_forget()
+#         progress_bar.pack(pady=(20,20))
+#         progress_bar.start()
 
-        #disabling navigation buttons to avoid glitching
-        back_button.configure(state="disabled")
-        next_button.configure(state="disabled")
+#         #disabling navigation buttons to avoid glitching
+#         back_button.configure(state="disabled")
+#         next_button.configure(state="disabled")
 
-        #creating a new thread to run the profiling report generation
-        #this is done to avoid blocking the main thread and keep the UI responsive
-        def report_generator():
-            try:
-                create_profile_report()
-            finally:
-                #back on the main thread
-                main_window.after(0, profile_done)
+#         #creating a new thread to run the profiling report generation
+#         #this is done to avoid blocking the main thread and keep the UI responsive
+#         def report_generator():
+#             try:
+#                 create_profile_report()
+#             finally:
+#                 #back on the main thread
+#                 config.main_window.after(0, profile_done)
 
-        threading.Thread(target=report_generator, daemon=True).start()
+#         threading.Thread(target=report_generator, daemon=True).start()
 
-    def profile_done():
+#     def profile_done():
 
-        #stopping and hiding the progress bar
-        progress_bar.stop()
-        progress_bar.pack_forget()
+#         #stopping and hiding the progress bar
+#         progress_bar.stop()
+#         progress_bar.pack_forget()
 
-        #changing the button text and command to open the report
-        data_profile_button.configure(text="View Profile Report", command=open_profile_report)
-        data_profile_button.pack(pady=(10,10))
+#         #changing the button text and command to open the report
+#         data_profile_button.configure(text="View Profile Report", command=open_profile_report)
+#         data_profile_button.pack(pady=(10,10))
 
-        #re-enabling the navigation buttons
-        back_button.configure(state="normal")
-        next_button.configure(state="normal")
+#         #re-enabling the navigation buttons
+#         back_button.configure(state="normal")
+#         next_button.configure(state="normal")
     
-    data_profile_button.configure(command=profile_report_button)
+#     data_profile_button.configure(command=profile_report_button)
 
-    ##############################################
+#     ##############################################
 
-    #forget
-    loading_frame.pack_forget()
-    #showing the entire dataframe section after all the widgets are created
-    entire_showdataframe_section.pack(fill="both", expand=True)
+#     #forget
+#     loading_frame.pack_forget()
+#     #showing the entire dataframe section after all the widgets are created
+#     entire_showdataframe_section.pack(fill="both", expand=True)
 
-    #updating the column tasks to get the available width of the container
-    #and then distributing the extra width equally among all columns
-    #this is done to make sure that the table fits the container and looks good
-    #even if the content is not too long
-    container.update_idletasks()
-    avail = container.winfo_width()
-    used  = sum(col_widths)
-    extra = max(0, avail - used) // len(col_widths)
-    if extra > 0:
-        new_widths = [w + extra for w in col_widths]
-        sheet.set_column_widths(new_widths)
-#################################################################################################################################### 
+#     #updating the column tasks to get the available width of the container
+#     #and then distributing the extra width equally among all columns
+#     #this is done to make sure that the table fits the container and looks good
+#     #even if the content is not too long
+#     container.update_idletasks()
+#     avail = container.winfo_width()
+#     used  = sum(col_widths)
+#     extra = max(0, avail - used) // len(col_widths)
+#     if extra > 0:
+#         new_widths = [w + extra for w in col_widths]
+#         sheet.set_column_widths(new_widths)
+# #################################################################################################################################### 
 
 
 
-#Step 2: Selecting the target variable
-#This function is used to select the target variable from the dataframe
-#################################################################################################################################### 
-def step_2_select_target_variable():
+# #Step 2: Selecting the target variable
+# #This function is used to select the target variable from the dataframe
+# #################################################################################################################################### 
+# def step_2_select_target_variable():
 
-    global df
-    global current_step
-    current_step = "step 2"
-
-    #removing the existing widgets from the screen
-    for widget in main_window.winfo_children():
-        widget.destroy()
+#     global df
     
-    #loading frame to show while the section is being created
-    #this is done to avoid flickering of the screen/ delay
-    loading_frame = ctk.CTkFrame(main_window, fg_color="gray10")
-    loading_frame.pack(fill="both", expand=True)
+#     config.current_step = "step 2"
 
-    loading_label = ctk.CTkLabel(loading_frame, text="Loading...", font=("Arial", 20, "bold"), text_color="white")
-    loading_label.pack(pady=40)
-
-    #creating a frame for the entire dataframe section
-    entire_targetvar_section = ctk.CTkFrame(main_window, fg_color="gray10")
+#     #removing the existing widgets from the screen
+#     for widget in config.main_window.winfo_children():
+#         widget.destroy()
     
-    #forgetting the section to show only after all the widgets are created
-    entire_targetvar_section.pack_forget()
+#     #loading frame to show while the section is being created
+#     #this is done to avoid flickering of the screen/ delay
+#     loading_frame = ctk.CTkFrame(config.main_window, fg_color="gray10")
+#     loading_frame.pack(fill="both", expand=True)
 
-    top_frame = ctk.CTkFrame(entire_targetvar_section, fg_color="gray10")
-    top_frame.pack(fill="x", pady=10)
+#     loading_label = ctk.CTkLabel(loading_frame, text="Loading...", font=("Arial", 20, "bold"), text_color="white")
+#     loading_label.pack(pady=40)
 
-    #back button to return to Step 1
-    back_button = ctk.CTkButton(top_frame, text="Back", font=("Arial", 12), command=lambda: show_dataframe(df))
-    back_button.pack(side="left", padx=10)
+#     #creating a frame for the entire dataframe section
+#     entire_targetvar_section = ctk.CTkFrame(config.main_window, fg_color="gray10")
+    
+#     #forgetting the section to show only after all the widgets are created
+#     entire_targetvar_section.pack_forget()
 
-    #label for Step 2
-    step2_label = ctk.CTkLabel(top_frame, text="Step 2: Select Target Variable", font=("Arial", 16, "bold"))
-    step2_label.pack(side="left", expand=True)
+#     top_frame = ctk.CTkFrame(entire_targetvar_section, fg_color="gray10")
+#     top_frame.pack(fill="x", pady=10)
 
-    #next button
-    next_button = ctk.CTkButton(top_frame, text="Next", font=("Arial", 12), command=None)
-    next_button.pack(side="right", padx=10)
+#     #back button to return to Step 1
+#     back_button = ctk.CTkButton(top_frame, text="Back", font=("Arial", 12), command=lambda: show_dataframe(df))
+#     back_button.pack(side="left", padx=10)
 
-    #dropdown selection for the target variable
-    dropdown_frame = ctk.CTkFrame(entire_targetvar_section, fg_color="gray10")
-    dropdown_frame.pack(pady=50)
+#     #label for Step 2
+#     step2_label = ctk.CTkLabel(top_frame, text="Step 2: Select Target Variable", font=("Arial", 16, "bold"))
+#     step2_label.pack(side="left", expand=True)
 
-    ctk.CTkLabel(dropdown_frame, text="Select Target Variable:", font=("Arial", 16), text_color="white").pack(side="left", padx=10)
+#     #next button
+#     next_button = ctk.CTkButton(top_frame, text="Next", font=("Arial", 12), command=None)
+#     next_button.pack(side="right", padx=10)
 
-    values=list(df.columns)
-    target_variable = ctk.StringVar()
-    target_dropdown = ctk.CTkComboBox(dropdown_frame, variable=target_variable, state="readonly", corner_radius=30, font=("Arial", 14), justify="center", width=180)
-    target_dropdown.pack(side="left")
+#     #dropdown selection for the target variable
+#     dropdown_frame = ctk.CTkFrame(entire_targetvar_section, fg_color="gray10")
+#     dropdown_frame.pack(pady=50)
 
-    #attaching the scrollable dropdown to the combo box
-    CTkScrollableDropdown(target_dropdown, values=values, justify="left", button_color="transparent")
+#     ctk.CTkLabel(dropdown_frame, text="Select Target Variable:", font=("Arial", 16), text_color="white").pack(side="left", padx=10)
 
-    #adjusting the internal entry’s grid padding
-    target_dropdown._entry.grid_configure(padx=(10,45))
+#     values=list(df.columns)
+#     target_variable = ctk.StringVar()
+#     target_dropdown = ctk.CTkComboBox(dropdown_frame, variable=target_variable, state="readonly", corner_radius=30, font=("Arial", 14), justify="center", width=180)
+#     target_dropdown.pack(side="left")
 
-    #function to store selection when "Next" is clicked
-    def save_selected_target_var():
+#     #attaching the scrollable dropdown to the combo box
+#     CTkScrollableDropdown(target_dropdown, values=values, justify="left", button_color="transparent")
 
-        global selected_target_variable
-        selected_target_variable = target_variable.get()
+#     #adjusting the internal entry’s grid padding
+#     target_dropdown._entry.grid_configure(padx=(10,45))
 
-        if not selected_target_variable:
-            #showing an error message if next button clicked without selecting a target variable
-            messagebox.showerror("Error", "Please select a target variable!")
-            return
+#     #function to store selection when "Next" is clicked
+#     def save_selected_target_var():
+
+#         global selected_target_variable
+#         selected_target_variable = target_variable.get()
+
+#         if not selected_target_variable:
+#             #showing an error message if next button clicked without selecting a target variable
+#             messagebox.showerror("Error", "Please select a target variable!")
+#             return
         
-        #printting the selected target variable for debugging
-        print(f"Selected Target Variable: {selected_target_variable}")
-        step_3_select_input_variables()
+#         #printting the selected target variable for debugging
+#         print(f"Selected Target Variable: {selected_target_variable}")
+#         step_3_select_input_variables()
 
-    next_button.configure(command=save_selected_target_var)
+#     next_button.configure(command=save_selected_target_var)
 
-    #forget
-    loading_frame.pack_forget()
-    #showing the entire section after all the widgets are created
-    entire_targetvar_section.pack(fill="both", expand=True)
-#################################################################################################################################### 
+#     #forget
+#     loading_frame.pack_forget()
+#     #showing the entire section after all the widgets are created
+#     entire_targetvar_section.pack(fill="both", expand=True)
+# #################################################################################################################################### 
 
 
 
-#Step 3: Select Input Variables
-#This function is used to select the input variables from the dataframe
-#################################################################################################################################### 
-def step_3_select_input_variables():
+# #Step 3: Select Input Variables
+# #This function is used to select the input variables from the dataframe
+# #################################################################################################################################### 
+# def step_3_select_input_variables():
 
-    global df
-    global selected_target_variable
+#     global df
+#     global selected_target_variable
 
-    global current_step
-    current_step = "step 3"
-
-    #removing the existing widgets from the screen
-    for widget in main_window.winfo_children():
-        widget.destroy()
-
-    #loading frame
-    loading_frame = ctk.CTkFrame(main_window, fg_color="gray10")
-    loading_frame.pack(fill="both", expand=True)
-
-    loading_label = ctk.CTkLabel(loading_frame, text="Loading...", font=("Arial", 20, "bold"), text_color="white")
-    loading_label.pack(pady=40)
-
-    #creating a frame for the entire section
-    entire_inputvariables_section = ctk.CTkFrame(main_window, fg_color="gray10")
     
-    #forgetting the section to show only after all the widgets are created
-    entire_inputvariables_section.pack_forget()
+#     config.current_step = "step 3"
 
-    top_frame = ctk.CTkFrame(entire_inputvariables_section, fg_color="gray10")
-    top_frame.pack(fill="x", pady=10)
+#     #removing the existing widgets from the screen
+#     for widget in config.main_window.winfo_children():
+#         widget.destroy()
 
+#     #loading frame
+#     loading_frame = ctk.CTkFrame(config.main_window, fg_color="gray10")
+#     loading_frame.pack(fill="both", expand=True)
 
-    #back button
-    back_button = ctk.CTkButton(top_frame, text="Back", font=("Arial", 12), command=step_2_select_target_variable)
-    back_button.pack(side="left",padx=10)
+#     loading_label = ctk.CTkLabel(loading_frame, text="Loading...", font=("Arial", 20, "bold"), text_color="white")
+#     loading_label.pack(pady=40)
 
-    #heading lable
-    table_label = ctk.CTkLabel(top_frame, text="Step 3: Select Input Variables", font=("Arial", 16, "bold"))
-    table_label.pack(side="left", expand=True)
-
-    #Next button
-    next_button = ctk.CTkButton(top_frame, text="Next", font=("Arial", 12), command=None)
-    next_button.pack(side="right", padx=10)
-
-    #displaying the columns except the target variable
-    selected_columns = {col: tk.BooleanVar(value=True) for col in df.columns if col != selected_target_variable}
-
-    #middle frame for content
-    middle_frame = ctk.CTkFrame(entire_inputvariables_section, fg_color="gray10")
-    middle_frame.pack(pady=40)
-
-    scroll_frame = ctk.CTkScrollableFrame(middle_frame, width=700, height=600, fg_color="gray10")
-    scroll_frame.pack(padx=10, pady=10, fill="both", expand=True)
-
-    #turning on the visibility of the scrollbar if there are more than 13 columns
-    if len(selected_columns) > 13:
-        scroll_frame._scrollbar.grid()
-    else:
-        scroll_frame._scrollbar.grid_remove()
-
-    scroll_frame.columnconfigure(0, weight=1)
-
-    #checkbox for each column
-    for col, var in selected_columns.items():
-        checkbox = ctk.CTkCheckBox(scroll_frame, text=col, variable=var)
-        checkbox.grid(column=0, sticky="w", pady=10, padx=50)
-
-    #creatting a segmented button for select all and deselect all
-    select_all_button = ctk.CTkSegmentedButton(scroll_frame, values=["✅", "❎"], command=None)
-    select_all_button.grid(row=0, column=1, padx=10, pady=10)
-
-    #function for selecting/deselecting all checkboxes
-    def selection_command(value):
-        
-        if value == "✅":
-            #select all checkboxes
-            for var in selected_columns.values():
-                var.set(True)
-
-            #setting the segmented button to None to reuse it
-            select_all_button.set(None)
-
-        elif value == "❎":
-            #deselect all checkboxes
-            for var in selected_columns.values():
-                var.set(False)
-
-            select_all_button.set(None)
-
-    select_all_button.configure(command=selection_command)
-
-    def save_selected_columns_df():
-
-        global df
-        global df_selected
-        #get the selected columns
-        selected = [col for col, var in selected_columns.items() if var.get()]
-        
-        #check if at least one column is selected
-        if len(selected) == 0:
-            #show error message if no column is selected
-            messagebox.showerror("Error", "Please select at least one column.")
-            return
-
-        #show confirmation dialog 
-        confirmation = messagebox.askyesno("Confirm", f"You have selected: {', '.join(selected)}\nDo you want to proceed?")
-        if confirmation:
-            #drop unselected columns 
-            df_selected = df[selected + [selected_target_variable]]
-            #show updated dataframe
-            show_dataframe(df_selected)
-        else:
-            #allow user to modify selection
-            return
-        
-    next_button.configure(command=save_selected_columns_df)
-
-    loading_frame.pack_forget()
-    entire_inputvariables_section.pack(fill="both", expand=True)
-#################################################################################################################################### 
-
-
-
-#Step 4 - Handling Missing Values
-
-#this function is used to handle the change in the combo box selection
-# it saves the selected action for each column in the saved_actions dictionary
-def on_combo_change(col_name: str, combo: ctk.CTkComboBox):
-    saved_actions[col_name] = combo.get()
-
-
-#This function is used to handle missing values in the dataset for both numerical and categorical data
-#################################################################################################################################### 
-def step_4_Missing_values():
+#     #creating a frame for the entire section
+#     entire_inputvariables_section = ctk.CTkFrame(config.main_window, fg_color="gray10")
     
-    global df, df_selected, selected_target_variable, saved_actions, prev_columns, current_step
+#     #forgetting the section to show only after all the widgets are created
+#     entire_inputvariables_section.pack_forget()
 
-    current_step = "step 4"
+#     top_frame = ctk.CTkFrame(entire_inputvariables_section, fg_color="gray10")
+#     top_frame.pack(fill="x", pady=10)
 
-    #removing the existing widgets from the screen
-    for widget in main_window.winfo_children():
-        widget.destroy()
 
-    #removing the saved actions if the columns have changed
-    #this is done to avoid issues with the saved actions not matching the current columns
-    current_columns = list(df_selected.columns)
-    if prev_columns is None or set(current_columns) != set(prev_columns):
-        saved_actions.clear()
+#     #back button
+#     back_button = ctk.CTkButton(top_frame, text="Back", font=("Arial", 12), command=step_2_select_target_variable)
+#     back_button.pack(side="left",padx=10)
 
-    prev_columns = current_columns.copy()
+#     #heading lable
+#     table_label = ctk.CTkLabel(top_frame, text="Step 3: Select Input Variables", font=("Arial", 16, "bold"))
+#     table_label.pack(side="left", expand=True)
 
-    #loading frame
-    loading_frame = ctk.CTkFrame(main_window, fg_color="gray10")
-    loading_frame.pack(fill="both", expand=True)
+#     #Next button
+#     next_button = ctk.CTkButton(top_frame, text="Next", font=("Arial", 12), command=None)
+#     next_button.pack(side="right", padx=10)
 
-    loading_label = ctk.CTkLabel(loading_frame, text="Loading...", font=("Arial", 20, "bold"), text_color="white")
-    loading_label.pack(pady=40)
+#     #displaying the columns except the target variable
+#     selected_columns = {col: tk.BooleanVar(value=True) for col in df.columns if col != selected_target_variable}
 
-    #creating a frame for the entire section
-    
-    entire_missingvalues_section = ctk.CTkFrame(main_window, fg_color="gray10")
-    
-    #forgetting the section to show only after all the widgets are created
-    entire_missingvalues_section.pack_forget()
+#     #middle frame for content
+#     middle_frame = ctk.CTkFrame(entire_inputvariables_section, fg_color="gray10")
+#     middle_frame.pack(pady=40)
 
-    top_frame = ctk.CTkFrame(entire_missingvalues_section, fg_color="gray10")
-    top_frame.pack(fill="x", pady=10)
+#     scroll_frame = ctk.CTkScrollableFrame(middle_frame, width=700, height=600, fg_color="gray10")
+#     scroll_frame.pack(padx=10, pady=10, fill="both", expand=True)
 
-    #back button
-    back_button = ctk.CTkButton(top_frame, text="Back", font=("Arial", 12), command=step_3_select_input_variables)
-    back_button.pack(side="left",padx=10)
+#     #turning on the visibility of the scrollbar if there are more than 13 columns
+#     if len(selected_columns) > 13:
+#         scroll_frame._scrollbar.grid()
+#     else:
+#         scroll_frame._scrollbar.grid_remove()
 
-    #heading lable
-    table_label = ctk.CTkLabel(top_frame, text="Step 4: Handling Missing Values", font=("Arial", 16, "bold"))
-    table_label.pack(side="left", expand=True)
+#     scroll_frame.columnconfigure(0, weight=1)
 
-    #Next button
-    next_button = ctk.CTkButton(top_frame, text="Next", font=("Arial", 12), command=None)
-    next_button.pack(side="right", padx=10)
+#     #checkbox for each column
+#     for col, var in selected_columns.items():
+#         checkbox = ctk.CTkCheckBox(scroll_frame, text=col, variable=var)
+#         checkbox.grid(column=0, sticky="w", pady=10, padx=50)
 
-    #middle fram for content
-    middle_frame = ctk.CTkFrame(entire_missingvalues_section, fg_color="gray10")
-    middle_frame.pack(pady=30)
+#     #creatting a segmented button for select all and deselect all
+#     select_all_button = ctk.CTkSegmentedButton(scroll_frame, values=["✅", "❎"], command=None)
+#     select_all_button.grid(row=0, column=1, padx=10, pady=10)
 
-    scroll_frame = ctk.CTkScrollableFrame(middle_frame, width=700, height=500, fg_color="transparent")
-    scroll_frame.pack(padx=10, pady=10, fill="both", expand=True)
-
-    #creating 3 columns in the scrollable frame
-    scroll_frame.columnconfigure(0, weight=1)
-
-    #hiding the scrollbar if there are 8 columns or less
-    if len(df_selected.columns) > 8:
-        scroll_frame._scrollbar.grid()
-    else:
-        scroll_frame._scrollbar.grid_remove()
-    
-    #dictionary to store actions for each option in the combo box
-    actions = {}
-
-    for i, col in enumerate(df_selected.columns):
-
-        #counting the missing values in each column
-        missing_count = df_selected[col].isnull().sum()
-
-        #creating border for each row using a lower height frame
-        border_frame = ctk.CTkFrame(scroll_frame, fg_color="gray8", border_color="gray10", border_width=1)
-        border_frame.grid(row=i, column=0, columnspan=3, sticky="ew")
+#     #function for selecting/deselecting all checkboxes
+#     def selection_command(value):
         
-        #making the columns equal width for better alignment
-        for col_idx in (0, 1, 2):
-            border_frame.grid_columnconfigure(col_idx, weight=1, uniform="cols")
+#         if value == "✅":
+#             #select all checkboxes
+#             for var in selected_columns.values():
+#                 var.set(True)
+
+#             #setting the segmented button to None to reuse it
+#             select_all_button.set(None)
+
+#         elif value == "❎":
+#             #deselect all checkboxes
+#             for var in selected_columns.values():
+#                 var.set(False)
+
+#             select_all_button.set(None)
+
+#     select_all_button.configure(command=selection_command)
+
+#     def save_selected_columns_df():
+
+#         global df
+#         global df_selected
+#         #get the selected columns
+#         selected = [col for col, var in selected_columns.items() if var.get()]
+        
+#         #check if at least one column is selected
+#         if len(selected) == 0:
+#             #show error message if no column is selected
+#             messagebox.showerror("Error", "Please select at least one column.")
+#             return
+
+#         #show confirmation dialog 
+#         confirmation = messagebox.askyesno("Confirm", f"You have selected: {', '.join(selected)}\nDo you want to proceed?")
+#         if confirmation:
+#             #drop unselected columns 
+#             df_selected = df[selected + [selected_target_variable]]
+#             #show updated dataframe
+#             show_dataframe(df_selected)
+#         else:
+#             #allow user to modify selection
+#             return
+        
+#     next_button.configure(command=save_selected_columns_df)
+
+#     loading_frame.pack_forget()
+#     entire_inputvariables_section.pack(fill="both", expand=True)
+# #################################################################################################################################### 
 
 
-        #column name label
-        col_name_label = ctk.CTkLabel(border_frame, text=f"{col}: ", font=("Arial", 16), text_color="white", wraplength=180, bg_color="gray8")
-        col_name_label.grid(row=0, column=0, sticky="w", padx=10, pady=(15,15))
+
+# #Step 4 - Handling Missing Values
+
+# #this function is used to handle the change in the combo box selection
+# # it saves the selected action for each column in the saved_actions dictionary
+# def on_combo_change(col_name: str, combo: ctk.CTkComboBox):
+#     saved_actions[col_name] = combo.get()
+
+
+# #This function is used to handle missing values in the dataset for both numerical and categorical data
+# #################################################################################################################################### 
+# def step_4_Missing_values():
+    
+#     global df, df_selected, selected_target_variable, saved_actions, prev_columns
+
+#     config.current_step = "step 4"
+
+#     #removing the existing widgets from the screen
+#     for widget in config.main_window.winfo_children():
+#         widget.destroy()
+
+#     #removing the saved actions if the columns have changed
+#     #this is done to avoid issues with the saved actions not matching the current columns
+#     current_columns = list(df_selected.columns)
+#     if prev_columns is None or set(current_columns) != set(prev_columns):
+#         saved_actions.clear()
+
+#     prev_columns = current_columns.copy()
+
+#     #loading frame
+#     loading_frame = ctk.CTkFrame(config.main_window, fg_color="gray10")
+#     loading_frame.pack(fill="both", expand=True)
+
+#     loading_label = ctk.CTkLabel(loading_frame, text="Loading...", font=("Arial", 20, "bold"), text_color="white")
+#     loading_label.pack(pady=40)
+
+#     #creating a frame for the entire section
+    
+#     entire_missingvalues_section = ctk.CTkFrame(config.main_window, fg_color="gray10")
+    
+#     #forgetting the section to show only after all the widgets are created
+#     entire_missingvalues_section.pack_forget()
+
+#     top_frame = ctk.CTkFrame(entire_missingvalues_section, fg_color="gray10")
+#     top_frame.pack(fill="x", pady=10)
+
+#     #back button
+#     back_button = ctk.CTkButton(top_frame, text="Back", font=("Arial", 12), command=step_3_select_input_variables)
+#     back_button.pack(side="left",padx=10)
+
+#     #heading lable
+#     table_label = ctk.CTkLabel(top_frame, text="Step 4: Handling Missing Values", font=("Arial", 16, "bold"))
+#     table_label.pack(side="left", expand=True)
+
+#     #Next button
+#     next_button = ctk.CTkButton(top_frame, text="Next", font=("Arial", 12), command=None)
+#     next_button.pack(side="right", padx=10)
+
+#     #middle fram for content
+#     middle_frame = ctk.CTkFrame(entire_missingvalues_section, fg_color="gray10")
+#     middle_frame.pack(pady=30)
+
+#     scroll_frame = ctk.CTkScrollableFrame(middle_frame, width=700, height=500, fg_color="transparent")
+#     scroll_frame.pack(padx=10, pady=10, fill="both", expand=True)
+
+#     #creating 3 columns in the scrollable frame
+#     scroll_frame.columnconfigure(0, weight=1)
+
+#     #hiding the scrollbar if there are 8 columns or less
+#     if len(df_selected.columns) > 8:
+#         scroll_frame._scrollbar.grid()
+#     else:
+#         scroll_frame._scrollbar.grid_remove()
+    
+#     #dictionary to store actions for each option in the combo box
+#     actions = {}
+
+#     for i, col in enumerate(df_selected.columns):
+
+#         #counting the missing values in each column
+#         missing_count = df_selected[col].isnull().sum()
+
+#         #creating border for each row using a lower height frame
+#         border_frame = ctk.CTkFrame(scroll_frame, fg_color="gray8", border_color="gray10", border_width=1)
+#         border_frame.grid(row=i, column=0, columnspan=3, sticky="ew")
+        
+#         #making the columns equal width for better alignment
+#         for col_idx in (0, 1, 2):
+#             border_frame.grid_columnconfigure(col_idx, weight=1, uniform="cols")
+
+
+#         #column name label
+#         col_name_label = ctk.CTkLabel(border_frame, text=f"{col}: ", font=("Arial", 16), text_color="white", wraplength=180, bg_color="gray8")
+#         col_name_label.grid(row=0, column=0, sticky="w", padx=10, pady=(15,15))
 
         
-        if missing_count == 0:
+#         if missing_count == 0:
 
-            #label for no missing values
-            no_missing_label = ctk.CTkLabel(border_frame, text="No Missing Values", text_color="green", font=("Arial", 16), bg_color="gray8")
-            no_missing_label.grid(row=0, column=1, sticky="w", padx=10, pady=5)
+#             #label for no missing values
+#             no_missing_label = ctk.CTkLabel(border_frame, text="No Missing Values", text_color="green", font=("Arial", 16), bg_color="gray8")
+#             no_missing_label.grid(row=0, column=1, sticky="w", padx=10, pady=5)
 
-            #lable for no action needed
-            no_action_label = ctk.CTkLabel(border_frame, text="No Action Needed", text_color="gray50", font=("Arial", 16), bg_color="gray8")
-            no_action_label.grid(row=0, column=2, sticky="w", padx=10, pady=5)
+#             #lable for no action needed
+#             no_action_label = ctk.CTkLabel(border_frame, text="No Action Needed", text_color="gray50", font=("Arial", 16), bg_color="gray8")
+#             no_action_label.grid(row=0, column=2, sticky="w", padx=10, pady=5)
         
-        else:
+#         else:
 
-            #missing count label
-            missing_count_label = ctk.CTkLabel(border_frame, text=f"{missing_count} missing values", text_color="red", font=("Arial", 16), bg_color="gray8")
-            missing_count_label.grid(row=0, column=1, sticky="w", padx=10, pady=5)
+#             #missing count label
+#             missing_count_label = ctk.CTkLabel(border_frame, text=f"{missing_count} missing values", text_color="red", font=("Arial", 16), bg_color="gray8")
+#             missing_count_label.grid(row=0, column=1, sticky="w", padx=10, pady=5)
             
-            #actions for handling missing values by data type
-            column_data = df_selected[col]
+#             #actions for handling missing values by data type
+#             column_data = df_selected[col]
             
-            #continuous numeric data
-            if is_numeric_dtype(column_data) and column_data.nunique() > 10:
-                options = [ "ContinuousN debug",
-                    "Fill with Mean/Average",
-                    "Fill with Median",
-                    "Remove Rows",
-                    "Remove Column"
-                ]
+#             #continuous numeric data
+#             if is_numeric_dtype(column_data) and column_data.nunique() > 10:
+#                 options = [ "ContinuousN debug",
+#                     "Fill with Mean/Average",
+#                     "Fill with Median",
+#                     "Remove Rows",
+#                     "Remove Column"
+#                 ]
 
-            #categorical numeric data
-            elif is_numeric_dtype(column_data):
-                options = ["CategoricalN debug",
-                    "Fill with Mode",
-                    "Remove Rows",
-                    "Remove Column"
-                ]
+#             #categorical numeric data
+#             elif is_numeric_dtype(column_data):
+#                 options = ["CategoricalN debug",
+#                     "Fill with Mode",
+#                     "Remove Rows",
+#                     "Remove Column"
+#                 ]
 
-            #object or string dtype
-            else:
-                options = ["object or string debug",
-                    "Fill with Mode",      
-                    "Remove Rows",
-                    "Remove Column"
-                ]
+#             #object or string dtype
+#             else:
+#                 options = ["object or string debug",
+#                     "Fill with Mode",      
+#                     "Remove Rows",
+#                     "Remove Column"
+#                 ]
 
-            #combo box for handling missing values
-            combo = ctk.CTkComboBox(border_frame, values=options, state="readonly")
-            combo.set("Choose Action")
+#             #combo box for handling missing values
+#             combo = ctk.CTkComboBox(border_frame, values=options, state="readonly")
+#             combo.set("Choose Action")
 
-            if col in saved_actions and saved_actions[col] in options:
-                combo.set(saved_actions[col])
+#             if col in saved_actions and saved_actions[col] in options:
+#                 combo.set(saved_actions[col])
 
-            combo.configure(command=lambda val, c=col, cb=combo: on_combo_change(c, cb))
+#             combo.configure(command=lambda val, c=col, cb=combo: on_combo_change(c, cb))
 
-            combo.grid(row=0, column=2, sticky="w", padx=10, pady=5)
-            actions[col] = combo
+#             combo.grid(row=0, column=2, sticky="w", padx=10, pady=5)
+#             actions[col] = combo
     
-    global total_missing   
-    total_missing = df_selected.isnull().sum().sum()
+#     global total_missing   
+#     total_missing = df_selected.isnull().sum().sum()
 
-    #showcasing the missing values only if there are any
-    if total_missing == 0:
-        total_missing_label = ctk.CTkLabel(middle_frame, text="Click Next to continue", font=("Arial", 18), text_color="white")
-        total_missing_label.pack(pady=10)
-    else:
-        total_missing_label = ctk.CTkLabel(middle_frame, text=f"Total Missing Values: {total_missing}", font=("Arial", 18), text_color="white")
-        total_missing_label.pack(pady=10)
+#     #showcasing the missing values only if there are any
+#     if total_missing == 0:
+#         total_missing_label = ctk.CTkLabel(middle_frame, text="Click Next to continue", font=("Arial", 18), text_color="white")
+#         total_missing_label.pack(pady=10)
+#     else:
+#         total_missing_label = ctk.CTkLabel(middle_frame, text=f"Total Missing Values: {total_missing}", font=("Arial", 18), text_color="white")
+#         total_missing_label.pack(pady=10)
 
-    def apply_actions():
+#     def apply_actions():
 
-        global df_selected, df_handled_missing_values, total_missing
-        #creating a copy of the selected DataFrame to avoid modifying the original
-        df_handled_missing_values = df_selected.copy()
+#         global df_selected, df_handled_missing_values, total_missing
+#         #creating a copy of the selected DataFrame to avoid modifying the original
+#         df_handled_missing_values = df_selected.copy()
 
-        if total_missing == 0:
-            show_dataframe(df_handled_missing_values)
-        else:
-            #checking if any action is selected for columns with missing values
-            missing_cols = [
-                col
-                for col, combo in actions.items()
-                if combo.get() == "Choose Action"
-            ]
-            if missing_cols:
-                messagebox.showerror(
-                    "Error",
-                    "Please select an action for the following columns:\n  "
-                    + "\n  ".join(missing_cols)
-                )
-                return
+#         if total_missing == 0:
+#             show_dataframe(df_handled_missing_values)
+#         else:
+#             #checking if any action is selected for columns with missing values
+#             missing_cols = [
+#                 col
+#                 for col, combo in actions.items()
+#                 if combo.get() == "Choose Action"
+#             ]
+#             if missing_cols:
+#                 messagebox.showerror(
+#                     "Error",
+#                     "Please select an action for the following columns:\n  "
+#                     + "\n  ".join(missing_cols)
+#                 )
+#                 return
 
-            #confirmation dialog for applying actions
-            if not messagebox.askyesno(
-                "Confirm",
-                "You’ve selected actions for every column.\nProceed to apply them?"
-            ):
-                return
+#             #confirmation dialog for applying actions
+#             if not messagebox.askyesno(
+#                 "Confirm",
+#                 "You’ve selected actions for every column.\nProceed to apply them?"
+#             ):
+#                 return
 
             
 
-            #dropping rows with missing values first
-            to_drop_rows = [
-                c for c, combo in actions.items()
-                if combo.get().startswith("Remove Rows")
-            ]
-            if to_drop_rows:
-                df_handled_missing_values.dropna(subset=to_drop_rows, inplace=True)
+#             #dropping rows with missing values first
+#             to_drop_rows = [
+#                 c for c, combo in actions.items()
+#                 if combo.get().startswith("Remove Rows")
+#             ]
+#             if to_drop_rows:
+#                 df_handled_missing_values.dropna(subset=to_drop_rows, inplace=True)
 
-            #filling missing values based on selected actions
-            for col, combo in actions.items():
-                act = combo.get()
-                if act == "Fill with Mean/Average":
-                    df_handled_missing_values[col].fillna(df_handled_missing_values[col].mean(), inplace=True)
-                elif act == "Fill with Median":
-                    df_handled_missing_values[col].fillna(df_handled_missing_values[col].median(), inplace=True)
-                elif act == "Fill with Mode":
-                    df_handled_missing_values[col].fillna(df_handled_missing_values[col].mode()[0], inplace=True)
+#             #filling missing values based on selected actions
+#             for col, combo in actions.items():
+#                 act = combo.get()
+#                 if act == "Fill with Mean/Average":
+#                     df_handled_missing_values[col].fillna(df_handled_missing_values[col].mean(), inplace=True)
+#                 elif act == "Fill with Median":
+#                     df_handled_missing_values[col].fillna(df_handled_missing_values[col].median(), inplace=True)
+#                 elif act == "Fill with Mode":
+#                     df_handled_missing_values[col].fillna(df_handled_missing_values[col].mode()[0], inplace=True)
 
-            #droppin columns last to avoid issues with missing values in other columns
-            to_drop_cols = [
-                c for c, combo in actions.items()
-                if combo.get().startswith("Remove Column")
-            ]
-            if to_drop_cols:
-                df_handled_missing_values.drop(columns=to_drop_cols, inplace=True)
+#             #droppin columns last to avoid issues with missing values in other columns
+#             to_drop_cols = [
+#                 c for c, combo in actions.items()
+#                 if combo.get().startswith("Remove Column")
+#             ]
+#             if to_drop_cols:
+#                 df_handled_missing_values.drop(columns=to_drop_cols, inplace=True)
 
-            #showing the dataset preview after handling missing values
-            show_dataframe(df_handled_missing_values)
+#             #showing the dataset preview after handling missing values
+#             show_dataframe(df_handled_missing_values)
     
-    next_button.configure(command=apply_actions)
+#     next_button.configure(command=apply_actions)
 
-    loading_frame.pack_forget()
-    entire_missingvalues_section.pack(fill="both", expand=True)
-#################################################################################################################################### 
-    
+#     loading_frame.pack_forget()
+#     entire_missingvalues_section.pack(fill="both", expand=True)
+# #################################################################################################################################### 
 
-main_menu()
-#running the main window
-main_window.mainloop()
+
+if __name__ == "__main__":
+    #creating the main window
+    config.main_window = ctk.CTk()
+    config.main_window.title("UNEEFLOW")
+    center_window(config.main_window, 750, 750)
+
+    #setting the logo
+    config.main_window.iconbitmap("U Logo.ico")
+
+    #Splash Screen- this will act as a loading screen before the main window
+    ##########################################################################################
+
+    #hiding the app at the start for the splash screen
+    config.main_window.withdraw()
+
+    splash = ctk.CTkToplevel()
+
+    #centering the splash window
+    center_window(splash, 500, 500)
+    splash.overrideredirect(True)  
+
+    #loading the uneeflow logo as splash
+    splash_img = Image.open("UNEE FLOW LOGO.png")
+    splash_img = splash_img.resize((500, 500), Image.LANCZOS)
+    splash_bg = CTkImage(splash_img, size=(500, 500))
+
+    splash_label = ctk.CTkLabel(splash, image=splash_bg, text="")
+    splash_label.pack()
+
+    #removing the splash and showing the main window
+    def close_splash():
+        splash.destroy()
+        config.main_window.deiconify()
+
+    splash.after(1500, close_splash)
+    MainMenuScreen().main_menu()
+    #running the main window
+    config.main_window.mainloop()
