@@ -15,6 +15,8 @@ uri = None
 current_step = None
 total_missing = 0
 
+profile_cache = {}
+
 uneeflow_logo = 'assets/UNEE FLOW LOGO.png'
 uneeflow_ctk_theme = 'assets/UneeFlow_theme.json'
 uneeflow_logo_icon = 'assets/U Logo.ico'

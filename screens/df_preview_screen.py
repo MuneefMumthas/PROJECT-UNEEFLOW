@@ -11,6 +11,8 @@ import shutil
 import webbrowser
 from pathlib import Path
 import customtkinter as ctk
+import pandas as pd
+import hashlib
 
 
 import config
@@ -52,6 +54,10 @@ class DFPreviewScreen:
     #This function is used to display dataframe in a table whenever needed to preview the updated dataframe
     #################################################################################################################################### 
     def show_dataframe(self, current_df):
+
+        row_hashes = pd.util.hash_pandas_object(current_df, index=True).values
+        df_hash    = hashlib.sha256(row_hashes.tobytes()).hexdigest()
+        self._df_hash = df_hash
 
         #removing the existing widgets from the screen
         for widget in config.main_window.winfo_children():
@@ -146,7 +152,9 @@ class DFPreviewScreen:
 
         #data profile report button
         data_profile_button = ctk.CTkButton(summary_frame, text="Generate Profile Report", font=("Arial", 14), command=None)
-        data_profile_button.pack(pady=(10,10))
+        
+
+        
 
         progress_bar = ctk.CTkProgressBar(summary_frame, mode="indeterminate", width=200)
         
@@ -176,6 +184,7 @@ class DFPreviewScreen:
             #creating a file URI for the HTML report
 
             config.uri = Path(html_path).absolute().as_uri()  
+            config.profile_cache[self._df_hash] = config.uri
 
 
         #function to open the html report in a web browser
@@ -268,7 +277,16 @@ class DFPreviewScreen:
 
             save_view_profile_button.configure(command=save_view_selection_command)
         
-        data_profile_button.configure(command=profile_report_button)
+        if self._df_hash in config.profile_cache:
+            #if the profile report is already generated for this dataframe, we can skip the generation
+            #and directly show the report
+            config.uri = config.profile_cache[self._df_hash]
+            profile_done()
+
+        else:
+            data_profile_button.configure(text="Generate Profile Report", command=profile_report_button)
+            data_profile_button.pack(pady=(10,10))
+        
 
         ##############################################
 
