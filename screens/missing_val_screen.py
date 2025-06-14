@@ -121,9 +121,11 @@ class MissingValScreen:
                 
                 #actions for handling missing values by data type
                 column_data = config.df_selected[col]
-                
+                nunique  = column_data.nunique(dropna=True)
+                frac_nunique   = nunique / len(column_data)
+
                 #continuous numeric data
-                if is_numeric_dtype(column_data) and column_data.nunique() > 10:
+                if is_numeric_dtype(column_data) and nunique > 10 and frac_nunique > 0.05:
                     options = [ "ContinuousN debug",
                         "Fill with Mean/Average",
                         "Fill with Median",
@@ -138,6 +140,7 @@ class MissingValScreen:
                         "Remove Rows",
                         "Remove Column"
                     ]
+                
 
                 #object or string dtype
                 else:
