@@ -234,32 +234,57 @@ class DFPreviewScreen:
             
             #deriving the temporary folder path from the saved URI
             tmp_html_path = Path(config.uri.replace("file:///", ""))
-            tmp_dir = tmp_html_path.parent
 
             #letting user choose a destination directory
-            destination_parent = filedialog.askdirectory(title="Select folder to save the profile report")
+            destination_parent = Path(filedialog.askdirectory(title="Select folder to save the profile report"))
             if not destination_parent:
                 return
-
-            #giving a name
+            
+            #folder name
             folder_name = "UNEEFLOW Data Profile Report"
-            destination_folder = os.path.join(destination_parent, folder_name)
+
+            #file name
+            html_file_name = "UNEEFLOW Data Profile Report.html"
+            
+            #creating the destination folder path
+            destination_folder = destination_parent / folder_name
+            destination_file = destination_folder/ html_file_name
 
             #error handling
             try:
-                shutil.copytree(tmp_dir, destination_folder)
+                destination_folder.mkdir()
+                shutil.copy2(tmp_html_path, destination_file)
                 messagebox.showinfo("Success", f"Profile report saved to:\n{destination_folder}")
+
             except FileExistsError:
-                overwrite = messagebox.askyesno(
+                overwrite = messagebox.askyesnocancel(
                     "Folder Exists",
-                    f"The folder '{folder_name}' already exists at the destination.\nDo you want to replace it?"
+                    f"The folder '{folder_name}' already exists at the destination.\nDo you want to replace it?\n"
+                    "Yes: Replace it\n"
+                    "No: Save a copy with a numbered suffix\n"
+                    "Cancel: Do nothing"
                 )
-                if overwrite:
+                if overwrite is True:
                     shutil.rmtree(destination_folder)
-                    shutil.copytree(tmp_dir, destination_folder)
+                    destination_folder.mkdir()
+                    shutil.copy2(tmp_html_path, destination_file)
                     messagebox.showinfo("Success", f"Profile report overwritten at:\n{destination_folder}")
+
+                if overwrite is False:
+                    #creating copies with numbered suffixes
+                    i = 1
+                    while True:
+                        new_folder = destination_parent / f"{folder_name} ({i})"
+                        if not new_folder.exists():
+                            new_folder.mkdir()
+                            shutil.copy2(tmp_html_path, new_folder / html_file_name)
+                            messagebox.showinfo("Success", f"Profile report saved to:\n{new_folder}")
+                            break
+                        i += 1
+                
                 else:
-                    messagebox.showwarning("Cancelled", "Save operation was cancelled.")
+                    messagebox.showinfo("Cancelled", "Save operation was cancelled.")
+
             except Exception as e:
                 messagebox.showerror("Error", f"Failed to save profile report:\n{e}")
 
@@ -274,7 +299,7 @@ class DFPreviewScreen:
             #data_profile_button.pack(pady=(10,10))
 
             #save or view button
-            save_view_profile_button = ctk.CTkSegmentedButton(summary_frame, values=["Save Profile Report", "View Profile Report"], command=None, font=("Arial", 14), width=100)
+            save_view_profile_button = ctk.CTkSegmentedButton(summary_frame, values=["Save Profile Report", "View Profile Report"], command=None, font=("Arial", 14), width=150)
             save_view_profile_button.pack(pady=(10,10))
 
             def save_view_selection_command(value):
