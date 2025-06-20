@@ -17,6 +17,9 @@ total_missing = 0
 
 profile_cache = {}
 
+profile_temp_dirs = []
+
+
 uneeflow_logo = 'assets/UNEE FLOW LOGO.png'
 uneeflow_ctk_theme = 'assets/UneeFlow_theme.json'
 uneeflow_logo_icon = 'assets/U Logo.ico'

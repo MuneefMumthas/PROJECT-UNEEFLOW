@@ -170,6 +170,9 @@ class DFPreviewScreen:
             #and we don't want to keep it in memory
             tmp_dir  = tempfile.mkdtemp(prefix="uneeflow_profile_")
 
+            #storing the temporary directory in the config for cleaning up later
+            config.profile_temp_dirs.append(tmp_dir)
+
             html_path = os.path.join(tmp_dir, "report.html")
 
             profile.to_widgets

@@ -90,5 +90,14 @@ if __name__ == "__main__":
 
     splash.after(1500, close_splash)
     MainMenuScreen().main_menu()
+
+    #deleting the temporary folders created for the profile reports once the app is closed to prevent cluttering the system
+    def on_app_close():
+        for d in config.profile_temp_dirs:
+            shutil.rmtree(d, ignore_errors=True)
+        config.main_window.destroy()
+
+    config.main_window.protocol("WM_DELETE_WINDOW", on_app_close)
+
     #running the main window
     config.main_window.mainloop()
