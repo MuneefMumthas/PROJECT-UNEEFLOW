@@ -14,7 +14,7 @@ import customtkinter as ctk
 import pandas as pd
 import hashlib
 
-
+import base64
 import config
 
 class DFPreviewScreen:
@@ -176,14 +176,29 @@ class DFPreviewScreen:
             profile.to_file(html_path)
             
             #copying the logo to the temporary directory to display it in the report
-            logo_src_path = config.uneeflow_logo
-            logo_filename = Path(logo_src_path).name
-            logo_dst_path = os.path.join(tmp_dir, logo_filename)
-            shutil.copy2(logo_src_path, logo_dst_path)
+            #logo_src_path = config.uneeflow_logo
+            #logo_filename = Path(logo_src_path).name
+            #logo_dst_path = os.path.join(tmp_dir, logo_filename)
+            #shutil.copy2(logo_src_path, logo_dst_path)
+
+
+            html_path = Path(tmp_dir) / "report.html"
+            logo_path = Path(config.uneeflow_logo)
+
+            #reading the HTML file and encoding the logo to base64
+            #this is done to embed the logo in the HTML report
+            html = html_path.read_text(encoding="utf-8")
+            b64  = base64.b64encode(logo_path.read_bytes()).decode("ascii")
+            data_uri = f"data:image/png;base64,{b64}"
+
+            #replacing the logo path in the HTML with the base64 encoded data URI
+            html = html.replace(f'src="{logo_path.name}"', f'src="{data_uri}"')
+
+            inlined_html = Path(tmp_dir) / "report_inlined.html"
+            inlined_html.write_text(html, encoding="utf-8")
 
             #creating a file URI for the HTML report
-
-            config.uri = Path(html_path).absolute().as_uri()  
+            config.uri = Path(inlined_html).absolute().as_uri()  
             config.profile_cache[self._df_hash] = config.uri
 
 
