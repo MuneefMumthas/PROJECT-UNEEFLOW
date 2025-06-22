@@ -18,10 +18,10 @@ class MissingValScreen:
 
     #This function is used to handle missing values in the dataset for both numerical and categorical data
     #################################################################################################################################### 
-    def step_4_Missing_values(self):
+    def step_5_Missing_values(self):
         
 
-        config.current_step = "step 4"
+        config.current_step = "step 5"
 
         #removing the existing widgets from the screen
         for widget in config.main_window.winfo_children():
