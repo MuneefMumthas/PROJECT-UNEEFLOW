@@ -29,16 +29,15 @@ class DFPreviewScreen:
         from screens.import_screen import ImportScreen
         from screens.input_var_screen import InputVarScreen 
         from screens.missing_val_screen import MissingValScreen
-        from screens.dtype_confirmation_screen import DtypeScreen
 
         if config.current_step == "step 1" or config.current_step == "step 2":
             ImportScreen().build_model_button_function()
 
-        elif config.current_step == "step 4":
-            DtypeScreen().step_4_confirm_dtypes()
+        elif config.current_step == "step 3":
+            InputVarScreen().step_3_select_input_variables()
                
-        elif config.current_step == "step 5":
-            MissingValScreen().step_5_Missing_values()
+        elif config.current_step == "step 4":
+            MissingValScreen().step_4_Missing_values()
 
     def show_dataframe_next(self):
         
@@ -48,8 +47,8 @@ class DFPreviewScreen:
         if config.current_step == "step 1" or config.current_step == "step 2":
             TargetVarScreen().step_2_select_target_variable()
 
-        elif config.current_step == "step 4":
-            MissingValScreen().step_5_Missing_values()
+        elif config.current_step == "step 3":
+            MissingValScreen().step_4_Missing_values()
 
 
     #This function is used to display dataframe in a table whenever needed to preview the updated dataframe

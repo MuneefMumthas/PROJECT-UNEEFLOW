@@ -100,8 +100,7 @@ class InputVarScreen:
 
         def save_selected_columns_df():
 
-            #from screens.df_preview_screen import DFPreviewScreen
-            from screens.dtype_confirmation_screen import DtypeScreen
+            from screens.df_preview_screen import DFPreviewScreen
 
             #get the selected columns
             selected = [col for col, var in selected_columns.items() if var.get()]
@@ -117,12 +116,8 @@ class InputVarScreen:
             if confirmation:
                 #drop unselected columns 
                 config.df_selected = config.df[selected + [config.selected_target_variable]]
-                print("Selected columns:", config.df_selected.columns.tolist())
                 #show updated dataframe
-                #DFPreviewScreen().show_dataframe(config.df_selected)
-                
-                DtypeScreen().step_4_confirm_dtypes()
-
+                DFPreviewScreen().show_dataframe(config.df_selected)
             else:
                 #allow user to modify selection
                 return
