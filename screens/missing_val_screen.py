@@ -11,17 +11,17 @@ class MissingValScreen:
     #Step 4 - Handling Missing Values
 
     #this function is used to handle the change in the combo box selection
-    # it saves the selected action for each column in the saved_actions dictionary
+    #it saves the selected action for each column in the saved_actions dictionary
     def on_combo_change(self, col_name: str, combo: ctk.CTkComboBox):
         config.saved_actions[col_name] = combo.get()
 
 
     #This function is used to handle missing values in the dataset for both numerical and categorical data
     #################################################################################################################################### 
-    def step_4_Missing_values(self):
+    def step_5_Missing_values(self):
         
 
-        config.current_step = "step 4"
+        config.current_step = "step 5"
 
         #removing the existing widgets from the screen
         for widget in config.main_window.winfo_children():
