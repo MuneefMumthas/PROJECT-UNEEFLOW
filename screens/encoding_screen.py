@@ -105,7 +105,71 @@ class EncodingScreen:
                 encoding_combo.pack(side="left", padx=10)
 
         
+        def apply_encoding():
+            #validating the selection for each columns
         
+            #validation for target variable
+            if not is_numeric_dtype(target_series) and not config.saved_target_encoding.get(target):
+                messagebox.showerror("Error", "Please select encoding for the target variable.")
+                return
+            
+            #validation for categorical columns
+            missing = [c for c in categorical_columns if not config.saved_categorical_encoding.get(c)]
+            if missing:
+                messagebox.showerror("Error", f"Select encoding for: {', '.join(missing)}")
+                return
+
+            #encoding the target variable
+            if not is_numeric_dtype(target_series):
+                choice = config.saved_target_encoding[target]
+                
+                #lable encoding
+                if choice == "Label Encoding":
+                    le = LabelEncoder()
+                    config.df_encoded[target] = le.fit_transform(config.df_encoded[target])
+
+
+                #ordinal encoding
+                elif choice == "Ordinal Encoding":
+                    oe = OrdinalEncoder()
+                    config.df_encoded[target] = oe.fit_transform(config.df_encoded[[target]]).astype(int)
+
+            
+            #encoding the categorical columns
+            for col in categorical_columns:
+                choice = config.saved_categorical_encoding[col]
+
+                #one hot encoding
+                if choice == "One-Hot Encoding":
+                    ohe = OneHotEncoder(sparse_output=False, handle_unknown='ignore')
+                    encoded_col = ohe.fit_transform(config.df_encoded[[col]])
+
+                    #creating new meaningful column names
+                    new_col_name = ohe.get_feature_names_out([col])
+
+                    #creating a new dataframe with the encoded column
+                    df_ohe = pd.DataFrame(encoded_col, columns=new_col_name, index=config.df_encoded.index)
+
+                    #dropping the original column and concatenating the new dataframe
+                    config.df_encoded = pd.concat([config.df_encoded.drop(columns=[col]), df_ohe], axis=1)
+                    
+
+
+                elif choice == "Label Encoding":
+                    le = LabelEncoder()
+                    config.df_encoded[col] = le.fit_transform(config.df_encoded[col])
+
+
+                elif choice == "Ordinal Encoding":
+                    oe = OrdinalEncoder()
+                    config.df_encoded[col] = oe.fit_transform(config.df_encoded[[col]]).astype(int)
+
+            
+            #showing the encoded dataframe
+            from screens.df_preview_screen import DFPreviewScreen
+            DFPreviewScreen().show_dataframe(config.df_encoded)
+        
+        next_button.configure(command=apply_encoding)
 
         loading_frame.pack_forget()
         entire_encoding_section.pack(fill="both", expand=True)
