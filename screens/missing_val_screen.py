@@ -232,6 +232,10 @@ class MissingValScreen:
                 if to_drop_cols:
                     config.df_handled_missing_values.drop(columns=to_drop_cols, inplace=True)
 
+                #storing the final input variables after handling missing values
+                config.selected_input_variables = list(config.df_handled_missing_values.columns.drop(config.selected_target_variable))
+                print(f"Updated Input Variables: {config.selected_input_variables}")
+
                 #showing the dataset preview after handling missing values
                 DFPreviewScreen().show_dataframe(config.df_handled_missing_values)
         
