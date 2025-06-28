@@ -39,6 +39,10 @@ class DFPreviewScreen:
         elif config.current_step == "step 4":
             MissingValScreen().step_4_Missing_values()
 
+        elif config.current_step == "step 5":
+            from screens.encoding_screen import EncodingScreen
+            EncodingScreen().show_encoding_screen()
+
     def show_dataframe_next(self):
         
         from screens.target_var_screen import TargetVarScreen

@@ -6,6 +6,7 @@ main_window = None
 df = None
 df_selected = None
 df_handled_missing_values = None
+df_encoded = None
 
 selected_target_variable = None
 selected_input_variables = []
@@ -19,6 +20,10 @@ total_missing = 0
 profile_cache = {}
 
 profile_temp_dirs = []
+
+#encoding methods
+saved_target_encoding = {}
+saved_categorical_encoding = {}
 
 
 uneeflow_logo = 'assets/UNEE FLOW LOGO.png'
