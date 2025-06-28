@@ -50,8 +50,12 @@ class TargetVarScreen:
         next_button = ctk.CTkButton(top_frame, text="Next", font=("Arial", 12), command=None)
         next_button.pack(side="right", padx=10)
 
+        #middle frame for content
+        middle_frame = ctk.CTkFrame(entire_targetvar_section, fg_color="gray10")
+        middle_frame.pack(pady=30)
+
         #dropdown selection for the target variable
-        dropdown_frame = ctk.CTkFrame(entire_targetvar_section, fg_color="gray10")
+        dropdown_frame = ctk.CTkFrame(middle_frame, fg_color="gray10")
         dropdown_frame.pack(pady=50)
 
         ctk.CTkLabel(dropdown_frame, text="Select Target Variable:", font=("Arial", 16), text_color="white").pack(side="left", padx=10)
@@ -84,6 +88,18 @@ class TargetVarScreen:
             InputVarScreen().step_3_select_input_variables()
 
         next_button.configure(command=save_selected_target_var)
+
+        def handle_answer(answer: str):
+            print("AI says:", answer)
+            ctk.CTkLabel(middle_frame, text=f"AI says: {answer}", text_color="green")\
+        .pack(side="bottom", pady=10)
+
+        config.chat_bot.ask(
+            "You are a concise assistant. Never reveal your chain-of-thought—"
+            "only output the single-sentence answer for someone with no coding knowledge.\n\n"
+            "Why do we need to select a target variable for machine learning?", 
+            handle_answer
+        )
 
         #forget
         loading_frame.pack_forget()
