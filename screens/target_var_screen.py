@@ -89,17 +89,49 @@ class TargetVarScreen:
 
         next_button.configure(command=save_selected_target_var)
 
-        def handle_answer(answer: str):
-            print("AI says:", answer)
-            ctk.CTkLabel(middle_frame, text=f"AI says: {answer}", text_color="green")\
-        .pack(side="bottom", pady=10)
+        
 
-        config.chat_bot.ask(
-            "You are a concise assistant. Never reveal your chain-of-thought—"
-            "only output the single-sentence answer for someone with no coding knowledge.\n\n"
-            "Why do we need to select a target variable for machine learning?", 
-            handle_answer
-        )
+        def handle_answer(answer: str):
+
+            print("UneeSeek says:", answer)
+
+            #stoping and hiding the progress bar
+            progress_bar.stop()
+            progress_bar.pack_forget()
+
+            #enabling the back and next buttons after the AI response
+            back_button.configure(state="normal")
+            next_button.configure(state="normal")
+
+            #showing the AI response in a label
+            ctk.CTkLabel(middle_frame, text=f"UneeSeek: {answer}", text_color="#3a7ebf", font=("Arial", 14)).pack(side="bottom", pady=10)
+            
+
+
+        progress_bar = ctk.CTkProgressBar(middle_frame, mode="indeterminate", width=100)
+
+        def prompt():
+
+            #showing the progress bar while waiting for the AI response
+            ai_button.pack_forget()
+            progress_bar.pack(side="bottom", pady=10)
+            progress_bar.start()
+
+            #disabling the back and next buttons while waiting for the AI response
+            back_button.configure(state="disabled")
+            next_button.configure(state="disabled")
+
+            #prompting the AI to answer the question
+            config.chat_bot.ask(
+                "You are a concise assistant. Never reveal your chain-of-thought—"
+                "only output the single-sentence answer for someone with no coding knowledge.\n\n"
+                "Why do we need to select a target variable for machine learning?", 
+                handle_answer
+            )
+
+        #Ask ai button
+        ai_button = ctk.CTkButton(middle_frame, text="Why?, Ask UneeSeek AI", font=("Arial", 14), command=lambda: prompt())
+        ai_button.pack(side="bottom", pady=10)
 
         #forget
         loading_frame.pack_forget()

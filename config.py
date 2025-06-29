@@ -33,9 +33,8 @@ uneeflow_ctk_theme = 'assets/UneeFlow_theme.json'
 uneeflow_logo_icon = 'assets/U Logo.ico'
 uneeflow_data_profile_config = 'assets/config_default.yaml'
 
-#loading the chatbot at the start
-from model.chat_bot import ChatBot
-chat_bot = ChatBot()
+
+chat_bot = None
 
 
 #function to reset the config when needed
@@ -44,7 +43,6 @@ def reset_config():
     global selected_target_variable, selected_input_variables
     global saved_actions, prev_columns, uri
     global current_step, total_missing
-    global profile_cache, profile_temp_dirs
     global saved_target_encoding, saved_categorical_encoding
 
     #reseting necessary variables to their initial state

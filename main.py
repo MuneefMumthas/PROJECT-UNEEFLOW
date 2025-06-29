@@ -85,14 +85,25 @@ if __name__ == "__main__":
 
     #removing the splash and showing the main window
     def close_splash():
+        #loading the chatbot at the start during the splash screen
+        from model.chat_bot import ChatBot
+        config.chat_bot = ChatBot()
+
         splash.destroy()
         config.main_window.deiconify()
 
-    splash.after(1500, close_splash)
+    splash.after(100, close_splash)
     MainMenuScreen().main_menu()
 
     #deleting the temporary folders created for the profile reports once the app is closed to prevent cluttering the system
     def on_app_close():
+        
+        #closing the chat bot connection
+        if config.chat_bot is not None:
+            config.chat_bot.close()
+            config.chat_bot = None
+
+        #removing the temporary directories created for the profile reports
         for d in config.profile_temp_dirs:
             shutil.rmtree(d, ignore_errors=True)
         config.main_window.destroy()

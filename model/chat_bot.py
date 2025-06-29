@@ -33,3 +33,14 @@ class ChatBot:
             config.main_window.after(0, lambda: callback(answer))
 
         threading.Thread(target=_worker, daemon=True).start()
+    
+    def close(self):
+        #close the LLM connection
+        try:
+            self.llm.close()
+            print("ChatBot connection closed.")
+        except Exception:
+            pass
+
+        #setting the llm to None to free up memory
+        self.llm = None
