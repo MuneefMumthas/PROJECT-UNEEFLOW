@@ -181,6 +181,9 @@ class MissingValScreen:
             config.df_handled_missing_values = config.df_selected.copy()
 
             if config.total_missing == 0:
+                config.selected_input_variables = list(config.df_handled_missing_values.columns.drop(config.selected_target_variable))
+                print(f"Updated Input Variables: {config.selected_input_variables}")
+                
                 DFPreviewScreen().show_dataframe(config.df_handled_missing_values)
             else:
                 #checking if any action is selected for columns with missing values

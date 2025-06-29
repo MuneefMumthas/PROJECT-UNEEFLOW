@@ -3,11 +3,13 @@
 
 main_window = None
 
+#data frames
 df = None
 df_selected = None
 df_handled_missing_values = None
 df_encoded = None
 
+#variables
 selected_target_variable = None
 selected_input_variables = []
 saved_actions = {}
@@ -25,11 +27,43 @@ profile_temp_dirs = []
 saved_target_encoding = {}
 saved_categorical_encoding = {}
 
-
+#paths for assets
 uneeflow_logo = 'assets/UNEE FLOW LOGO.png'
 uneeflow_ctk_theme = 'assets/UneeFlow_theme.json'
 uneeflow_logo_icon = 'assets/U Logo.ico'
 uneeflow_data_profile_config = 'assets/config_default.yaml'
 
+#loading the chatbot at the start
 from model.chat_bot import ChatBot
 chat_bot = ChatBot()
+
+
+#function to reset the config when needed
+def reset_config():
+    global df, df_selected, df_handled_missing_values, df_encoded
+    global selected_target_variable, selected_input_variables
+    global saved_actions, prev_columns, uri
+    global current_step, total_missing
+    global profile_cache, profile_temp_dirs
+    global saved_target_encoding, saved_categorical_encoding
+
+    #reseting necessary variables to their initial state
+    #data frames
+    df = None
+    df_selected = None
+    df_handled_missing_values = None
+    df_encoded = None
+
+    #variables
+    selected_target_variable = None
+    selected_input_variables = []
+    saved_actions = {}
+    prev_columns = None
+    uri = None
+
+    total_missing = 0
+
+
+    #encoding methods
+    saved_target_encoding = {}
+    saved_categorical_encoding = {}

@@ -54,6 +54,8 @@ class ImportScreen:
             return
 
         try:
+            config.reset_config()
+            
             #read CSV file
             config.df = pd.read_csv(file_path)
 
@@ -75,6 +77,8 @@ class ImportScreen:
             return
 
         try:
+            config.reset_config()
+
             #read excel file
             config.df = pd.read_excel(file_path, sheet_name=0, engine="openpyxl")
 
@@ -97,6 +101,8 @@ class ImportScreen:
             return
 
         try:
+            config.reset_config()
+
             #read json file
             config.df = pd.read_json(file_path, orient="records")
 
