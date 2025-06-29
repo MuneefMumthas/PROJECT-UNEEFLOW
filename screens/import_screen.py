@@ -21,8 +21,8 @@ class ImportScreen:
             widget.destroy()
         
         #step 1 label
-        step1_label = ctk.CTkLabel(config.main_window, text="Step 1: Import Dataset", font=("Arial", 20, "bold"))
-        step1_label.pack(pady=20)
+        heading_label = ctk.CTkLabel(config.main_window, text="Step 1: Import Dataset", font=("Arial", 20, "bold"))
+        heading_label.pack(pady=20)
 
         #import csv button
         import_csv_button = ctk.CTkButton(config.main_window, text="Import CSV", font=("Arial", 16), command=self.import_csv, width=180, height=40)

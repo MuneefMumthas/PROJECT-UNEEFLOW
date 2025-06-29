@@ -58,8 +58,8 @@ class MissingValScreen:
         back_button.pack(side="left",padx=10)
 
         #heading lable
-        table_label = ctk.CTkLabel(top_frame, text="Step 4: Handling Missing Values", font=("Arial", 16, "bold"))
-        table_label.pack(side="left", expand=True)
+        heading_label = ctk.CTkLabel(top_frame, text="Step 4: Handling Missing Values", font=("Arial", 16, "bold"))
+        heading_label.pack(side="left", expand=True)
 
         #Next button
         next_button = ctk.CTkButton(top_frame, text="Next", font=("Arial", 12), command=None)
@@ -183,7 +183,7 @@ class MissingValScreen:
             if config.total_missing == 0:
                 config.selected_input_variables = list(config.df_handled_missing_values.columns.drop(config.selected_target_variable))
                 print(f"Updated Input Variables: {config.selected_input_variables}")
-                
+
                 DFPreviewScreen().show_dataframe(config.df_handled_missing_values)
             else:
                 #checking if any action is selected for columns with missing values

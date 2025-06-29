@@ -43,8 +43,8 @@ class TargetVarScreen:
         back_button.pack(side="left", padx=10)
 
         #label for Step 2
-        step2_label = ctk.CTkLabel(top_frame, text="Step 2: Select Target Variable", font=("Arial", 16, "bold"))
-        step2_label.pack(side="left", expand=True)
+        heading_label = ctk.CTkLabel(top_frame, text="Step 2: Select Target Variable", font=("Arial", 16, "bold"))
+        heading_label.pack(side="left", expand=True)
 
         #next button
         next_button = ctk.CTkButton(top_frame, text="Next", font=("Arial", 12), command=None)

@@ -93,8 +93,8 @@ class DFPreviewScreen:
         back_button.pack(side="left",padx=10)
 
         #heading lable
-        table_label = ctk.CTkLabel(top_frame, text="Dataset Preview", font=("Arial", 20, "bold"))
-        table_label.pack(side="left", expand=True)
+        heading_label = ctk.CTkLabel(top_frame, text="Dataset Preview", font=("Arial", 20, "bold"))
+        heading_label.pack(side="left", expand=True)
 
         #Next button
         next_button = ctk.CTkButton(top_frame, text="Next", font=("Arial", 14), command=self.show_dataframe_next)
