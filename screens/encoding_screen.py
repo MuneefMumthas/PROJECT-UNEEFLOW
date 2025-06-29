@@ -104,6 +104,11 @@ class EncodingScreen:
                 encoding_combo.configure(command=lambda val, c=col: config.saved_categorical_encoding.__setitem__(c, val))
                 encoding_combo.pack(side="left", padx=10)
 
+        no_columns_to_encode = not categorical_columns and is_numeric_dtype(target_series)
+
+        if no_columns_to_encode:
+
+            ctk.CTkLabel(middle_frame, text="All Columns are numerical, click next to proceed to scaling.", font=("Arial", 14), text_color="green").pack(pady=20)
         
         def apply_encoding():
             #validating the selection for each columns
