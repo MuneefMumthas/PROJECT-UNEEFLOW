@@ -130,18 +130,25 @@ class EncodingScreen:
         
         def apply_encoding():
             #validating the selection for each columns
-        
+            
             #validation for target variable
             if not is_numeric_dtype(target_series) and not config.saved_target_encoding.get(target):
                 messagebox.showerror("Error", "Please select encoding for the target variable.")
                 return
             
             #validation for categorical columns
-            missing = [c for c in categorical_columns if not config.saved_categorical_encoding.get(c)]
-            if missing:
-                messagebox.showerror("Error", f"Select encoding for: {', '.join(missing)}")
+            cat_cols_not_selected = [c for c in categorical_columns if not config.saved_categorical_encoding.get(c)]
+            if cat_cols_not_selected:
+                messagebox.showerror("Error", f"Select encoding for: {', '.join(cat_cols_not_selected)}")
                 return
 
+            # confirmation dialog before applying encoding
+            if not messagebox.askyesno(
+                "Confirm",
+                "You’ve selected encoding for every column.\nProceed to apply them?"
+            ):
+                return
+    
             #encoding the target variable
             if not is_numeric_dtype(target_series):
                 choice = config.saved_target_encoding[target]
