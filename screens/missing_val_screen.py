@@ -15,12 +15,14 @@ class MissingValScreen:
     def on_combo_change(self, col_name: str, combo: ctk.CTkComboBox):
         config.saved_actions[col_name] = combo.get()
 
-    def _apply_bulk(self, option: str, actions: dict[str, ctk.CTkComboBox]):
+    #this function is used to bulk select actions for all columns in the missing values section
+    def apply_bulk(self, option: str, actions: dict[str, ctk.CTkComboBox]):
 
         for col, combo in actions.items():
 
             if option == "Remove All Rows":
                 combo.set("Remove Rows")
+                
 
             elif option == "Fill Median/Mode":
                 column_data = config.df_selected[col]
@@ -35,8 +37,12 @@ class MissingValScreen:
                 else:
                     combo.set("Fill with Mode")
 
-            # persist the bulk choice
+            #saving the selected action in the saved_actions dictionary
             config.saved_actions[col] = combo.get()
+
+            if self.bulk_button is not None:
+                #resetting the bulk button to None to reuse it
+                self.bulk_button.set(None)
 
 
     #This function is used to handle missing values in the dataset for both numerical and categorical data
@@ -93,8 +99,8 @@ class MissingValScreen:
         middle_frame.pack(pady=30)
 
         #bulk button to bulk select actions
-        bulk_button =ctk.CTkSegmentedButton(middle_frame, values=["Remove All Rows", "Fill Median/Mode"], command=lambda opt: self._apply_bulk(opt, actions))
-        bulk_button.pack(pady=10)
+        self.bulk_button =ctk.CTkSegmentedButton(middle_frame, values=["Remove All Rows", "Fill Median/Mode"], command=lambda opt: self.apply_bulk(opt, actions))
+        self.bulk_button.pack(pady=10)
 
         #scrollable frame for the content
         scroll_frame = ctk.CTkScrollableFrame(middle_frame, width=700, height=500, fg_color="transparent")
