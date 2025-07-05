@@ -15,6 +15,29 @@ class MissingValScreen:
     def on_combo_change(self, col_name: str, combo: ctk.CTkComboBox):
         config.saved_actions[col_name] = combo.get()
 
+    def _apply_bulk(self, option: str, actions: dict[str, ctk.CTkComboBox]):
+
+        for col, combo in actions.items():
+
+            if option == "Remove All Rows":
+                combo.set("Remove Rows")
+
+            elif option == "Fill Median/Mode":
+                column_data = config.df_selected[col]
+                nunique  = column_data.nunique(dropna=True)
+                frac_nunique   = nunique / len(column_data)
+
+                #continuous numeric data
+                if is_numeric_dtype(column_data) and nunique > 10 and frac_nunique > 0.05:
+                    combo.set("Fill with Median")
+                
+                #categorical numeric data
+                else:
+                    combo.set("Fill with Mode")
+
+            # persist the bulk choice
+            config.saved_actions[col] = combo.get()
+
 
     #This function is used to handle missing values in the dataset for both numerical and categorical data
     #################################################################################################################################### 
@@ -69,6 +92,11 @@ class MissingValScreen:
         middle_frame = ctk.CTkFrame(entire_missingvalues_section, fg_color="gray10")
         middle_frame.pack(pady=30)
 
+        #bulk button to bulk select actions
+        bulk_button =ctk.CTkSegmentedButton(middle_frame, values=["Remove All Rows", "Fill Median/Mode"], command=lambda opt: self._apply_bulk(opt, actions))
+        bulk_button.pack(pady=10)
+
+        #scrollable frame for the content
         scroll_frame = ctk.CTkScrollableFrame(middle_frame, width=700, height=500, fg_color="transparent")
         scroll_frame.pack(padx=10, pady=10, fill="both", expand=True)
 
@@ -126,7 +154,7 @@ class MissingValScreen:
 
                 #continuous numeric data
                 if is_numeric_dtype(column_data) and nunique > 10 and frac_nunique > 0.05:
-                    options = [ "ContinuousN debug",
+                    options = [ 
                         "Fill with Mean/Average",
                         "Fill with Median",
                         "Remove Rows",
@@ -135,7 +163,7 @@ class MissingValScreen:
 
                 #categorical numeric data
                 elif is_numeric_dtype(column_data):
-                    options = ["CategoricalN debug",
+                    options = [
                         "Fill with Mode",
                         "Remove Rows",
                         "Remove Column"
@@ -144,7 +172,7 @@ class MissingValScreen:
 
                 #object or string dtype
                 else:
-                    options = ["object or string debug",
+                    options = [
                         "Fill with Mode",      
                         "Remove Rows",
                         "Remove Column"
