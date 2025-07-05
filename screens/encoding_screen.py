@@ -56,59 +56,77 @@ class EncodingScreen:
         middle_frame = ctk.CTkFrame(entire_encoding_section, fg_color="gray10")
         middle_frame.pack(pady=30)
 
-        #creating a copy of the dataframe to work with
+        scroll_frame = ctk.CTkScrollableFrame(middle_frame, width=700, height=500, fg_color="transparent")
+        scroll_frame.pack(padx=10, pady=10, fill="both", expand=True)
 
+        #creating 3 columns in the scrollable frame
+        scroll_frame.columnconfigure(0, weight=1)
+
+        
+
+        #creating a copy of the dataframe to work with
         config.df_encoded = config.df_handled_missing_values.copy()
 
         target = config.selected_target_variable
-        target_series = config.df_encoded[config.selected_target_variable]
-
-        #encoding the target variable if it is categorical
-        if not is_numeric_dtype(target_series):
-            target_encoding_frame = ctk.CTkFrame(middle_frame, fg_color="gray10")
-            target_encoding_frame.pack(pady=20)
-            ctk.CTkLabel(target_encoding_frame, text=f"Encoding for {target} Target", font=("Arial", 16, "bold"), text_color="white").pack(pady=10)
-
-            #creating a combo box for selecting the encoding method
-            target_encoding_options = ["Label Encoding", "Ordinal Encoding"]
-
-            target_encoding_combo = ctk.CTkComboBox(target_encoding_frame, values=target_encoding_options, state="readonly")
-            target_encoding_combo.set("Select Encoding Method")
-            
-            #saving the selected encoding method in the config
-            target_encoding_combo.configure(command=lambda val, t=target: config.saved_target_encoding.__setitem__(t, val))
-            target_encoding_combo.pack(pady=10)
-        
+        target_series = config.df_encoded[target]
 
         categorical_columns = [c for c in config.selected_input_variables if not is_numeric_dtype(config.df_encoded[c])]
 
-        if categorical_columns:
-            #encoding the categorical input variables
-            categorical_encoding_frame = ctk.CTkFrame(middle_frame, fg_color="gray10")
-            categorical_encoding_frame.pack(pady=20)
-            ctk.CTkLabel(categorical_encoding_frame, text="Encoding for Categorical Variables", font=("Arial", 16, "bold"), text_color="white").pack(pady=10)
+        columns_to_encode = []
 
-            #creating a combo box for selecting the encoding method
-            categorical_encoding_options = ["One-Hot Encoding", "Label Encoding", "Ordinal Encoding"]
+        #creating a list of columns to encode
+        if not is_numeric_dtype(target_series):
+            columns_to_encode.append(target)
+        columns_to_encode.extend(categorical_columns)
 
-            for col in categorical_columns:
-                col_frame = ctk.CTkFrame(categorical_encoding_frame, fg_color="gray10")
-                col_frame.pack(pady=5)
+        #hiding the scrollbar if there are 8 columns or less
+        if len(columns_to_encode) > 8:
+            scroll_frame._scrollbar.grid()
+        else:
+            scroll_frame._scrollbar.grid_remove()
 
-                ctk.CTkLabel(col_frame, text=f"Encoding for {col}", font=("Arial", 14), text_color="white").pack(side="left", padx=10)
 
-                encoding_combo = ctk.CTkComboBox(col_frame, values=categorical_encoding_options, state="readonly")
-                encoding_combo.set("Select Encoding Method")
+        for i, col in enumerate(columns_to_encode):
 
-                #saving the selected encoding method in the config
-                encoding_combo.configure(command=lambda val, c=col: config.saved_categorical_encoding.__setitem__(c, val))
-                encoding_combo.pack(side="left", padx=10)
+            #creating border for each row using a lower height frame
+            border_frame = ctk.CTkFrame(scroll_frame, fg_color="gray8", border_color="gray10", border_width=1)
+            border_frame.grid(row=i, column=0, columnspan=3, sticky="ew")
+            
+            #making the columns equal width for better alignment
+            for col_idx in (0, 1, 2):
+                border_frame.grid_columnconfigure(col_idx, weight=1, uniform="cols")
 
+
+            #column name label
+            col_name_label = ctk.CTkLabel(border_frame, text=f"{col}: ", font=("Arial", 16), text_color="white", wraplength=180, bg_color="gray8")
+            col_name_label.grid(row=0, column=0, sticky="w", padx=10, pady=(15,15))
+
+            if col == target:
+                options = ["Label Encoding", "Ordinal Encoding"]
+                col_name_label.configure(text=f"{col} (Target): ")
+
+            else:
+                options = ["One-Hot Encoding", "Label Encoding", "Ordinal Encoding"]
+            
+            #combo box for encoding
+            combo = ctk.CTkComboBox(border_frame, values=options, state="readonly", width=250)
+            combo.set("Choose Encoding Method")
+
+            #saving the selected encoding method in the config
+            if col == target:
+                combo.configure(command=lambda val, t=target: config.saved_target_encoding.__setitem__(t, val))
+            else:
+                combo.configure(command=lambda val, c=col: config.saved_categorical_encoding.__setitem__(c, val))
+
+            combo.grid(row=0, column=2, sticky="w", padx=10, pady=5)
+
+
+        #message to show if there are no columns to encode
         no_columns_to_encode = not categorical_columns and is_numeric_dtype(target_series)
 
         if no_columns_to_encode:
 
-            ctk.CTkLabel(middle_frame, text="All Columns are numerical, click next to proceed to scaling.", font=("Arial", 14), text_color="green").pack(pady=20)
+            ctk.CTkLabel(scroll_frame, text="All Columns are numerical, click next to proceed to scaling.", font=("Arial", 14), text_color="green").pack(pady=20)
         
         def apply_encoding():
             #validating the selection for each columns
