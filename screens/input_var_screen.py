@@ -21,6 +21,17 @@ class InputVarScreen:
         for widget in config.main_window.winfo_children():
             widget.destroy()
 
+        #saving the selected input columns in the config to save checkbox selections
+        current_input_columns = list(col for col in config.df.columns if col != config.selected_target_variable)
+
+        #if the previous input columns are not set or the current input columns are different from the previous input columns
+        #then clear the saved selected inputs to reset the checkbox selections
+        if config.prev_input_columns is None or set(current_input_columns) != set(config.prev_input_columns):
+            config.saved_selected_inputs.clear()
+
+        #then copy the current input columns to the previous input columns to track the changes
+        config.prev_input_columns = current_input_columns.copy()
+
         #loading frame
         loading_frame = ctk.CTkFrame(config.main_window, fg_color="gray10")
         loading_frame.pack(fill="both", expand=True)
@@ -52,7 +63,7 @@ class InputVarScreen:
         next_button.pack(side="right", padx=10)
 
         #displaying the columns except the target variable
-        selected_columns = {col: tk.BooleanVar(value=True) for col in config.df.columns if col != config.selected_target_variable}
+        selected_columns = {col: tk.BooleanVar(value=config.saved_selected_inputs.get(col, True)) for col in current_input_columns}
 
         #middle frame for content
         middle_frame = ctk.CTkFrame(entire_inputvariables_section, fg_color="gray10")
@@ -101,6 +112,10 @@ class InputVarScreen:
         def save_selected_columns_df():
 
             from screens.df_preview_screen import DFPreviewScreen
+
+            #save the selected columns to the config to use it again when returning to this screen
+            for col, var in selected_columns.items():
+                config.saved_selected_inputs[col] = var.get()
 
             #get the selected columns
             selected = [col for col, var in selected_columns.items() if var.get()]

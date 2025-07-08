@@ -12,9 +12,16 @@ df_encoded = None
 #variables
 selected_target_variable = None
 selected_input_variables = []
+
+uri = None
+
+#missing values screen saving
 saved_actions = {}
 prev_columns = None
-uri = None
+
+#input variable screen saving
+prev_input_columns = None
+saved_selected_inputs = {}
 
 current_step = None
 total_missing = 0
@@ -23,7 +30,7 @@ profile_cache = {}
 
 profile_temp_dirs = []
 
-#encoding methods
+#saving encoding methods
 saved_target_encoding = {}
 saved_categorical_encoding = {}
 
