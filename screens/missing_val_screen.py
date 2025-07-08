@@ -198,11 +198,16 @@ class MissingValScreen:
         
  
         config.total_missing = config.df_selected.isnull().sum().sum()
-
+    
         #showcasing the missing values only if there are any
         if config.total_missing == 0:
+            
             total_missing_label = ctk.CTkLabel(middle_frame, text="Click Next to continue", font=("Arial", 18), text_color="white")
             total_missing_label.pack(pady=10)
+
+            #hiding the bulk button if there are no missing values
+            self.bulk_button.pack_forget()
+
         else:
             total_missing_label = ctk.CTkLabel(middle_frame, text=f"Total Missing Values: {config.total_missing}", font=("Arial", 18), text_color="white")
             total_missing_label.pack(pady=10)
