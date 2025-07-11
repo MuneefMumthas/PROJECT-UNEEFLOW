@@ -19,12 +19,14 @@ uri = None
 saved_actions = {}
 prev_columns = None
 
+
 #input variable screen saving
 prev_input_columns = None
 saved_selected_inputs = {}
 
 current_step = None
 total_missing = 0
+
 
 profile_cache = {}
 
@@ -51,6 +53,7 @@ def reset_config():
     global saved_actions, prev_columns, uri
     global current_step, total_missing
     global saved_target_encoding, saved_categorical_encoding
+    global prev_input_columns, saved_selected_inputs
 
     #reseting necessary variables to their initial state
     #data frames
@@ -68,6 +71,8 @@ def reset_config():
 
     total_missing = 0
 
+    prev_input_columns = None
+    saved_selected_inputs = {}
 
     #encoding methods
     saved_target_encoding = {}

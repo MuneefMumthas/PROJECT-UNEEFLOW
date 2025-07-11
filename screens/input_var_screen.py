@@ -1,4 +1,3 @@
-import tkinter as tk
 import customtkinter as ctk
 from tkinter import messagebox
 from screens.df_preview_screen import DFPreviewScreen
@@ -63,7 +62,7 @@ class InputVarScreen:
         next_button.pack(side="right", padx=10)
 
         #displaying the columns except the target variable
-        selected_columns = {col: tk.BooleanVar(value=config.saved_selected_inputs.get(col, True)) for col in current_input_columns}
+        selected_columns = {col: ctk.BooleanVar(value=config.saved_selected_inputs.get(col, True)) for col in current_input_columns}
 
         #middle frame for content
         middle_frame = ctk.CTkFrame(entire_inputvariables_section, fg_color="gray10")

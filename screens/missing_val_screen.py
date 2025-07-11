@@ -202,14 +202,14 @@ class MissingValScreen:
         #showcasing the missing values only if there are any
         if config.total_missing == 0:
             
-            total_missing_label = ctk.CTkLabel(middle_frame, text="Click Next to continue", font=("Arial", 18), text_color="white")
+            total_missing_label = ctk.CTkLabel(middle_frame, text="Click Next to continue, will also remove any duplicates", font=("Arial", 18), text_color="white")
             total_missing_label.pack(pady=10)
 
             #hiding the bulk button if there are no missing values
             self.bulk_button.pack_forget()
 
         else:
-            total_missing_label = ctk.CTkLabel(middle_frame, text=f"Total Missing Values: {config.total_missing}", font=("Arial", 18), text_color="white")
+            total_missing_label = ctk.CTkLabel(middle_frame, text=f"Will remove duplicates and Total Missing Values: {config.total_missing}", font=("Arial", 18), text_color="white")
             total_missing_label.pack(pady=10)
 
         def apply_actions():
@@ -222,6 +222,9 @@ class MissingValScreen:
             if config.total_missing == 0:
                 config.selected_input_variables = list(config.df_handled_missing_values.columns.drop(config.selected_target_variable))
                 print(f"Updated Input Variables: {config.selected_input_variables}")
+                
+                #removing duplicates
+                config.df_handled_missing_values.drop_duplicates(inplace=True)
 
                 DFPreviewScreen().show_dataframe(config.df_handled_missing_values)
             else:
@@ -273,6 +276,9 @@ class MissingValScreen:
                 ]
                 if to_drop_cols:
                     config.df_handled_missing_values.drop(columns=to_drop_cols, inplace=True)
+
+                #removing duplicate rows
+                config.df_handled_missing_values.drop_duplicates(inplace=True)
 
                 #storing the final input variables after handling missing values
                 config.selected_input_variables = list(config.df_handled_missing_values.columns.drop(config.selected_target_variable))
