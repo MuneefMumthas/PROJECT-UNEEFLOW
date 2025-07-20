@@ -56,6 +56,10 @@ class EncodingScreen:
         middle_frame = ctk.CTkFrame(entire_encoding_section, fg_color="gray10")
         middle_frame.pack(pady=30)
 
+        #bulk button to bulk select actions
+        self.bulk_button =ctk.CTkSegmentedButton(middle_frame, values=["Lable All", "Ordinal All"], command=None)
+        self.bulk_button.pack(pady=10)
+
         scroll_frame = ctk.CTkScrollableFrame(middle_frame, width=700, height=500, fg_color="transparent")
         scroll_frame.pack(padx=10, pady=10, fill="both", expand=True)
 
