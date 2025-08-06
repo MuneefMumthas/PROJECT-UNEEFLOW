@@ -202,14 +202,14 @@ class MissingValScreen:
         #showcasing the missing values only if there are any
         if config.total_missing == 0:
             
-            total_missing_label = ctk.CTkLabel(middle_frame, text="Click Next to continue, will also remove any duplicates", font=("Arial", 18), text_color="white")
+            total_missing_label = ctk.CTkLabel(middle_frame, text="Click Next to continue, this will also remove any duplicate rows", font=("Arial", 18), text_color="white")
             total_missing_label.pack(pady=10)
 
             #hiding the bulk button if there are no missing values
             self.bulk_button.pack_forget()
 
         else:
-            total_missing_label = ctk.CTkLabel(middle_frame, text=f"Will remove duplicates and Total Missing Values: {config.total_missing}", font=("Arial", 18), text_color="white")
+            total_missing_label = ctk.CTkLabel(middle_frame, text=f"The actions Will also remove duplicate rows after handling the Total Missing Values: {config.total_missing}", font=("Arial", 18), text_color="white")
             total_missing_label.pack(pady=10)
 
         def apply_actions():
