@@ -99,13 +99,19 @@ class TargetVarScreen:
             progress_bar.stop()
             progress_bar.pack_forget()
 
+            #showing the AI response in a label
+            response = f"UneeSeek: {answer}"
+            response_lable = ctk.CTkLabel(middle_frame, text="", text_color="#3a7ebf", wraplength=500, font=("Arial", 14), justify="left")
+
+            response_lable.pack(side="bottom", pady=10)
+            
+            from model.chat_bot import ChatBot
+            ChatBot().animate_text(response_lable, response, delay=30)
+
+
             #enabling the back and next buttons after the AI response
             back_button.configure(state="normal")
             next_button.configure(state="normal")
-
-            #showing the AI response in a label
-            ctk.CTkLabel(middle_frame, text=f"UneeSeek: {answer}", text_color="#3a7ebf", font=("Arial", 14)).pack(side="bottom", pady=10)
-            
 
 
         progress_bar = ctk.CTkProgressBar(middle_frame, mode="indeterminate", width=100)
@@ -125,7 +131,7 @@ class TargetVarScreen:
             config.chat_bot.ask(
                 "You are a concise assistant. Never reveal your chain-of-thought—"
                 "only output the single-sentence answer for someone with no coding knowledge.\n\n"
-                "Why do we need to select a target variable for machine learning?", 
+                "Why do we need to select a target variable for machine learning?\n\n", 
                 handle_answer
             )
 

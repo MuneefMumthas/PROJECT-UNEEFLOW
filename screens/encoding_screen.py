@@ -53,59 +53,12 @@ class EncodingScreen:
         next_button.pack(side="right", padx=10)
 
         #middle frame for content
-        middle_frame = ctk.CTkFrame(entire_encoding_section, fg_color="gray10")
+        middle_frame = ctk.CTkFrame(entire_encoding_section, fg_color="gray10", height=600)
         middle_frame.pack(pady=30)
 
         #bulk button to bulk select actions
         #self.bulk_button =ctk.CTkSegmentedButton(middle_frame, values=["Lable All", "Ordinal All"], command=None)
         #self.bulk_button.pack(pady=10)
-
-        #AI button to decide the encoding methods
-
-        #function to handle the AI response
-        def handle_answer(answer: str):
-
-            print("UneeSeek says:", answer)
-
-            #stoping and hiding the progress bar
-            progress_bar.stop()
-            progress_bar.pack_forget()
-
-            #enabling the back and next buttons after the AI response
-            back_button.configure(state="normal")
-            next_button.configure(state="normal")
-
-            #showing the AI response in a label
-            ctk.CTkLabel(middle_frame, text=f"UneeSeek: {answer}", text_color="#3a7ebf", font=("Arial", 14)).pack(side="bottom", pady=10)
-    
-
-        progress_bar = ctk.CTkProgressBar(middle_frame, mode="indeterminate", width=100)
-
-        #function to prompt the AI
-        def prompt():
-
-            #showing the progress bar while waiting for the AI response
-            ai_button.pack_forget()
-            progress_bar.pack(side="bottom", pady=10)
-            progress_bar.start()
-
-            #disabling the back and next buttons while waiting for the AI response
-            back_button.configure(state="disabled")
-            next_button.configure(state="disabled")
-
-            #prompting the AI to answer the question
-
-            prompt =("You are a concise assistant. Never reveal your chain-of-thought"
-                    "only output the single-sentence answer for someone with no coding knowledge.\n"
-                    "how should we decide the encoding methods for the different columns between ordinal, label and one-hot encoding?\n\n"
-                    "Keep it short, Do not include any extra commentary.\n")
-            
-            print(prompt)
-            config.chat_bot.ask( prompt, handle_answer)
-
-        #Ask ai button
-        ai_button = ctk.CTkButton(middle_frame, text="Ask AI for Help", font=("Arial", 14), command=lambda: prompt())
-        ai_button.pack(side="bottom", pady=10)
 
 
         scroll_frame = ctk.CTkScrollableFrame(middle_frame, width=700, height=500, fg_color="transparent")
@@ -252,6 +205,54 @@ class EncodingScreen:
             DFPreviewScreen().show_dataframe(config.df_encoded)
         
         next_button.configure(command=apply_encoding)
+
+        def handle_answer(answer: str):
+
+            print("UneeSeek says:", answer)
+
+            #stoping and hiding the progress bar
+            progress_bar.stop()
+            progress_bar.pack_forget()
+
+            #showing the AI response in a label
+            response = f"UneeSeek: {answer}"
+            response_lable = ctk.CTkLabel(middle_frame, text="", text_color="#3a7ebf", wraplength=650, font=("Arial", 14), justify="left")
+
+            response_lable.pack(side="bottom", pady=10)
+            
+            from model.chat_bot import ChatBot
+            ChatBot().animate_text(response_lable, response, delay=30)
+
+
+            #enabling the back and next buttons after the AI response
+            back_button.configure(state="normal")
+            next_button.configure(state="normal")
+
+
+        progress_bar = ctk.CTkProgressBar(middle_frame, mode="indeterminate", width=100)
+
+        def prompt():
+
+            #showing the progress bar while waiting for the AI response
+            ai_button.pack_forget()
+            progress_bar.pack(side="bottom", pady=10)
+            progress_bar.start()
+
+            #disabling the back and next buttons while waiting for the AI response
+            back_button.configure(state="disabled")
+            next_button.configure(state="disabled")
+
+            #prompting the AI to answer the question
+            config.chat_bot.ask(
+                "You are a concise assistant. Never reveal your chain-of-thought—"
+                "only output the single-sentence answer for someone with no coding knowledge.\n\n"
+                "when to use lable encoding, when to use ordinal encoding, and when to use one-hot encoding?\n\n", 
+                handle_answer
+            )
+
+        #Ask ai button
+        ai_button = ctk.CTkButton(middle_frame, text="Need Help?, Ask UneeSeek AI", font=("Arial", 14), command=lambda: prompt())
+        ai_button.pack(side="bottom", pady=10)
 
         loading_frame.pack_forget()
         entire_encoding_section.pack(fill="both", expand=True)
