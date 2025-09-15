@@ -57,6 +57,10 @@ class DFPreviewScreen:
         elif config.current_step == "step 4":
             from screens.encoding_screen import EncodingScreen
             EncodingScreen().show_encoding_screen()
+        
+        elif config.current_step == "step 5":
+            from screens.training_screen import TrainingScreen
+            TrainingScreen().show_training_screen()
 
 
     #This function is used to display dataframe in a table whenever needed to preview the updated dataframe
