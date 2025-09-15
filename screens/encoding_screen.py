@@ -90,6 +90,8 @@ class EncodingScreen:
         else:
             scroll_frame._scrollbar.grid_remove()
 
+        #dictionary to store actions for each option in the combo box
+        actions = {}
 
         for i, col in enumerate(columns_to_encode):
 
@@ -124,6 +126,7 @@ class EncodingScreen:
                 combo.configure(command=lambda val, c=col: config.saved_categorical_encoding.__setitem__(c, val))
 
             combo.grid(row=0, column=2, sticky="w", padx=10, pady=5)
+            actions[col] = combo
 
 
         #message to show if there are no columns to encode
@@ -136,24 +139,27 @@ class EncodingScreen:
         def apply_encoding():
             #validating the selection for each columns
             
-            #validation for target variable
-            if not is_numeric_dtype(target_series) and not config.saved_target_encoding.get(target):
-                messagebox.showerror("Error", "Please select encoding for the target variable.")
+            cols_without_selection = [
+                col
+                for col, combo in actions.items()
+                if combo.get() == "Choose Encoding Method"
+            ]
+            if cols_without_selection:
+                messagebox.showerror(
+                    "Error",
+                    "Please select an encoding method for the following columns:\n  "
+                    + "\n  ".join(cols_without_selection)
+                )
                 return
             
-            #validation for categorical columns
-            cat_cols_not_selected = [c for c in categorical_columns if not config.saved_categorical_encoding.get(c)]
-            if cat_cols_not_selected:
-                messagebox.showerror("Error", f"Select encoding for: {', '.join(cat_cols_not_selected)}")
-                return
-
             # confirmation dialog before applying encoding
             if not messagebox.askyesno(
                 "Confirm",
                 "You’ve selected encoding for every column.\nProceed to apply them?"
             ):
                 return
-    
+            
+            
             #encoding the target variable
             if not is_numeric_dtype(target_series):
                 choice = config.saved_target_encoding[target]
