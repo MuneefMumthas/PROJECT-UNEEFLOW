@@ -119,6 +119,13 @@ class EncodingScreen:
             combo = ctk.CTkComboBox(border_frame, values=options, state="readonly", width=250)
             combo.set("Choose Encoding Method")
 
+            #setting the combo box to the previously selected value if exists
+            if col in config.saved_categorical_encoding:
+                combo.set(config.saved_categorical_encoding[col])
+
+            elif col == target and col in config.saved_target_encoding:
+                combo.set(config.saved_target_encoding[col])
+
             #saving the selected encoding method in the config
             if col == target:
                 combo.configure(command=lambda val, t=target: config.saved_target_encoding.__setitem__(t, val))
