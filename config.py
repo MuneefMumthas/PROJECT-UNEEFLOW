@@ -46,6 +46,10 @@ uneeflow_data_profile_config = 'assets/config_default.yaml'
 chat_bot = None
 
 
+#train test split default values
+test_size = 0.2
+train_size = 0.8
+
 #function to reset the config when needed
 def reset_config():
     global df, df_selected, df_handled_missing_values, df_encoded
