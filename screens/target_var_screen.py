@@ -39,15 +39,15 @@ class TargetVarScreen:
 
         #back button to return to Step 1
         from screens.df_preview_screen import DFPreviewScreen
-        back_button = ctk.CTkButton(top_frame, text="Back", font=("Arial", 12), command=lambda: DFPreviewScreen().show_dataframe(config.df))
+        back_button = ctk.CTkButton(top_frame, text="Back", font=("Arial", 14), command=lambda: DFPreviewScreen().show_dataframe(config.df))
         back_button.pack(side="left", padx=10)
 
         #label for Step 2
-        heading_label = ctk.CTkLabel(top_frame, text="Step 2: Select Target Variable", font=("Arial", 16, "bold"))
+        heading_label = ctk.CTkLabel(top_frame, text="Step 2: Select Target Variable", font=("Arial", 20, "bold"))
         heading_label.pack(side="left", expand=True)
 
         #next button
-        next_button = ctk.CTkButton(top_frame, text="Next", font=("Arial", 12), command=None)
+        next_button = ctk.CTkButton(top_frame, text="Next", font=("Arial", 14), command=None)
         next_button.pack(side="right", padx=10)
 
         #middle frame for content

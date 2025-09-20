@@ -41,15 +41,15 @@ class EncodingScreen:
             config.current_step = "step 4"
             DFPreviewScreen().show_dataframe(config.df_handled_missing_values)
 
-        back_button = ctk.CTkButton(top_frame, text="Back", font=("Arial", 12), command=back_to_preview)
+        back_button = ctk.CTkButton(top_frame, text="Back", font=("Arial", 14), command=back_to_preview)
         back_button.pack(side="left",padx=10)
 
         #heading lable
-        heading_label = ctk.CTkLabel(top_frame, text="Step 5: Encoding", font=("Arial", 16, "bold"))
+        heading_label = ctk.CTkLabel(top_frame, text="Step 5: Encoding", font=("Arial", 20, "bold"))
         heading_label.pack(side="left", expand=True)
 
         #Next button
-        next_button = ctk.CTkButton(top_frame, text="Next", font=("Arial", 12), command=None)
+        next_button = ctk.CTkButton(top_frame, text="Next", font=("Arial", 14), command=None)
         next_button.pack(side="right", padx=10)
 
         #middle frame for content

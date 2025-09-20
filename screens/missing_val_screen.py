@@ -83,15 +83,15 @@ class MissingValScreen:
 
         #back button
         from screens.input_var_screen import InputVarScreen
-        back_button = ctk.CTkButton(top_frame, text="Back", font=("Arial", 12), command=InputVarScreen().step_3_select_input_variables)
+        back_button = ctk.CTkButton(top_frame, text="Back", font=("Arial", 14), command=InputVarScreen().step_3_select_input_variables)
         back_button.pack(side="left",padx=10)
 
         #heading lable
-        heading_label = ctk.CTkLabel(top_frame, text="Step 4: Handling Missing Values", font=("Arial", 16, "bold"))
+        heading_label = ctk.CTkLabel(top_frame, text="Step 4: Handling Missing Values", font=("Arial", 20, "bold"))
         heading_label.pack(side="left", expand=True)
 
         #Next button
-        next_button = ctk.CTkButton(top_frame, text="Next", font=("Arial", 12), command=None)
+        next_button = ctk.CTkButton(top_frame, text="Next", font=("Arial", 14), command=None)
         next_button.pack(side="right", padx=10)
 
         #middle fram for content
@@ -114,6 +114,7 @@ class MissingValScreen:
             scroll_frame._scrollbar.grid()
         else:
             scroll_frame._scrollbar.grid_remove()
+
         
         #dictionary to store actions for each option in the combo box
         actions = {}
@@ -209,7 +210,7 @@ class MissingValScreen:
             self.bulk_button.pack_forget()
 
         else:
-            total_missing_label = ctk.CTkLabel(middle_frame, text=f"The actions Will also remove duplicate rows after handling the Total Missing Values: {config.total_missing}", font=("Arial", 18), text_color="white")
+            total_missing_label = ctk.CTkLabel(middle_frame, text=f"The actions will also remove duplicate rows after handling the Total Missing Values: {config.total_missing}", font=("Arial", 18), text_color="white", wraplength=500)
             total_missing_label.pack(pady=10)
 
         def apply_actions():
