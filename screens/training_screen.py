@@ -55,16 +55,14 @@ class TrainingScreen:
         middle_frame.pack(fill="x",pady=30)
 
 
-
-        scroll_frame = ctk.CTkScrollableFrame(middle_frame, width=700, height=600, fg_color="transparent")
-        scroll_frame.pack(padx=10, pady=10, fill="both", expand=True)
-
+        center_frame = ctk.CTkFrame(middle_frame, width=700, height=600, fg_color="transparent")
+        center_frame.pack(padx=50, pady=10, fill="both", expand=True)
 
 
         #train test split section
         ###############################################################
         
-        train_test_split_section_frame = ctk.CTkFrame(scroll_frame, fg_color="gray8", height=100, width=700, corner_radius=10)
+        train_test_split_section_frame = ctk.CTkFrame(center_frame, fg_color="gray8", height=100, width=700, corner_radius=10)
         train_test_split_section_frame.pack(anchor="center", pady=10, fill="x")
 
         train_test_split_label = ctk.CTkLabel(train_test_split_section_frame, text="Train Test Split", font=("Arial", 15, "bold"))
@@ -77,7 +75,7 @@ class TrainingScreen:
         test_size_lable = ctk.CTkLabel(train_test_frame, text="Test Size: ", font=("Arial", 14))
         test_size_lable.pack(side="left", padx=5, pady=10)
 
-        test_size_combo = ctk.CTkComboBox(train_test_frame, values=["10%", "15%", "20%", "25%", "30%", "35%", "40%", "45%", "50%"], font=("Arial", 14), width=100)
+        test_size_combo = ctk.CTkComboBox(train_test_frame, values=["10%", "15%", "20%", "25%", "30%", "35%", "40%", "45%", "50%"], font=("Arial", 14), width=100, state="readonly")
         test_size_combo.set("20%")
         test_size_combo.pack(side="left", padx=5, pady=10)
 
@@ -111,7 +109,7 @@ class TrainingScreen:
         #combo box for random state
         ###############################################################
 
-        random_state_combo = ctk.CTkComboBox(train_test_frame, values=["None", "0", "1", "21", "42", "99", "123", "2025"], font=("Arial", 14), width=180)
+        random_state_combo = ctk.CTkComboBox(train_test_frame, values=["None", "0", "1", "21", "42", "99", "123", "2025"], font=("Arial", 14), width=180, state="readonly")
         random_state_combo.set("Random State: None")
         random_state_combo.pack(side="left", padx=10, pady=10)
         
@@ -136,7 +134,7 @@ class TrainingScreen:
         #Task and Model Selection Section
         ###############################################################
 
-        task_model_selection_frame = ctk.CTkFrame(scroll_frame, fg_color="gray8", height=100, width=700, corner_radius=10)
+        task_model_selection_frame = ctk.CTkFrame(center_frame, fg_color="gray8", height=100, width=700, corner_radius=10)
         task_model_selection_frame.pack(anchor="center", pady=10, fill="x")
 
         model_selection_label = ctk.CTkLabel(task_model_selection_frame, text="Model Selection", font=("Arial", 15, "bold"))
@@ -149,7 +147,7 @@ class TrainingScreen:
         task_selection_frame = ctk.CTkFrame(task_model_selection_frame, fg_color="gray8")
         task_selection_frame.pack(anchor="center")
 
-        task_type_combo_box = ctk.CTkComboBox(task_selection_frame, values=["Regression", "Classification"], font=("Arial", 14), width=150)
+        task_type_combo_box = ctk.CTkComboBox(task_selection_frame, values=["Regression", "Classification"], font=("Arial", 14), width=150, state="readonly")
         task_type_combo_box.pack(side="left", pady=10, padx=10)
 
         #finding the task type based on the target variable using sklearn
@@ -179,7 +177,7 @@ class TrainingScreen:
 
         def overide_task_command():
             if overide_task_var.get():
-                task_type_combo_box.configure(state="normal")
+                task_type_combo_box.configure(state="readonly")
 
             else:
                 
@@ -216,7 +214,7 @@ class TrainingScreen:
         model_selection_frame.pack(anchor="center")
 
 
-        model_combo_box = ctk.CTkComboBox(model_selection_frame, values=[], font=("Arial", 14), width=300)
+        model_combo_box = ctk.CTkComboBox(model_selection_frame, values=[], font=("Arial", 14), width=300, state="readonly")
         model_combo_box.pack(side="left", padx=10, pady=10)
 
         #function to update the model options based on the task type
