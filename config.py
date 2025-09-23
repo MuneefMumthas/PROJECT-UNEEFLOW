@@ -51,8 +51,9 @@ test_size = None
 train_size = None
 split_random_state = None
 
-#task type
-task_type = None
+#task and model type
+task_type = None#
+selected_model = None
 
 #function to reset the config when needed
 def reset_config():

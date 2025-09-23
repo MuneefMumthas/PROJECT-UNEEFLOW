@@ -133,17 +133,20 @@ class TrainingScreen:
         print(f"Random State: {config.split_random_state}")
 
         
-        #Task Selection Section
+        #Task and Model Selection Section
         ###############################################################
 
-        model_selection_frame = ctk.CTkFrame(scroll_frame, fg_color="gray8", height=100, width=700, corner_radius=10)
-        model_selection_frame.pack(anchor="center", pady=10, fill="x")
+        task_model_selection_frame = ctk.CTkFrame(scroll_frame, fg_color="gray8", height=100, width=700, corner_radius=10)
+        task_model_selection_frame.pack(anchor="center", pady=10, fill="x")
 
-        model_selection_label = ctk.CTkLabel(model_selection_frame, text="Task Selection", font=("Arial", 15, "bold"))
+        model_selection_label = ctk.CTkLabel(task_model_selection_frame, text="Model Selection", font=("Arial", 15, "bold"))
         model_selection_label.pack(pady=10)
 
+        #Task type selection
+        ####################################
+
         #this frame will hold all the widgets to keep them in the center
-        task_selection_frame = ctk.CTkFrame(model_selection_frame, fg_color="gray8")
+        task_selection_frame = ctk.CTkFrame(task_model_selection_frame, fg_color="gray8")
         task_selection_frame.pack(anchor="center")
 
         task_type_combo_box = ctk.CTkComboBox(task_selection_frame, values=["Regression", "Classification"], font=("Arial", 14), width=150)
@@ -183,6 +186,9 @@ class TrainingScreen:
                 #setting the task type based on the target variable
                 set_task_type()
 
+                #updating the model options based on the task type
+                update_model_options()
+
             #debugging
             print(f"Task Type: {config.task_type}")
 
@@ -191,16 +197,59 @@ class TrainingScreen:
 
         #function to update the task type when selected from the combo box
         def update_task_type(choice):
-            if choice == "Regression":
-                config.task_type = "Regression"
-            
-            elif choice == "Classification":
-                config.task_type = "Classification"
+            config.task_type = choice
 
             #debugging
             print(f"Task Type: {config.task_type}")
+
+            update_model_options()
         
         task_type_combo_box.configure(command=update_task_type)
+
+        ####################################
+
+        #model selection section
+        ####################################
+        
+        #this frame will hold all the widgets to keep them in the center
+        model_selection_frame = ctk.CTkFrame(task_model_selection_frame, fg_color="gray8")
+        model_selection_frame.pack(anchor="center")
+
+
+        model_combo_box = ctk.CTkComboBox(model_selection_frame, values=[], font=("Arial", 14), width=300)
+        model_combo_box.pack(side="left", padx=10, pady=10)
+
+        #function to update the model options based on the task type
+        def update_model_options():
+
+            if config.task_type == "Classification":
+                model_combo_box.configure(values=["Logistic Regression", "Random Forest Classifier", "Support Vector Classifier"])
+                model_combo_box.set("Select Model")
+                config.selected_model = None
+                print(f"Selected Model: {config.selected_model}")
+            
+            elif config.task_type == "Regression":
+                model_combo_box.configure(values=["Linear Regression", "Random Forest Regressor", "Support Vector Regressor"])
+                model_combo_box.set("Select Model")
+                config.selected_model = None
+                print(f"Selected Model: {config.selected_model}")
+
+        
+        #running it when the screen loads
+        update_model_options()
+
+        #saving the selected model to config
+        def save_selected_model(choice):
+            config.selected_model = choice
+
+            #debugging
+            print(f"Selected Model: {config.selected_model}")
+        
+        model_combo_box.configure(command=save_selected_model)
+
+
+
+
 
         ###############################################################
 
