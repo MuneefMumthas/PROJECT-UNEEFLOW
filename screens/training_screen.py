@@ -51,7 +51,7 @@ class TrainingScreen:
         next_button.pack(side="right", padx=10)
 
         #middle frame for content
-        middle_frame = ctk.CTkFrame(entire_training_section, fg_color="gray9")
+        middle_frame = ctk.CTkFrame(entire_training_section, fg_color="gray10")
         middle_frame.pack(fill="x",pady=30)
 
 
@@ -59,24 +59,27 @@ class TrainingScreen:
         scroll_frame = ctk.CTkScrollableFrame(middle_frame, width=700, height=600, fg_color="transparent")
         scroll_frame.pack(padx=10, pady=10, fill="both", expand=True)
 
-        #creating 3 columns in the scrollable frame
-        scroll_frame.columnconfigure(0, weight=1)
 
 
         #train test split section
-        ######################################
-        train_test_split_label = ctk.CTkLabel(scroll_frame, text="Train Test Split", font=("Arial", 15,))
+        ###############################################################
+        
+        train_test_split_section_frame = ctk.CTkFrame(scroll_frame, fg_color="gray8", height=100, width=700, corner_radius=10)
+        train_test_split_section_frame.pack(anchor="center", pady=10, fill="x")
+
+        train_test_split_label = ctk.CTkLabel(train_test_split_section_frame, text="Train Test Split", font=("Arial", 15, "bold"))
         train_test_split_label.pack(pady=10)
 
-        train_test_split_frame = ctk.CTkFrame(scroll_frame, fg_color="gray10", height=100, width=600)
-        train_test_split_frame.pack(side ="left", pady=10)
+        #this frame will hold all the widgets to keep them in the center
+        train_test_frame = ctk.CTkFrame(train_test_split_section_frame, fg_color="gray8")
+        train_test_frame.pack(anchor="center")
 
-        test_size_lable = ctk.CTkLabel(train_test_split_frame, text="Test Size: ", font=("Arial", 14))
-        test_size_lable.pack(side="left", padx=10, pady=10)
+        test_size_lable = ctk.CTkLabel(train_test_frame, text="Test Size: ", font=("Arial", 14))
+        test_size_lable.pack(side="left", padx=5, pady=10)
 
-        test_size_combo = ctk.CTkComboBox(train_test_split_frame, values=["10%", "15%", "20%", "25%", "30%", "35%", "40%", "45%", "50%"], font=("Arial", 14), width=100)
+        test_size_combo = ctk.CTkComboBox(train_test_frame, values=["10%", "15%", "20%", "25%", "30%", "35%", "40%", "45%", "50%"], font=("Arial", 14), width=100)
         test_size_combo.set("20%")
-        test_size_combo.pack(side="left", padx=0, pady=10)
+        test_size_combo.pack(side="left", padx=5, pady=10)
 
         #default values for train test split
         config.test_size = 0.2
@@ -85,11 +88,11 @@ class TrainingScreen:
         config.test_size = int(test_size_combo.get().replace("%", "")) / 100
         config.train_size = 1 - config.test_size 
 
-        train_size_lable = ctk.CTkLabel(train_test_split_frame, text="Train Size: ", font=("Arial", 14))
+        train_size_lable = ctk.CTkLabel(train_test_frame, text="Train Size: ", font=("Arial", 14))
         train_size_lable.pack(side="left", padx=10, pady=10)
 
-        train_size_value_lable = ctk.CTkLabel(train_test_split_frame, text=f"{round(config.train_size * 100)}%", font=("Arial", 14), text_color="gray")
-        train_size_value_lable.pack(side="left", padx=0, pady=10)
+        train_size_value_lable = ctk.CTkLabel(train_test_frame, text=f"{round(config.train_size * 100)}%", font=("Arial", 14), text_color="gray")
+        train_size_value_lable.pack(side="left", padx=5, pady=10)
 
 
         def update_sizes(choice):
@@ -106,13 +109,11 @@ class TrainingScreen:
 
 
         #combo box for random state
-        ##############################
-        # random_state_lable = ctk.CTkLabel(train_test_split_frame, text="Random State: ", font=("Arial", 14), text_color="white")
-        # random_state_lable.pack(side="left", padx=10, pady=10)
+        ###############################################################
 
-        random_state_combo = ctk.CTkComboBox(train_test_split_frame, values=["None", "0", "1", "21", "42", "99", "123", "2025"], font=("Arial", 14), width=180)
+        random_state_combo = ctk.CTkComboBox(train_test_frame, values=["None", "0", "1", "21", "42", "99", "123", "2025"], font=("Arial", 14), width=180)
         random_state_combo.set("Random State: None")
-        random_state_combo.pack(side="left", padx=20, pady=10)
+        random_state_combo.pack(side="left", padx=10, pady=10)
         
         #default random state
         config.split_random_state = None
@@ -132,8 +133,78 @@ class TrainingScreen:
         print(f"Random State: {config.split_random_state}")
 
         
+        #Task Selection Section
+        ###############################################################
 
+        model_selection_frame = ctk.CTkFrame(scroll_frame, fg_color="gray8", height=100, width=700, corner_radius=10)
+        model_selection_frame.pack(anchor="center", pady=10, fill="x")
 
+        model_selection_label = ctk.CTkLabel(model_selection_frame, text="Task Selection", font=("Arial", 15, "bold"))
+        model_selection_label.pack(pady=10)
+
+        #this frame will hold all the widgets to keep them in the center
+        task_selection_frame = ctk.CTkFrame(model_selection_frame, fg_color="gray8")
+        task_selection_frame.pack(anchor="center")
+
+        task_type_combo_box = ctk.CTkComboBox(task_selection_frame, values=["Regression", "Classification"], font=("Arial", 14), width=150)
+        task_type_combo_box.pack(side="left", pady=10, padx=10)
+
+        #finding the task type based on the target variable using sklearn
+        from sklearn.utils.multiclass import type_of_target
+
+        target_type = type_of_target(config.df_encoded[config.selected_target_variable])
+
+        def set_task_type():
+            if  target_type in ['binary', 'multiclass', 'multilabel-indicator']:
+                task_type_combo_box.set("Classification")
+                config.task_type = "Classification"
+
+            elif target_type in ['continuous']:
+                task_type_combo_box.set("Regression")
+                config.task_type = "Regression"
+
+            task_type_combo_box.configure(state="disabled")
+        
+        #running it when the screen loads
+        set_task_type()
+        
+        #debugging
+        print(f"Task Type: {config.task_type}")
+
+        #checkbox to overide and the function to enable/disable the combo box
+        overide_task_var = ctk.BooleanVar(value=False)
+
+        def overide_task_command():
+            if overide_task_var.get():
+                task_type_combo_box.configure(state="normal")
+
+            else:
+                
+                #setting the task type based on the target variable
+                set_task_type()
+
+            #debugging
+            print(f"Task Type: {config.task_type}")
+
+        overide_task_check_box = ctk.CTkCheckBox(task_selection_frame, text="Overide", variable=overide_task_var, command=overide_task_command, font=("Arial", 14))
+        overide_task_check_box.pack(padx=10, pady=15)
+
+        #function to update the task type when selected from the combo box
+        def update_task_type(choice):
+            if choice == "Regression":
+                config.task_type = "Regression"
+            
+            elif choice == "Classification":
+                config.task_type = "Classification"
+
+            #debugging
+            print(f"Task Type: {config.task_type}")
+        
+        task_type_combo_box.configure(command=update_task_type)
+
+        ###############################################################
+
+        
 
 
 

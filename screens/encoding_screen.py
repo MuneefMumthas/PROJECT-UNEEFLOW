@@ -141,7 +141,7 @@ class EncodingScreen:
 
         if no_columns_to_encode:
 
-            ctk.CTkLabel(scroll_frame, text="All Columns are numerical, click next to proceed to scaling.", font=("Arial", 14), text_color="green").pack(pady=20)
+            ctk.CTkLabel(scroll_frame, text="All Columns are numerical, click next to proceed to Training.", font=("Arial", 14, "bold"), text_color="green").pack(pady=20)
         
         def apply_encoding():
             #validating the selection for each columns

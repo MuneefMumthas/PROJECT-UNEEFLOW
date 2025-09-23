@@ -51,6 +51,9 @@ test_size = None
 train_size = None
 split_random_state = None
 
+#task type
+task_type = None
+
 #function to reset the config when needed
 def reset_config():
     global df, df_selected, df_handled_missing_values, df_encoded
