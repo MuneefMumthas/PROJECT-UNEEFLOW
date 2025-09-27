@@ -135,6 +135,9 @@ class EncodingScreen:
             combo.grid(row=0, column=2, sticky="w", padx=10, pady=5)
             actions[col] = combo
 
+        print("category encoding: ", config.saved_categorical_encoding)
+        print("target encoding: ", config.saved_target_encoding)
+
 
         #message to show if there are no columns to encode
         no_columns_to_encode = not categorical_columns and is_numeric_dtype(target_series)
@@ -216,6 +219,10 @@ class EncodingScreen:
             #showing the encoded dataframe
             from screens.df_preview_screen import DFPreviewScreen
             DFPreviewScreen().show_dataframe(config.df_encoded)
+
+            #debugging
+            print("category encoding: ", config.saved_categorical_encoding)
+            print("target encoding: ", config.saved_target_encoding)
         
         next_button.configure(command=apply_encoding)
 
