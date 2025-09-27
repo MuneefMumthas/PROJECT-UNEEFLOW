@@ -254,9 +254,9 @@ class TrainingScreen:
         
 
 
-
-
-    
+        #linking the next button to the model evaluation screen
+        from screens.model_evaluation_screen import EvaluationScreen
+        next_button.configure(command=EvaluationScreen().show_evaluation_screen)
 
         loading_frame.pack_forget()
         entire_training_section.pack(fill="both", expand=True)
