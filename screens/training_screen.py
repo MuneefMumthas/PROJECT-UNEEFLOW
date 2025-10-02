@@ -249,11 +249,17 @@ class TrainingScreen:
         ###############################################################
 
         
+        def next_button_command():
+            from training_backend import TrainingBackend
+            TrainingBackend().split_dataset()
+            
+            from screens.model_evaluation_screen import EvaluationScreen
+            EvaluationScreen().show_evaluation_screen
 
 
         #linking the next button to the model evaluation screen
-        from screens.model_evaluation_screen import EvaluationScreen
-        next_button.configure(command=EvaluationScreen().show_evaluation_screen)
+
+        next_button.configure(command=next_button_command)
 
         
 
