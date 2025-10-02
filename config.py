@@ -58,6 +58,7 @@ y_test = None
 #task and model type
 task_type = None#
 selected_model = None
+trained_model = None
 
 
 
@@ -99,3 +100,5 @@ def reset_config():
     X_test = None
     y_train = None
     y_test = None
+
+    trained_model = None

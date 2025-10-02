@@ -253,11 +253,8 @@ class TrainingScreen:
             from training_backend import TrainingBackend
             TrainingBackend().train_model()
 
-            from screens.model_evaluation_screen import EvaluationScreen
-            EvaluationScreen().show_evaluation_screen
 
-
-        #linking the next button to the model evaluation screen
+        #linking the next button to the model training then to evaluation screen
 
         next_button.configure(command=next_button_command)
 
