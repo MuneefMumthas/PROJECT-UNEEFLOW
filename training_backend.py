@@ -65,11 +65,22 @@ class TrainingBackend:
             config.trained_model = model
 
             print(f"{config.selected_model} Model trained successfully.")
-
+            
+            #evaluating the model on the test set
             predictions = model.predict(config.X_test)
-            accuracy = accuracy_score(config.y_test, predictions)
+            
+            if config.task_type == "Classification":
+                
+                accuracy = accuracy_score(config.y_test, predictions)
+                print(f"Model Accuracy on Test Set: {accuracy*100:.2f}%")
 
-            print(f"Model Accuracy on Test Set: {accuracy*100:.2f}%")
+            elif config.task_type == "Regression":
+
+                accuracy = model.score(config.X_test, config.y_test)
+                print(f"Model R^2 Score on Test Set: {accuracy*100:.2f}%")
+
+                rmse = np.sqrt(np.mean((config.y_test - predictions) ** 2))
+                print(f"Model RMSE on Test Set: {rmse:.2f}")
 
         from screens.model_evaluation_screen import EvaluationScreen
         EvaluationScreen().show_evaluation_screen()
