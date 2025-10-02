@@ -50,10 +50,16 @@ chat_bot = None
 test_size = None
 train_size = None
 split_random_state = None
+X_train = None
+X_test = None
+y_train = None
+y_test = None
 
 #task and model type
 task_type = None#
 selected_model = None
+
+
 
 #function to reset the config when needed
 def reset_config():
@@ -63,6 +69,7 @@ def reset_config():
     global current_step, total_missing
     global saved_target_encoding, saved_categorical_encoding
     global prev_input_columns, saved_selected_inputs
+    global X_train, X_test, y_train, y_test
 
     #reseting necessary variables to their initial state
     #data frames
@@ -86,3 +93,9 @@ def reset_config():
     #encoding methods
     saved_target_encoding = {}
     saved_categorical_encoding = {}
+
+    #train test split
+    X_train = None
+    X_test = None
+    y_train = None
+    y_test = None

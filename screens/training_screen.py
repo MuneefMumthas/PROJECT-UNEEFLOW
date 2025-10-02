@@ -251,8 +251,8 @@ class TrainingScreen:
         
         def next_button_command():
             from training_backend import TrainingBackend
-            TrainingBackend().split_dataset()
-            
+            TrainingBackend().train_model()
+
             from screens.model_evaluation_screen import EvaluationScreen
             EvaluationScreen().show_evaluation_screen
 

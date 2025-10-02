@@ -13,7 +13,7 @@ class TrainingBackend:
     def __init__(self):
         pass
 
-    def split_dataset(self):
+    def train_model(self):
 
         #function to split the data into train and test sets
 
@@ -21,9 +21,18 @@ class TrainingBackend:
         X = config.df_encoded[config.selected_input_variables]
         y = config.df_encoded[config.selected_target_variable]
 
+        #if classification stratify the split based on the target variable to maintain class distribution
+        strat = y if config.task_type == "Classification" else None
+
 
         #splitting the data
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=config.test_size, random_state=config.split_random_state)
-        print(np.shape(X_train), np.shape(X_test), np.shape(y_train), np.shape(y_test))
+        config.X_train, config.X_test, config.y_train, config.y_test = train_test_split(X, y, test_size=config.test_size, random_state=config.split_random_state, stratify=strat)
+        print(np.shape(config.X_train), np.shape(config.X_test), np.shape(config.y_train), np.shape(config.y_test))
+
+
+
+
+
+    
 
         
