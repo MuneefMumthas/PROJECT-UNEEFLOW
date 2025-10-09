@@ -4,6 +4,7 @@ import numpy as np
 import config
 import customtkinter as ctk
 import pandas as pd
+import threading
 from sklearn.model_selection import train_test_split
 
 #importing models
@@ -12,7 +13,9 @@ from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 from sklearn.svm import SVC, SVR
 
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, classification_report
+from sklearn.metrics import r2_score
+from sklearn.metrics import root_mean_squared_error
 
 class TrainingBackend:
     
@@ -57,30 +60,48 @@ class TrainingBackend:
             elif config.selected_model == "Support Vector Regressor":
                 model = SVR()
 
-        if model is not None:
-            #training the model
-            model.fit(config.X_train, config.y_train)
+        #function to train the model in a separate thread
+        def train():
+                #training the model
+                model.fit(config.X_train, config.y_train)
 
-            #saving the trained model to the config
-            config.trained_model = model
+                #saving the trained model to the config
+                config.trained_model = model
 
-            print(f"{config.selected_model} Model trained successfully.")
-            
+                print(f"{config.selected_model} Model trained successfully.")
+
+                config.main_window.after(0, predict_and_evaluate)
+
+        def predict_and_evaluate():
             #evaluating the model on the test set
             predictions = model.predict(config.X_test)
             
             if config.task_type == "Classification":
                 
-                accuracy = accuracy_score(config.y_test, predictions)
-                print(f"Model Accuracy on Test Set: {accuracy*100:.2f}%")
+                #calculating model accuracy for classification tasks
+
+                #accuracy = accuracy_score(config.y_test, predictions)
+                #print(f"Model Accuracy on Test Set: {accuracy*100:.2f}%")
+
+                print("Classification Report:")
+                print(classification_report(config.y_test, predictions))
 
             elif config.task_type == "Regression":
 
-                accuracy = model.score(config.X_test, config.y_test)
-                print(f"Model R^2 Score on Test Set: {accuracy*100:.2f}%")
+                #calculating model r2 score and rmse for regression tasks
+                r2score = r2_score(config.y_test, predictions)
+                print(f"Model R^2 Score on Test Set: {r2score*100:.2f}%")
 
-                rmse = np.sqrt(np.mean((config.y_test - predictions) ** 2))
+                rmse = root_mean_squared_error(config.y_test, predictions)
                 print(f"Model RMSE on Test Set: {rmse:.2f}")
+
+        if model is not None:
+            
+            threading.Thread(target=train, daemon=True).start()
+            
+            
+            
+            
 
         from screens.model_evaluation_screen import EvaluationScreen
         EvaluationScreen().show_evaluation_screen()
