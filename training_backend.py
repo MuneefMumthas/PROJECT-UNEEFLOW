@@ -62,17 +62,23 @@ class TrainingBackend:
 
         #function to train the model in a separate thread
         def train():
-                #training the model
-                model.fit(config.X_train, config.y_train)
+            #training the model
+            model.fit(config.X_train, config.y_train)
 
-                #saving the trained model to the config
-                config.trained_model = model
+            #saving the trained model to the config
+            config.trained_model = model
 
-                print(f"{config.selected_model} Model trained successfully.")
+            print(f"{config.selected_model} Model trained successfully.")
 
+        #worker function to run the training in a separate thread
+        def worker():
+            try:
+                train()
+            finally:
                 config.main_window.after(0, predict_and_evaluate)
 
         def predict_and_evaluate():
+
             #evaluating the model on the test set
             predictions = model.predict(config.X_test)
             
@@ -94,17 +100,45 @@ class TrainingBackend:
 
                 rmse = root_mean_squared_error(config.y_test, predictions)
                 print(f"Model RMSE on Test Set: {rmse:.2f}")
+            
+            #stoping the progress bar and moving to the evaluation screen
+            training_progess_bar.stop()
+
+            from screens.model_evaluation_screen import EvaluationScreen
+            EvaluationScreen().show_evaluation_screen()
+            
 
         if model is not None:
             
-            threading.Thread(target=train, daemon=True).start()
+            #clearing the screen
+            for widget in config.main_window.winfo_children():
+                widget.destroy()
             
+            #creating a frame
+            progress_frame = ctk.CTkFrame(config.main_window, fg_color="gray10")
+            progress_frame.pack(fill="both", expand=True)
+
+            progress_label = ctk.CTkLabel(progress_frame, text="Training the model, please wait...", font=("Arial", 20, "bold"), text_color="white")
+            progress_label.pack(pady=60)
+            
+            #creating a progress bar to show the training progress
+            training_progess_bar = ctk.CTkProgressBar(progress_frame, mode="indeterminate", width=400, height=10)
+            training_progess_bar.pack(pady=200)
+            training_progess_bar.start()
+
+            #running the training in a separate thread to avoid blocking the UI
+            threading.Thread(target=worker, daemon=True).start()
+
+        
+
+
+            
+
             
             
             
 
-        from screens.model_evaluation_screen import EvaluationScreen
-        EvaluationScreen().show_evaluation_screen()
+        
 
 
 
