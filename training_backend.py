@@ -88,18 +88,18 @@ class TrainingBackend:
 
                 #accuracy = accuracy_score(config.y_test, predictions)
                 #print(f"Model Accuracy on Test Set: {accuracy*100:.2f}%")
-
+                config.classif_report = classification_report(config.y_test, predictions)
                 print("Classification Report:")
-                print(classification_report(config.y_test, predictions))
+                print(config.classif_report)
 
             elif config.task_type == "Regression":
 
                 #calculating model r2 score and rmse for regression tasks
-                r2score = r2_score(config.y_test, predictions)
-                print(f"Model R^2 Score on Test Set: {r2score*100:.2f}%")
+                config.r2score = r2_score(config.y_test, predictions)
+                print(f"Model R^2 Score on Test Set: {config.r2score*100:.2f}%")
 
-                rmse = root_mean_squared_error(config.y_test, predictions)
-                print(f"Model RMSE on Test Set: {rmse:.2f}")
+                config.rmse = root_mean_squared_error(config.y_test, predictions)
+                print(f"Model RMSE on Test Set: {config.rmse:.2f}")
             
             #stoping the progress bar and moving to the evaluation screen
             training_progess_bar.stop()

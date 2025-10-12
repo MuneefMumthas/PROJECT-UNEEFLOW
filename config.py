@@ -60,6 +60,11 @@ task_type = None#
 selected_model = None
 trained_model = None
 
+#meterics
+classif_report = None
+r2score = None
+rmse = None
+
 
 
 #function to reset the config when needed
@@ -71,6 +76,8 @@ def reset_config():
     global saved_target_encoding, saved_categorical_encoding
     global prev_input_columns, saved_selected_inputs
     global X_train, X_test, y_train, y_test
+    global trained_model
+    global classif_report, r2score, rmse
 
     #reseting necessary variables to their initial state
     #data frames
@@ -102,3 +109,8 @@ def reset_config():
     y_test = None
 
     trained_model = None
+
+    #meterics
+    classif_report = None
+    r2score = None
+    rmse = None

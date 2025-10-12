@@ -250,8 +250,14 @@ class TrainingScreen:
 
         
         def next_button_command():
-            from training_backend import TrainingBackend
-            TrainingBackend().train_model()
+
+            #checking if a model is selected before proceeding
+            if config.selected_model is None:
+                messagebox.showerror("Error", "Please select a model before proceeding.")
+                return
+            else:
+                from training_backend import TrainingBackend
+                TrainingBackend().train_model()
 
 
         #linking the next button to the model training then to evaluation screen
