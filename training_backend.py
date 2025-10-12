@@ -1,4 +1,5 @@
 import threading
+from tkinter import messagebox
 from llama_cpp import Llama
 import numpy as np
 import config
@@ -13,7 +14,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor, GradientBoostingClassifier, GradientBoostingRegressor
 
 
-from sklearn.metrics import accuracy_score, classification_report
+from sklearn.metrics import classification_report
 from sklearn.metrics import r2_score
 from sklearn.metrics import root_mean_squared_error
 
@@ -26,21 +27,7 @@ class TrainingBackend:
 
     def train_model(self):
 
-        #function to split the data into train and test sets
-
-        #separating the input and target variables
-        X = config.df_encoded.drop(columns=[config.selected_target_variable])
-        y = config.df_encoded[config.selected_target_variable]
-
-        #if classification stratify the split based on the target variable to maintain class distribution
-        strat = y if config.task_type == "Classification" else None
-
-
-        #splitting the data
-        config.X_train, config.X_test, config.y_train, config.y_test = train_test_split(X, y, test_size=config.test_size, random_state=config.split_random_state, stratify=strat)
-        print(np.shape(config.X_train), np.shape(config.X_test), np.shape(config.y_train), np.shape(config.y_test))
-
-
+        
         #creating the model based on the selected model type
         model = None
 
@@ -68,6 +55,21 @@ class TrainingBackend:
 
         #function to train the model in a separate thread
         def train():
+
+            #function to split the data into train and test sets
+
+            #separating the input and target variables
+            X = config.df_encoded.drop(columns=[config.selected_target_variable])
+            y = config.df_encoded[config.selected_target_variable]
+
+            #if classification stratify the split based on the target variable to maintain class distribution
+            strat = y if config.task_type == "Classification" else None
+
+
+            #splitting the data
+            config.X_train, config.X_test, config.y_train, config.y_test = train_test_split(X, y, test_size=config.test_size, random_state=config.split_random_state, stratify=strat)
+            print(np.shape(config.X_train), np.shape(config.X_test), np.shape(config.y_train), np.shape(config.y_test))
+
             #training the model
             model.fit(config.X_train, config.y_train)
 
@@ -78,11 +80,35 @@ class TrainingBackend:
 
         #worker function to run the training in a separate thread
         def worker():
+
+            training_successful = False
+
             try:
                 train()
-            finally:
+                training_successful = True
+
+            except Exception as e:
+                err_msg = str(e)
+
+                def training_failed():
+                    
+                    #showing the training screen again to allow the user to retry
+                    from screens.training_screen import TrainingScreen
+                    TrainingScreen().show_training_screen()
+
+                    #error message
+                    messagebox.showerror("Training failed", err_msg)
+                    
+                config.main_window.after(0, training_failed())
+                
+                return
+
+            #if the training is successfull moving onto evaluation
+            if training_successful:
                 config.main_window.after(0, predict_and_evaluate)
 
+
+        #function to predict and evaluate the model and move to the evaluation screen
         def predict_and_evaluate():
 
             #evaluating the model on the test set
@@ -125,11 +151,11 @@ class TrainingBackend:
             progress_frame.pack(fill="both", expand=True)
 
             progress_label = ctk.CTkLabel(progress_frame, text="Training the model, please wait...", font=("Arial", 20, "bold"), text_color="white")
-            progress_label.pack(pady=60)
+            progress_label.place(relx=0.5, rely=0.44, anchor="center")
             
             #creating a progress bar to show the training progress
-            training_progess_bar = ctk.CTkProgressBar(progress_frame, mode="indeterminate", width=400, height=10)
-            training_progess_bar.pack(pady=200)
+            training_progess_bar = ctk.CTkProgressBar(progress_frame, mode="indeterminate", width=350, height=15)
+            training_progess_bar.place(relx=0.5, rely=0.50, anchor="center")
             training_progess_bar.start()
 
             #running the training in a separate thread to avoid blocking the UI
