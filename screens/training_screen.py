@@ -221,13 +221,13 @@ class TrainingScreen:
         def update_model_options():
 
             if config.task_type == "Classification":
-                model_combo_box.configure(values=["Logistic Regression", "Random Forest Classifier", "Support Vector Classifier"])
+                model_combo_box.configure(values=["Logistic Regression", "Random Forest Classifier", "Gradient Boosting Classifier"])
                 model_combo_box.set("Select Model")
                 config.selected_model = None
                 print(f"Selected Model: {config.selected_model}")
             
             elif config.task_type == "Regression":
-                model_combo_box.configure(values=["Linear Regression", "Random Forest Regressor", "Support Vector Regressor"])
+                model_combo_box.configure(values=["Linear Regression", "Random Forest Regressor", "Gradient Boosting Regressor"])
                 model_combo_box.set("Select Model")
                 config.selected_model = None
                 print(f"Selected Model: {config.selected_model}")

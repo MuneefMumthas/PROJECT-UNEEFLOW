@@ -10,8 +10,8 @@ from sklearn.model_selection import train_test_split
 #importing models
 from sklearn.linear_model import LogisticRegression
 from sklearn.linear_model import LinearRegression
-from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
-from sklearn.svm import SVC, SVR
+from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor, GradientBoostingClassifier, GradientBoostingRegressor
+
 
 from sklearn.metrics import accuracy_score, classification_report
 from sklearn.metrics import r2_score
@@ -45,20 +45,26 @@ class TrainingBackend:
         model = None
 
         if config.task_type == "Classification":
+
             if config.selected_model == "Logistic Regression":
                 model = LogisticRegression(max_iter=1000)
+
             elif config.selected_model == "Random Forest Classifier":
                 model = RandomForestClassifier(n_estimators=100)
-            elif config.selected_model == "Support Vector Classifier":
-                model = SVC()
+
+            elif config.selected_model == "Gradient Boosting Classifier":
+                model = GradientBoostingClassifier(n_estimators=100)
         
         elif config.task_type == "Regression":
+
             if config.selected_model == "Linear Regression":
                 model = LinearRegression()
+
             elif config.selected_model == "Random Forest Regressor":
                 model = RandomForestRegressor(n_estimators=100)
-            elif config.selected_model == "Support Vector Regressor":
-                model = SVR()
+
+            elif config.selected_model == "Gradient Boosting Regressor":
+                model = GradientBoostingRegressor(n_estimators=100)
 
         #function to train the model in a separate thread
         def train():
