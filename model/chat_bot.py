@@ -12,7 +12,7 @@ class ChatBot:
         threads = 4
 
         #loading the model
-        self.llm  = Llama(model_path=path, n_threads=threads, verbose=True)
+        self.llm  = Llama(model_path=path, n_threads=threads, verbose=False)
         self.lock = threading.Lock()
 
     #function to animate the text in a label

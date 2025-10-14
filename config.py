@@ -60,10 +60,8 @@ task_type = None#
 selected_model = None
 trained_model = None
 
-#meterics
-classif_report = None
-r2score = None
-rmse = None
+#predictions
+predictions = None
 
 
 
@@ -77,7 +75,7 @@ def reset_config():
     global prev_input_columns, saved_selected_inputs
     global X_train, X_test, y_train, y_test
     global trained_model
-    global classif_report, r2score, rmse
+    global predictions
 
     #reseting necessary variables to their initial state
     #data frames
@@ -110,7 +108,4 @@ def reset_config():
 
     trained_model = None
 
-    #meterics
-    classif_report = None
-    r2score = None
-    rmse = None
+    predictions = None

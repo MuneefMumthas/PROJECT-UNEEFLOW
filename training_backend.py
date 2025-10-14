@@ -14,9 +14,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor, GradientBoostingClassifier, GradientBoostingRegressor
 
 
-from sklearn.metrics import classification_report
-from sklearn.metrics import r2_score
-from sklearn.metrics import root_mean_squared_error
+
 
 class TrainingBackend:
     
@@ -112,26 +110,7 @@ class TrainingBackend:
         def predict_and_evaluate():
 
             #evaluating the model on the test set
-            predictions = model.predict(config.X_test)
-            
-            if config.task_type == "Classification":
-                
-                #calculating model accuracy for classification tasks
-
-                #accuracy = accuracy_score(config.y_test, predictions)
-                #print(f"Model Accuracy on Test Set: {accuracy*100:.2f}%")
-                config.classif_report = classification_report(config.y_test, predictions)
-                print("Classification Report:")
-                print(config.classif_report)
-
-            elif config.task_type == "Regression":
-
-                #calculating model r2 score and rmse for regression tasks
-                config.r2score = r2_score(config.y_test, predictions)
-                print(f"Model R^2 Score on Test Set: {config.r2score*100:.2f}%")
-
-                config.rmse = root_mean_squared_error(config.y_test, predictions)
-                print(f"Model RMSE on Test Set: {config.rmse:.2f}")
+            config.predictions = model.predict(config.X_test)
             
             #stoping the progress bar and moving to the evaluation screen
             training_progess_bar.stop()

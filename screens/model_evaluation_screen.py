@@ -3,6 +3,12 @@ from tkinter import messagebox
 import config
 import pandas as pd
 
+#classification metrics
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+
+#regression metrics
+from sklearn.metrics import r2_score, mean_squared_error, root_mean_squared_error, mean_absolute_error
+
 
 class EvaluationScreen:
     def __init__(self):
@@ -41,7 +47,7 @@ class EvaluationScreen:
         back_button.pack(side="left",padx=10)
 
         #heading lable
-        heading_label = ctk.CTkLabel(top_frame, text="Step 7: Model Evaluation", font=("Arial", 20, "bold"))
+        heading_label = ctk.CTkLabel(top_frame, text="Step 7: Evaluation and Export", font=("Arial", 20, "bold"))
         heading_label.pack(side="left", expand=True)
 
         #Next button
@@ -56,6 +62,61 @@ class EvaluationScreen:
         center_frame = ctk.CTkFrame(middle_frame, width=700, height=600, fg_color="gray11")
         center_frame.pack(padx=50, pady=10, fill="both", expand=True)
 
+
+        # Model Performance Metrics
+        
+        evaluation_metrics_frame = ctk.CTkFrame(center_frame, fg_color="gray8")
+        evaluation_metrics_frame.pack(anchor="center", pady=10, fill="x")
+
+        evaluation_label = ctk.CTkLabel(evaluation_metrics_frame, text="Model Performance Metrics", font=("Arial", 15, "bold"),  text_color="white")
+        evaluation_label.pack(pady=10)
+        
+        #calculating the evaluation metrics
+        if config.trained_model is not None:
+            if config.task_type == "Classification":
+
+                #calculating the metrics
+                accuracy = accuracy_score(config.y_test, config.predictions)
+                precision = precision_score(config.y_test, config.predictions, average='weighted')
+                recall = recall_score(config.y_test, config.predictions, average='weighted')
+                f1 = f1_score(config.y_test, config.predictions, average='weighted')
+                
+                #dictionary to hold the metrics and their values
+                metrics = {
+                    "Accuracy": f"{accuracy*100:.2f}%",
+                    "Precision": f"{precision*100:.2f}%",
+                    "Recall": f"{recall*100:.2f}%",
+                    "F1 Score": f"{f1*100:.2f}%"
+                }
+
+            elif config.task_type == "Regression":
+                
+                #calculating the metrics
+                r2score = r2_score(config.y_test, config.predictions)
+                mse = mean_squared_error(config.y_test, config.predictions)
+                rmse = root_mean_squared_error(config.y_test, config.predictions)
+                mae = mean_absolute_error(config.y_test, config.predictions)
+
+                #dictionary to hold the metrics and their values
+                metrics = {
+                    "R² Score": f"{r2score*100:.2f}%",
+                    "Mean Squared Error (MSE)": f"{mse:,.2f}",
+                    "Root Mean Squared Error (RMSE)": f"{rmse:,.2f}",
+                    "Mean Absolute Error (MAE)": f"{mae:,.2f}"
+                }
+            
+            #displaying the metrics in the frame
+            for name, value in metrics.items():
+                row = ctk.CTkFrame(evaluation_metrics_frame, fg_color="transparent")
+                row.pack(anchor="w", pady=4)
+
+                name_label = ctk.CTkLabel(row, text=f"{name}:", font=("Arial", 13, "bold"),)
+                name_label.pack(side="left", padx=(20,10))
+
+                value_label = ctk.CTkLabel(row, text=value, font=("Arial", 13), text_color="#50DF9C")
+                value_label.pack(side="left")
+            
+            
 
 
         loading_frame.pack_forget()

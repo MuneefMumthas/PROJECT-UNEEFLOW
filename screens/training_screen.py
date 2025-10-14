@@ -245,6 +245,7 @@ class TrainingScreen:
         
         model_combo_box.configure(command=save_selected_model)
 
+        config.trained_model = None
 
         ###############################################################
 
