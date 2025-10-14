@@ -58,14 +58,44 @@ class EvaluationScreen:
         middle_frame = ctk.CTkFrame(entire_evaluation_section, fg_color="gray10")
         middle_frame.pack(fill="x",pady=30)
 
-
-        center_frame = ctk.CTkFrame(middle_frame, width=700, height=600, fg_color="gray11")
+        center_frame = ctk.CTkFrame(middle_frame, width=700, height=600, fg_color="gray10")
         center_frame.pack(padx=50, pady=10, fill="both", expand=True)
 
+        #model configuration details
+        #####################################
+        model_config_frame = ctk.CTkScrollableFrame(center_frame, fg_color="gray8", height=220)
+        model_config_frame.pack(anchor="center", pady=10, fill="x")
 
-        # Model Performance Metrics
-        
-        evaluation_metrics_frame = ctk.CTkFrame(center_frame, fg_color="gray8")
+        model_config_label = ctk.CTkLabel(model_config_frame, text="Model Configuration Details", font=("Arial", 15, "bold"),  text_color="white")
+        model_config_label.pack(pady=(5, 10))
+
+        #creating a dictionary to hold the model details
+        model_details = {
+            
+            "Target Variable": config.selected_target_variable,
+            "Features/Input Variables": ", ".join(config.selected_input_variables),
+            "Task Type":config.task_type,
+            "Selected Model": config.selected_model,
+            "Train Size": f"{round(config.train_size * 100)}%",
+            "Test Size": f"{round(config.test_size * 100)}%",
+            "Random State for Data Split": config.split_random_state if config.split_random_state is not None else "None"
+        }
+
+        #displaying the model details in the frame
+        for name, value in model_details.items():
+            row = ctk.CTkFrame(model_config_frame, fg_color="transparent")
+            row.pack(anchor="w", pady=4)
+
+            name_label = ctk.CTkLabel(row, text=f"{name}:", font=("Arial", 13, "bold"))
+            name_label.pack(side="left", padx=(20,10))
+
+            value_label = ctk.CTkLabel(row, text=value, font=("Arial", 13), text_color="gray", wraplength=400, justify="left")
+            value_label.pack(side="left")
+
+
+        #model Performance Metrics
+        #####################################
+        evaluation_metrics_frame = ctk.CTkFrame(center_frame, fg_color="gray8", height=220)
         evaluation_metrics_frame.pack(anchor="center", pady=10, fill="x")
 
         evaluation_label = ctk.CTkLabel(evaluation_metrics_frame, text="Model Performance Metrics", font=("Arial", 15, "bold"),  text_color="white")
