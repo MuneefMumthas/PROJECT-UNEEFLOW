@@ -47,7 +47,7 @@ class EvaluationScreen:
         back_button.pack(side="left",padx=10)
 
         #heading lable
-        heading_label = ctk.CTkLabel(top_frame, text="Step 7: Evaluation and Export", font=("Arial", 20, "bold"))
+        heading_label = ctk.CTkLabel(top_frame, text="Step 7: Model Evaluation", font=("Arial", 20, "bold"))
         heading_label.pack(side="left", expand=True)
 
         #Next button
@@ -56,17 +56,17 @@ class EvaluationScreen:
 
         #middle frame for content
         middle_frame = ctk.CTkFrame(entire_evaluation_section, fg_color="gray10")
-        middle_frame.pack(fill="x",pady=30)
+        middle_frame.pack(fill="both",pady=(20,0))
 
-        center_frame = ctk.CTkFrame(middle_frame, width=700, height=600, fg_color="gray10")
+        center_frame = ctk.CTkFrame(middle_frame, width=700, height=700, fg_color="gray10")
         center_frame.pack(padx=50, pady=10, fill="both", expand=True)
 
         #model configuration details
         #####################################
         model_config_frame = ctk.CTkScrollableFrame(center_frame, fg_color="gray8", height=220)
-        model_config_frame.pack(anchor="center", pady=10, fill="x")
+        model_config_frame.pack(anchor="center", pady=10, fill="both")
 
-        model_config_label = ctk.CTkLabel(model_config_frame, text="Model Configuration Details", font=("Arial", 15, "bold"),  text_color="white")
+        model_config_label = ctk.CTkLabel(model_config_frame, text="Model Config Summary", font=("Arial", 15, "bold"),  text_color="white")
         model_config_label.pack(pady=(5, 10))
 
         #creating a dictionary to hold the model details
@@ -146,7 +146,14 @@ class EvaluationScreen:
                 value_label = ctk.CTkLabel(row, text=value, font=("Arial", 13), text_color="#50DF9C")
                 value_label.pack(side="left")
             
-            
+        #ai review section
+        ai_review_frame = ctk.CTkFrame(center_frame, fg_color="gray8", height=220)
+        ai_review_frame.pack(anchor="center", pady=10, fill="x")
+
+        
+        #Ask ai button
+        ai_button = ctk.CTkButton(ai_review_frame, text="Get Insights with UneeSeek AI", font=("Arial", 14), command=None)
+        ai_button.pack(side="bottom", pady=10)
 
 
         loading_frame.pack_forget()
