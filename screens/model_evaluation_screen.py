@@ -147,7 +147,7 @@ class EvaluationScreen:
                 value_label.pack(side="left")
             
         #ai review section
-        ai_review_frame = ctk.CTkFrame(center_frame, fg_color="gray8", height=220)
+        ai_review_frame = ctk.CTkFrame(center_frame, fg_color="gray10", height=220)
         ai_review_frame.pack(anchor="center", pady=10, fill="x")
 
         def handle_answer(answer: str):

@@ -8,6 +8,7 @@ df = None
 df_selected = None
 df_handled_missing_values = None
 df_encoded = None
+df_not_encoded = None
 
 #variables
 selected_target_variable = None
@@ -67,7 +68,7 @@ predictions = None
 
 #function to reset the config when needed
 def reset_config():
-    global df, df_selected, df_handled_missing_values, df_encoded
+    global df, df_selected, df_handled_missing_values, df_encoded, df_not_encoded
     global selected_target_variable, selected_input_variables
     global saved_actions, prev_columns, uri
     global current_step, total_missing
@@ -83,6 +84,7 @@ def reset_config():
     df_selected = None
     df_handled_missing_values = None
     df_encoded = None
+    df_not_encoded = None
 
     #variables
     selected_target_variable = None

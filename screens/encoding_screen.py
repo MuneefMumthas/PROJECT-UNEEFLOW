@@ -71,6 +71,7 @@ class EncodingScreen:
 
         #creating a copy of the dataframe to work with
         config.df_encoded = config.df_handled_missing_values.copy()
+        config.df_not_encoded = config.df_handled_missing_values.copy() 
 
         target = config.selected_target_variable
         target_series = config.df_encoded[target]
@@ -109,11 +110,11 @@ class EncodingScreen:
             col_name_label.grid(row=0, column=0, sticky="w", padx=10, pady=(15,15))
 
             if col == target:
-                options = ["Label Encoding", "Ordinal Encoding"]
+                options = ["Label Encoding"]
                 col_name_label.configure(text=f"{col} (Target): ")
 
             else:
-                options = ["One-Hot Encoding", "Label Encoding", "Ordinal Encoding"]
+                options = ["One-Hot Encoding", "Ordinal Encoding"]
             
             #combo box for encoding
             combo = ctk.CTkComboBox(border_frame, values=options, state="readonly", width=250)
@@ -184,11 +185,6 @@ class EncodingScreen:
                         config.df_encoded[target] = le.fit_transform(config.df_encoded[target])
 
 
-                    #ordinal encoding
-                    elif choice == "Ordinal Encoding":
-                        oe = OrdinalEncoder()
-                        config.df_encoded[target] = oe.fit_transform(config.df_encoded[[target]]).astype(int)
-
                 
                 #encoding the categorical columns
                 for col in categorical_columns:
@@ -207,12 +203,6 @@ class EncodingScreen:
 
                         #dropping the original column and concatenating the new dataframe
                         config.df_encoded = pd.concat([config.df_encoded.drop(columns=[col]), df_ohe], axis=1)
-                        
-
-
-                    elif choice == "Label Encoding":
-                        le = LabelEncoder()
-                        config.df_encoded[col] = le.fit_transform(config.df_encoded[col])
 
 
                     elif choice == "Ordinal Encoding":
