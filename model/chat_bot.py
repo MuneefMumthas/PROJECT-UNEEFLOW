@@ -22,6 +22,16 @@ class ChatBot:
 
         self.initialized = True
 
+    # #function to animate the text in a label
+    # #this will reveal one character at a time to create a typing effect
+    # def animate_text(self, label: ctk.CTkLabel, full_text: str, delay: int = 30, index: int = 0):
+            
+            
+    #         if index <= len(full_text):
+    #             label.configure(text=full_text[:index])
+    #             #scheduling the next character
+    #             #this will call the animate_text function again after the delay
+    #             label.after(delay, self.animate_text, label, full_text, delay, index + 1)
 
     #funtion to ask a question to the LLM
     def ask(self, prompt: str, label: ctk.CTkLabel, progress_bar:ctk.CTkProgressBar, stop: list[str] | None = None):
