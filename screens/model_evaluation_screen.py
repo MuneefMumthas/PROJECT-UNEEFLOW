@@ -225,12 +225,9 @@ class EvaluationScreen:
                 f"Summarise the ML model's performance. limit to the context given.\n\n"
                 f"Model Details: {model_details}\n"
                 f"Performance Metrics: {metrics}\n\n", 
-                response_lable, progress_bar
+                response_lable, progress_bar, back_button, next_button
             )
 
-            #enabling the back and next buttons after the AI response
-            back_button.configure(state="normal")
-            next_button.configure(state="normal")
 
         #Ask ai button
         ai_button = ctk.CTkButton(ai_review_frame, text="Get Insights with UneeSeek AI", font=("Arial", 14), command=lambda: prompt())

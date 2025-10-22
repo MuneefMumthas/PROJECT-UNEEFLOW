@@ -34,7 +34,7 @@ class ChatBot:
     #             label.after(delay, self.animate_text, label, full_text, delay, index + 1)
 
     #funtion to ask a question to the LLM
-    def ask(self, prompt: str, label: ctk.CTkLabel, progress_bar:ctk.CTkProgressBar, stop: list[str] | None = None):
+    def ask(self, prompt: str, label: ctk.CTkLabel, progress_bar:ctk.CTkProgressBar, back_btn: ctk.CTkButton, next_btn: ctk.CTkButton ,stop: list[str] | None = None):
         
         if stop is None:
             stop = ["\n\n"]
@@ -47,7 +47,7 @@ class ChatBot:
 
             with self.lock:
 
-                for chunk in self.llm(prompt, max_tokens=128, temperature=0.0, stop=stop, stream=True):
+                for chunk in self.llm(prompt, max_tokens=256, temperature=0.0, stop=stop, stream=True):
                     text = chunk['choices'][0].get('text', '')
                     if text:
                         if not started:
@@ -61,6 +61,13 @@ class ChatBot:
                         current_text = ''.join(text_buffer)
                         config.main_window.after(0, lambda t=current_text: label.configure(text=f"UneeSeek: {t}"))
 
+            #reenabling the buttons after the response is complete
+            if back_btn is not None and next_btn is not None:
+
+                config.main_window.after(0, lambda: (
+                    back_btn.configure(state="normal"),
+                    next_btn.configure(state="normal")
+                ))
 
         threading.Thread(target=worker, daemon=True).start()
     

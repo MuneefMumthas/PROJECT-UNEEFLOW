@@ -139,12 +139,9 @@ class TargetVarScreen:
                 "You are a concise assistant. Never reveal your chain-of-thought—"
                 "only output the single-sentence answer for someone with no coding knowledge.\n\n"
                 "Why do we need to select a target variable for machine learning?\n\n", 
-                response_lable, progress_bar
+                response_lable, progress_bar, back_button, next_button
             )
 
-            #enabling the back and next buttons after the AI response
-            back_button.configure(state="normal")
-            next_button.configure(state="normal")
 
         #Ask ai button
         ai_button = ctk.CTkButton(middle_frame, text="Why?, Ask UneeSeek AI", font=("Arial", 14), command=lambda: prompt())
