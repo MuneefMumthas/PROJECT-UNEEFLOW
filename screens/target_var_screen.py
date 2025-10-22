@@ -91,35 +91,38 @@ class TargetVarScreen:
 
         
 
-        def handle_answer(answer: str):
+        # def handle_answer(answer: str):
 
-            print("UneeSeek says:", answer)
+        #     print("UneeSeek says:", answer)
 
-            #stoping and hiding the progress bar
-            progress_bar.stop()
-            progress_bar.pack_forget()
+        #     #stoping and hiding the progress bar
+        #     # progress_bar.stop()
+        #     # progress_bar.pack_forget()
 
-            #showing the AI response in a label
-            response = f"UneeSeek: {answer}"
-            response_lable = ctk.CTkLabel(middle_frame, text="", text_color="#3a7ebf", wraplength=500, font=("Arial", 14), justify="left")
+        #     #showing the AI response in a label
+        #     response = f"UneeSeek: {answer}"
+        #     response_lable = ctk.CTkLabel(middle_frame, text="", text_color="#3a7ebf", wraplength=500, font=("Arial", 14), justify="left")
 
-            response_lable.pack(side="bottom", pady=10)
+        #     response_lable.pack(side="bottom", pady=10)
             
-            from model.chat_bot import ChatBot
-            ChatBot().animate_text(response_lable, response, delay=30)
+        #     from model.chat_bot import ChatBot
+        #     ChatBot().animate_text(response_lable, response, delay=30)
 
 
-            #enabling the back and next buttons after the AI response
-            back_button.configure(state="normal")
-            next_button.configure(state="normal")
+        #     #enabling the back and next buttons after the AI response
+        #     back_button.configure(state="normal")
+        #     next_button.configure(state="normal")
 
 
-        progress_bar = ctk.CTkProgressBar(middle_frame, mode="indeterminate", width=100)
+        
 
         def prompt():
 
             #showing the progress bar while waiting for the AI response
             ai_button.pack_forget()
+            
+            #progress bar
+            progress_bar = ctk.CTkProgressBar(middle_frame, mode="indeterminate", width=100)
             progress_bar.pack(side="bottom", pady=10)
             progress_bar.start()
 
@@ -127,13 +130,21 @@ class TargetVarScreen:
             back_button.configure(state="disabled")
             next_button.configure(state="disabled")
 
+            response_lable = ctk.CTkLabel(middle_frame, text="", text_color="#3a7ebf", wraplength=500, font=("Arial", 14), justify="left")
+
+            response_lable.pack(side="bottom", pady=10)
+
             #prompting the AI to answer the question
             config.chat_bot.ask(
                 "You are a concise assistant. Never reveal your chain-of-thought—"
                 "only output the single-sentence answer for someone with no coding knowledge.\n\n"
                 "Why do we need to select a target variable for machine learning?\n\n", 
-                handle_answer
+                response_lable, progress_bar
             )
+
+            #enabling the back and next buttons after the AI response
+            back_button.configure(state="normal")
+            next_button.configure(state="normal")
 
         #Ask ai button
         ai_button = ctk.CTkButton(middle_frame, text="Why?, Ask UneeSeek AI", font=("Arial", 14), command=lambda: prompt())
