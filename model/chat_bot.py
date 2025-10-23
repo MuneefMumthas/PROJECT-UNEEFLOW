@@ -17,21 +17,20 @@ class ChatBot:
         threads = max(2, (os.cpu_count() or 6) - 4)
 
         #loading the model
-        self.llm  = Llama(model_path=path, n_threads=threads, verbose=False, n_ctx=4096, n_batch=512)
+        self.llm  = Llama(model_path=path, n_threads=threads, verbose=True, n_ctx=4096, n_batch=512)
         self.lock = threading.Lock()
 
         self.initialized = True
 
     # #function to animate the text in a label
     # #this will reveal one character at a time to create a typing effect
-    # def animate_text(self, label: ctk.CTkLabel, full_text: str, delay: int = 30, index: int = 0):
+    def animate_text(self, label: ctk.CTkLabel, full_text: str, delay: int = 30, index: int = 0):
             
-            
-    #         if index <= len(full_text):
-    #             label.configure(text=full_text[:index])
-    #             #scheduling the next character
-    #             #this will call the animate_text function again after the delay
-    #             label.after(delay, self.animate_text, label, full_text, delay, index + 1)
+        if index <= len(full_text):
+            label.configure(text=full_text[:index])
+            #scheduling the next character
+            #this will call the animate_text function again after the delay
+            label.after(delay, self.animate_text, label, full_text, delay, index + 1)
 
     #funtion to ask a question to the LLM
     def ask(self, prompt: str, label: ctk.CTkLabel, progress_bar:ctk.CTkProgressBar, back_btn: ctk.CTkButton, next_btn: ctk.CTkButton ,stop: list[str] | None = None):
@@ -56,12 +55,23 @@ class ChatBot:
                                 #stopping and hiding the progress bar when the first text chunk is received
                                 config.main_window.after(0, lambda: progress_bar.stop())
                                 config.main_window.after(10, lambda: progress_bar.pack_forget())
-
+            
                         text_buffer.append(text)
                         current_text = ''.join(text_buffer)
+                        
+                        #using the streaming text update to show the text as it is being generated
                         config.main_window.after(0, lambda t=current_text: label.configure(text=f"UneeSeek: {t}"))
 
-            #reenabling the buttons after the response is complete
+                #using animate_text to reveal the full text with typing effect
+                # if progress_bar is not None:
+                #     config.main_window.after(0, lambda: progress_bar.stop())
+                #     config.main_window.after(10, lambda: progress_bar.pack_forget())
+
+                # config.main_window.after(0, lambda t=current_text: self.animate_text(label, f"UneeSeek: {t}"))
+
+                        
+
+            #re enabling the buttons after the response is complete
             if back_btn is not None and next_btn is not None:
 
                 config.main_window.after(0, lambda: (
