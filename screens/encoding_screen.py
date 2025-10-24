@@ -5,6 +5,8 @@ import config
 from sklearn.preprocessing import LabelEncoder, OrdinalEncoder, OneHotEncoder
 import pandas as pd
 
+from sklearn.compose import ColumnTransformer
+
 
 class EncodingScreen:
     def __init__(self):
@@ -69,8 +71,12 @@ class EncodingScreen:
 
         
 
-        #creating a copy of the dataframe to work with
+        #creating a copies of the dataframe to work with
+
+        #this copy will be used to show the encoded dataframe in the preview screen
         config.df_encoded = config.df_handled_missing_values.copy()
+
+        #this copy will be used to build piplines and train models without affecting the original dataframe
         config.df_not_encoded = config.df_handled_missing_values.copy() 
 
         target = config.selected_target_variable
@@ -136,8 +142,8 @@ class EncodingScreen:
             combo.grid(row=0, column=2, sticky="w", padx=10, pady=5)
             actions[col] = combo
 
-        print("category encoding: ", config.saved_categorical_encoding)
-        print("target encoding: ", config.saved_target_encoding)
+        #print("category encoding: ", config.saved_categorical_encoding)
+        #print("target encoding: ", config.saved_target_encoding)
 
 
         #message to show if there are no columns to encode
@@ -148,6 +154,13 @@ class EncodingScreen:
             ctk.CTkLabel(scroll_frame, text="All Columns are numerical, click next to proceed to Training.", font=("Arial", 14, "bold"), text_color="green").pack(pady=20)
         
         def apply_encoding():
+
+            #resetting the encoding selections at the start
+            config.ohe_columns = []
+            config.ordinal_encode_cols = []
+            config.transformers = []
+            config.col_transformer = None
+
             #validating the selection for each columns
             if no_columns_to_encode:
                 from screens.training_screen import TrainingScreen
@@ -192,6 +205,8 @@ class EncodingScreen:
 
                     #one hot encoding
                     if choice == "One-Hot Encoding":
+
+
                         ohe = OneHotEncoder(sparse_output=False, handle_unknown='ignore')
                         encoded_col = ohe.fit_transform(config.df_encoded[[col]])
 
@@ -204,19 +219,40 @@ class EncodingScreen:
                         #dropping the original column and concatenating the new dataframe
                         config.df_encoded = pd.concat([config.df_encoded.drop(columns=[col]), df_ohe], axis=1)
 
+                        config.ohe_columns.append(col)
+
+                        
 
                     elif choice == "Ordinal Encoding":
                         oe = OrdinalEncoder()
                         config.df_encoded[col] = oe.fit_transform(config.df_encoded[[col]]).astype(int)
 
+                        config.ordinal_encode_cols.append(col)
                 
+                #creating the column transformer for the encoding steps
+                ####
+                #one hot enoding transformer
+                if config.ohe_columns:
+                    config.transformers.append(('OneHotEncoding', OneHotEncoder(handle_unknown='ignore'), config.ohe_columns))
+
+                #ordinal encoding transformer
+                if config.ordinal_encode_cols:
+                    config.transformers.append(('OrdinalEncoding', OrdinalEncoder(), config.ordinal_encode_cols))
+
+                #creating the column transformer with both encoding methods
+                config.col_transformer = ColumnTransformer(transformers=config.transformers, remainder='passthrough')
+                print(config.col_transformer)
+                ####
+
                 #showing the encoded dataframe
                 from screens.df_preview_screen import DFPreviewScreen
                 DFPreviewScreen().show_dataframe(config.df_encoded)
 
                 #debugging
-                print("category encoding: ", config.saved_categorical_encoding)
-                print("target encoding: ", config.saved_target_encoding)
+                #print("category encoding: ", config.saved_categorical_encoding)
+                #print("target encoding: ", config.saved_target_encoding)
+                print("ohe columns: ", config.ohe_columns)
+                print("ordinal encode columns: ", config.ordinal_encode_cols)
         
         next_button.configure(command=apply_encoding)
 

@@ -13,6 +13,8 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor, GradientBoostingClassifier, GradientBoostingRegressor
 
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import LabelEncoder
 
 
 
@@ -25,7 +27,7 @@ class TrainingBackend:
 
     def train_model(self):
 
-        
+
         #creating the model based on the selected model type
         model = None
 
@@ -53,12 +55,28 @@ class TrainingBackend:
 
         #function to train the model in a separate thread
         def train():
+            
+            #creating the pipeline with the column transformer and the model
+            config.pipe = Pipeline(steps=[ ("encoding", config.col_transformer), ("model", model)])
+            print(config.pipe)
+
+            #label encoding the target if it was encoded in the df_encoded, as the column transformer only handles input variables
+            if config.selected_target_variable in config.saved_target_encoding:
+
+                le = LabelEncoder()
+
+                config.df_not_encoded[config.selected_target_variable] = le.fit_transform(config.df_not_encoded[config.selected_target_variable])
+                
+                #saving the class labels for future use during prediction
+                config.target_class_labels = le.classes_
+
 
             #function to split the data into train and test sets
 
             #separating the input and target variables
-            X = config.df_encoded.drop(columns=[config.selected_target_variable])
-            y = config.df_encoded[config.selected_target_variable]
+            X = config.df_not_encoded.drop(columns=[config.selected_target_variable])
+            y = config.df_not_encoded[config.selected_target_variable]
+            print(y.head())
 
             #if classification stratify the split based on the target variable to maintain class distribution
             strat = y if config.task_type == "Classification" else None
@@ -68,11 +86,9 @@ class TrainingBackend:
             config.X_train, config.X_test, config.y_train, config.y_test = train_test_split(X, y, test_size=config.test_size, random_state=config.split_random_state, stratify=strat)
             print(np.shape(config.X_train), np.shape(config.X_test), np.shape(config.y_train), np.shape(config.y_test))
 
-            #training the model
-            model.fit(config.X_train, config.y_train)
+            #training the model/pipeline
+            config.pipe.fit(config.X_train, config.y_train)
 
-            #saving the trained model to the config
-            config.trained_model = model
 
             print(f"{config.selected_model} Model trained successfully.")
 
@@ -110,7 +126,8 @@ class TrainingBackend:
         def predict_and_evaluate():
 
             #evaluating the model on the test set
-            config.predictions = model.predict(config.X_test)
+            config.predictions = config.pipe.predict(config.X_test)
+            print(config.predictions)
             
             #stoping the progress bar and moving to the evaluation screen
             training_progess_bar.stop()

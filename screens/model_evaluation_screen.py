@@ -102,7 +102,7 @@ class EvaluationScreen:
         evaluation_label.pack(pady=10)
         
         #calculating the evaluation metrics
-        if config.trained_model is not None:
+        if config.pipe is not None:
             if config.task_type == "Classification":
 
                 #calculating the metrics
