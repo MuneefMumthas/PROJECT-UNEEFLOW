@@ -11,7 +11,7 @@ class TargetVarScreen:
     #Step 2: Selecting the target variable
     #This function is used to select the target variable from the dataframe
     #################################################################################################################################### 
-    def step_2_select_target_variable(self):
+    def show_target_var_screen(self):
 
         
         config.current_step = "step 2"
@@ -85,7 +85,7 @@ class TargetVarScreen:
             
             #printting the selected target variable for debugging
             print(f"Selected Target Variable: {config.selected_target_variable}")
-            InputVarScreen().step_3_select_input_variables()
+            InputVarScreen().show_input_var_screen()
 
         next_button.configure(command=save_selected_target_var)
 

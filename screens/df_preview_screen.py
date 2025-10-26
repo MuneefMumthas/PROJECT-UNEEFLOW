@@ -31,13 +31,13 @@ class DFPreviewScreen:
         from screens.missing_val_screen import MissingValScreen
 
         if config.current_step == "step 1" or config.current_step == "step 2":
-            ImportScreen().build_model_button_function()
+            ImportScreen().show_import_screen()
 
         elif config.current_step == "step 3":
-            InputVarScreen().step_3_select_input_variables()
+            InputVarScreen().show_input_var_screen()
                
         elif config.current_step == "step 4":
-            MissingValScreen().step_4_Missing_values()
+            MissingValScreen().show_missing_val_screen()
 
         elif config.current_step == "step 5":
             from screens.encoding_screen import EncodingScreen
@@ -49,10 +49,10 @@ class DFPreviewScreen:
         from screens.missing_val_screen import MissingValScreen
 
         if config.current_step == "step 1" or config.current_step == "step 2":
-            TargetVarScreen().step_2_select_target_variable()
+            TargetVarScreen().show_target_var_screen()
 
         elif config.current_step == "step 3":
-            MissingValScreen().step_4_Missing_values()
+            MissingValScreen().show_missing_val_screen()
         
         elif config.current_step == "step 4":
             from screens.encoding_screen import EncodingScreen
@@ -81,7 +81,7 @@ class DFPreviewScreen:
         loading_frame.pack(fill="both", expand=True)
 
         loading_label = ctk.CTkLabel(loading_frame, text="Loading...", font=("Arial", 20, "bold"), text_color="white")
-        loading_label.pack(pady=40)
+        loading_label.pack(expand=True)
 
         #creating a frame for the entire dataframe section
         entire_showdataframe_section = ctk.CTkFrame(config.main_window, fg_color="gray10")

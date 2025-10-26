@@ -47,7 +47,7 @@ class MissingValScreen:
 
     #This function is used to handle missing values in the dataset for both numerical and categorical data
     #################################################################################################################################### 
-    def step_4_Missing_values(self):
+    def show_missing_val_screen(self):
         
 
         config.current_step = "step 4"
@@ -69,7 +69,7 @@ class MissingValScreen:
         loading_frame.pack(fill="both", expand=True)
 
         loading_label = ctk.CTkLabel(loading_frame, text="Loading...", font=("Arial", 20, "bold"), text_color="white")
-        loading_label.pack(pady=40)
+        loading_label.pack(expand=True)
 
         #creating a frame for the entire section
         
@@ -83,7 +83,7 @@ class MissingValScreen:
 
         #back button
         from screens.input_var_screen import InputVarScreen
-        back_button = ctk.CTkButton(top_frame, text="Back", font=("Arial", 14), command=lambda: InputVarScreen().step_3_select_input_variables())
+        back_button = ctk.CTkButton(top_frame, text="Back", font=("Arial", 14), command=lambda: InputVarScreen().show_input_var_screen())
         back_button.pack(side="left",padx=10)
 
         #heading lable

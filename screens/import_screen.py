@@ -14,7 +14,7 @@ class ImportScreen:
 
     #STEP 1: Importing the dataset
     #This function is used to import dataset files and display it
-    def build_model_button_function(self):
+    def show_import_screen(self):
 
         #removing all widgets from the window
         for widget in config.main_window.winfo_children():
@@ -38,7 +38,7 @@ class ImportScreen:
 
         #back button
         from screens.main_menu_screen import MainMenuScreen
-        back_button = ctk.CTkButton(config.main_window, text="Back", font=("Arial", 16), command=MainMenuScreen().back_to_main_menu, width=100, height=40)
+        back_button = ctk.CTkButton(config.main_window, text="Back", font=("Arial", 16), command=lambda: MainMenuScreen().back_to_main_menu(), width=100, height=40)
         back_button.place(relx=0.5, rely=0.55, anchor="center")
 
     #saved actions dictionary for handling missing values

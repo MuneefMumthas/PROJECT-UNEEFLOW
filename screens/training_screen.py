@@ -21,7 +21,7 @@ class TrainingScreen:
         loading_frame.pack(fill="both", expand=True)
 
         loading_label = ctk.CTkLabel(loading_frame, text="Loading...", font=("Arial", 20, "bold"), text_color="white")
-        loading_label.pack(pady=40)
+        loading_label.pack(expand=True)
 
         #creating a frame for the entire section
         
