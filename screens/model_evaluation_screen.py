@@ -147,8 +147,9 @@ class EvaluationScreen:
                 value_label.pack(side="left")
             
         #ai review section
-        ai_review_frame = ctk.CTkFrame(center_frame, fg_color="gray10", height=220)
-        ai_review_frame.pack(anchor="center", pady=10, fill="x")
+        ai_review_frame = ctk.CTkScrollableFrame(center_frame, fg_color="gray10", height=220)
+        ai_review_frame.pack(anchor="center", pady=10, fill="both")
+        ai_review_frame._scrollbar.grid_remove()
 
         # def handle_answer(answer: str):
 
@@ -214,7 +215,7 @@ class EvaluationScreen:
             back_button.configure(state="disabled")
             next_button.configure(state="disabled")
 
-            response_lable = ctk.CTkLabel(ai_review_frame, text="", text_color="#3a7ebf", wraplength=650, font=("Arial", 14), justify="left")
+            response_lable = ctk.CTkLabel(ai_review_frame, text="", text_color="#3a7ebf", wraplength=600, font=("Arial", 14), justify="left")
 
             response_lable.pack(side="bottom", pady=10)
 
@@ -227,6 +228,8 @@ class EvaluationScreen:
                 f"Performance Metrics: {metrics}\n\n", 
                 response_lable, progress_bar, back_button, next_button
             )
+
+            ai_review_frame._scrollbar.grid()
 
 
         #Ask ai button

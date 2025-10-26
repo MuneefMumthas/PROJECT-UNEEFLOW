@@ -17,7 +17,7 @@ class ChatBot:
         threads = max(2, (os.cpu_count() or 6) - 4)
 
         #loading the model
-        self.llm  = Llama(model_path=path, n_threads=threads, verbose=True, n_ctx=4096, n_batch=512)
+        self.llm  = Llama(model_path=path, n_threads=threads, verbose=False, n_ctx=4096, n_batch=512)
         self.lock = threading.Lock()
 
         self.initialized = True

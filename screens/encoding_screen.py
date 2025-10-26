@@ -303,13 +303,17 @@ class EncodingScreen:
         # ai_button = ctk.CTkButton(middle_frame, text="Need Help?, Ask UneeSeek AI", font=("Arial", 14), command=lambda: prompt())
         # ai_button.pack(side="bottom", pady=10)
 
+        ai_help_frame = ctk.CTkScrollableFrame(middle_frame, fg_color="gray10")
+        ai_help_frame.pack(fill="both")
+        ai_help_frame._scrollbar.grid_remove()
+
         def prompt():
 
             #showing the progress bar while waiting for the AI response
             ai_button.pack_forget()
             
             #progress bar
-            progress_bar = ctk.CTkProgressBar(middle_frame, mode="indeterminate", width=100)
+            progress_bar = ctk.CTkProgressBar(ai_help_frame, mode="indeterminate", width=100)
             progress_bar.pack(side="bottom", pady=10)
             progress_bar.start()
 
@@ -317,7 +321,7 @@ class EncodingScreen:
             back_button.configure(state="disabled")
             next_button.configure(state="disabled")
 
-            response_lable = ctk.CTkLabel(middle_frame, text="", text_color="#3a7ebf", wraplength=650, font=("Arial", 14), justify="left")
+            response_lable = ctk.CTkLabel(ai_help_frame, text="", text_color="#3a7ebf", wraplength=650, font=("Arial", 14), justify="left")
 
             response_lable.pack(side="bottom", pady=10)
 
@@ -329,9 +333,11 @@ class EncodingScreen:
                 response_lable, progress_bar, back_button, next_button
             )
 
+            ai_help_frame._scrollbar.grid()
+
 
         #Ask ai button
-        ai_button = ctk.CTkButton(middle_frame, text="Whats the difference?, Ask UneeSeek AI", font=("Arial", 14), command=lambda: prompt())
+        ai_button = ctk.CTkButton(ai_help_frame, text="Whats the difference?, Ask UneeSeek AI", font=("Arial", 14), command=lambda: prompt())
         ai_button.pack(side="bottom", pady=10)
 
         loading_frame.pack_forget()
