@@ -83,7 +83,7 @@ class MissingValScreen:
 
         #back button
         from screens.input_var_screen import InputVarScreen
-        back_button = ctk.CTkButton(top_frame, text="Back", font=("Arial", 14), command=InputVarScreen().step_3_select_input_variables)
+        back_button = ctk.CTkButton(top_frame, text="Back", font=("Arial", 14), command=lambda: InputVarScreen().step_3_select_input_variables())
         back_button.pack(side="left",padx=10)
 
         #heading lable

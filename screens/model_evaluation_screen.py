@@ -43,7 +43,7 @@ class EvaluationScreen:
         #back button
         from screens.training_screen import TrainingScreen
 
-        back_button = ctk.CTkButton(top_frame, text="Back", font=("Arial", 14), command=TrainingScreen().show_training_screen)
+        back_button = ctk.CTkButton(top_frame, text="Back", font=("Arial", 14), command=lambda: TrainingScreen().show_training_screen())
         back_button.pack(side="left",padx=10)
 
         #heading lable
@@ -51,7 +51,9 @@ class EvaluationScreen:
         heading_label.pack(side="left", expand=True)
 
         #Next button
-        next_button = ctk.CTkButton(top_frame, text="Next", font=("Arial", 14), command=None)
+        from screens.export_screen import ExportScreen
+
+        next_button = ctk.CTkButton(top_frame, text="Next", font=("Arial", 14), command=lambda: ExportScreen().show_export_screen())
         next_button.pack(side="right", padx=10)
 
         #middle frame for content
