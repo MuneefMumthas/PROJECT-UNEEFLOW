@@ -96,8 +96,27 @@ class DFPreviewScreen:
         back_button = ctk.CTkButton(top_frame, text="Back", font=("Arial", 14), command=self.show_dataframe_back)
         back_button.pack(side="left",padx=10)
 
+        #setting the name to differentiate between different dataframe previews
+        if config.current_step == "step 1":
+            current_dataset = "Dataset Preview"
+
+        elif config.current_step == "step 2":
+            current_dataset = "Dataset Preview"
+
+        elif config.current_step == "step 3":
+            current_dataset = "Refined Dataset Preview"
+
+        elif config.current_step == "step 4":
+            current_dataset = "Cleaned Dataset Preview"
+
+        elif config.current_step == "step 5":
+            current_dataset = "Encoded Dataset Preview"
+        
+        else:
+            current_dataset = "Dataset Preview"
+
         #heading lable
-        heading_label = ctk.CTkLabel(top_frame, text="Dataset Preview", font=("Arial", 20, "bold"))
+        heading_label = ctk.CTkLabel(top_frame, text=f"{current_dataset}", font=("Arial", 20, "bold"))
         heading_label.pack(side="left", expand=True)
 
         #Next button

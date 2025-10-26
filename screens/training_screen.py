@@ -2,6 +2,7 @@ import customtkinter as ctk
 from tkinter import messagebox
 import config
 import pandas as pd
+from pandas.api.types import is_numeric_dtype
 
 
 class TrainingScreen:
@@ -256,6 +257,16 @@ class TrainingScreen:
             if config.selected_model is None:
                 messagebox.showerror("Error", "Please select a model before proceeding.")
                 return
+            
+            #validating if the selected target var is categorical but the task type is regression
+            #selected df_handled_missing_values to check as it has the missing values handled and doesn't get affected by encoding
+            elif not is_numeric_dtype(config.df_handled_missing_values[config.selected_target_variable]) and config.task_type == "Regression":
+                messagebox.showerror(
+                    "Invalid Selection",
+                    "The target variable is categorical. Please select 'Classification' instead."
+                )
+                return
+            
             else:
                 from training_backend import TrainingBackend
                 TrainingBackend().train_model()
