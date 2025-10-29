@@ -63,12 +63,13 @@ class TrainingBackend:
             #label encoding the target if it was encoded in the df_encoded, as the column transformer only handles input variables
             if config.selected_target_variable in config.saved_target_encoding:
 
-                le = LabelEncoder()
+                #saving the label encoder for future use during prediction
+                config.label_encoder = LabelEncoder()
 
-                config.df_not_encoded[config.selected_target_variable] = le.fit_transform(config.df_not_encoded[config.selected_target_variable])
+                config.df_not_encoded[config.selected_target_variable] = config.label_encoder.fit_transform(config.df_not_encoded[config.selected_target_variable])
                 
                 #saving the class labels for future use during prediction
-                config.target_class_labels = le.classes_
+                config.target_class_labels = config.label_encoder.classes_.tolist() 
 
 
             #function to split the data into train and test sets

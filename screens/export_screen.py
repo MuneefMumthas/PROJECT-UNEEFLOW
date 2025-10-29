@@ -2,14 +2,17 @@ import customtkinter as ctk
 from tkinter import messagebox
 import config
 import pandas as pd
-
+from tkinter import filedialog
+import joblib
+import numpy as np
+from pathlib import Path
 
 
 class ExportScreen:
     def __init__(self):
         pass
 
-
+    
     def show_export_screen(self):
 
         config.current_step = "step 8"
@@ -57,6 +60,13 @@ class ExportScreen:
         center_frame = ctk.CTkFrame(middle_frame, width=700, height=700, fg_color="gray9")
         center_frame.pack(padx=50, pady=10, fill="both", expand=True)
 
+        #export section
+        ################################
+        export_section_frame = ctk.CTkFrame(center_frame, fg_color="gray8", height=220)
+        export_section_frame.pack(anchor="center", pady=10, fill="both")
+
+        export_button = ctk.CTkButton(export_section_frame, text="Export Model", font=("Arial", 16), width=200, height=40, command=None)
+        export_button.pack(pady=20)
 
         loading_frame.pack_forget()
         entire_export_section.pack(fill="both", expand=True)

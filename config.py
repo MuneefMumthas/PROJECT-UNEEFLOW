@@ -70,7 +70,7 @@ ordinal_encode_cols = []
 transformers = []
 target_class_labels = None
 pipe = None
-
+label_encoder = None
 
 #function to reset the config when needed
 def reset_config():
@@ -83,7 +83,7 @@ def reset_config():
     global X_train, X_test, y_train, y_test
     global trained_model
     global predictions
-    global col_transformer, ohe_columns, ordinal_encode_cols, transformers, target_class_labels, pipe
+    global col_transformer, ohe_columns, ordinal_encode_cols, transformers, target_class_labels, pipe, label_encoder
 
     #reseting necessary variables to their initial state
     #data frames
@@ -125,3 +125,4 @@ def reset_config():
     transformers = []
     target_class_labels = None
     pipe = None
+    label_encoder = None
