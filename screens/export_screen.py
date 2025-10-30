@@ -10,7 +10,17 @@ from pathlib import Path
 
 class ExportScreen:
     def __init__(self):
-        pass
+
+        #creating the export package at the initialization of the screen
+        self.export_package = {
+                    'model_pipeline': config.pipe,
+                    'feature_columns': config.selected_input_variables,
+                    'encoders_used_for_features': config.saved_categorical_encoding,
+                    'target_variable': config.selected_target_variable,
+                    'target_label_encoder': config.label_encoder if config.label_encoder else None,
+                    'encoded_labels': config.target_class_labels if config.target_class_labels else None
+                    
+                }
 
     def export_pkl(self):
         
@@ -21,26 +31,19 @@ class ExportScreen:
         
         else:
             
-            file_path = filedialog.asksaveasfilename(defaultextension=".pkl", filetypes=[("Pickle files", "*.pkl")], title="Save Trained Model")
-
+            #file_path = filedialog.asksaveasfilename(defaultextension=".pkl", filetypes=[("Pickle files", "*.pkl")], title="Save Trained Model")
+            file_path = Path(filedialog.askdirectory(title="Select Folder to Save Model")) / f"UNEEFLOW {config.file_name} Trained on {config.selected_model} Model.pkl"
             if not file_path:
                 return
 
             try:
-                export_package = {
-                    'model_pipeline': config.pipe,
-                    'feature_columns': config.selected_input_variables,
-                    'encoders_used_for_features': config.saved_categorical_encoding,
-                    'target_variable': config.selected_target_variable,
-                    'target_label_encoder': config.label_encoder if config.label_encoder else None,
-                    'encoded_labels': config.target_class_labels if config.target_class_labels else None
-                    
-                }
-
-                joblib.dump(export_package, file_path)
+                
+                #exporting the model using joblib
+                joblib.dump(self.export_package, file_path)
                 messagebox.showinfo("Success", f"Model exported successfully to {file_path}")
 
             
+            #error handling
             except Exception as e:
                 messagebox.showerror("Error", f"Failed to export model: {str(e)}")
 
