@@ -160,6 +160,12 @@ class TrainingScreen:
             print(f"Task Type: {config.task_type}")
 
             update_model_options()
+
+            #resetting model random state combo box
+            model_random_state_combo.pack_forget()
+            config.model_random_state = None
+            model_random_state_combo.set("Random State: None")
+            print(f"Model Random State: {config.model_random_state}")
         
         task_type_combo_box.configure(command=update_task_type)
 
@@ -212,6 +218,7 @@ class TrainingScreen:
                 #resetting model random state combo box
                 model_random_state_combo.pack_forget()
                 config.model_random_state = None
+                model_random_state_combo.set("Random State: None")
                 print(f"Model Random State: {config.model_random_state}")
 
             #debugging
@@ -265,6 +272,7 @@ class TrainingScreen:
             else:
                 model_random_state_combo.pack_forget()
                 config.model_random_state = None
+                model_random_state_combo.set("Random State: None")
                 print(f"Model Random State: {config.model_random_state}")
 
             #debugging
