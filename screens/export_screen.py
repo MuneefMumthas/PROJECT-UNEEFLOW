@@ -97,7 +97,7 @@ class ExportScreen:
 
         #export section
         ################################
-        export_section_frame = ctk.CTkFrame(center_frame, fg_color="gray8", height=220)
+        export_section_frame = ctk.CTkFrame(center_frame, fg_color="gray8", height=220, width=600)
         export_section_frame.pack(anchor="center", pady=10, fill="both")
 
         export_button = ctk.CTkButton(export_section_frame, text="Export Model", font=("Arial", 16), width=200, height=40, command=self.export_pkl)
