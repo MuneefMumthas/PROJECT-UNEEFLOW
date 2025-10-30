@@ -93,7 +93,7 @@ class TrainingScreen:
         train_size_value_lable = ctk.CTkLabel(train_test_frame, text=f"{round(config.train_size * 100)}%", font=("Arial", 14), text_color="gray")
         train_size_value_lable.pack(side="left", padx=5, pady=10)
 
-
+        #funtion to update the test and train size
         def update_sizes(choice):
             config.test_size = int(choice.replace("%", "")) / 100
             config.train_size = 1 - config.test_size 
@@ -114,9 +114,10 @@ class TrainingScreen:
         random_state_combo.set("Random State: None")
         random_state_combo.pack(side="left", padx=10, pady=10)
         
-        #default random state
+        #default random state at the start of the screen
         config.split_random_state = None
         
+        #function to update the random state based on the selection
         def update_random_state(choice):
             if choice == "None":
                 random_state_combo.set("Random State: None")
@@ -151,11 +152,25 @@ class TrainingScreen:
         task_type_combo_box = ctk.CTkComboBox(task_selection_frame, values=["Regression", "Classification"], font=("Arial", 14), width=150, state="readonly")
         task_type_combo_box.pack(side="left", pady=10, padx=10)
 
+        #function to update the task type when selected from the combo box
+        def update_task_type(choice):
+            config.task_type = choice
+
+            #debugging
+            print(f"Task Type: {config.task_type}")
+
+            update_model_options()
+        
+        task_type_combo_box.configure(command=update_task_type)
+
+        ###############################
+
         #finding the task type based on the target variable using sklearn type_of_target
         from sklearn.utils.multiclass import type_of_target
 
         target_type = type_of_target(config.df_handled_missing_values[config.selected_target_variable])
 
+        #function to set the task type based on the target variable at the start of the screen
         def set_task_type():
             if  target_type in ['binary', 'multiclass', 'multilabel-indicator']:
                 task_type_combo_box.set("Classification")
@@ -173,13 +188,19 @@ class TrainingScreen:
         #debugging
         print(f"Task Type: {config.task_type}")
 
+
+
         #checkbox to overide and the function to enable/disable the combo box
+        #############################################
         overide_task_var = ctk.BooleanVar(value=False)
 
+        #function for checkbox
         def overide_task_command():
+            #if the overide is checked enable the combo box
             if overide_task_var.get():
                 task_type_combo_box.configure(state="readonly")
 
+            #if the overide is unchecked then reset the target type, model options, and hide model random state combo box
             else:
                 
                 #setting the task type based on the target variable
@@ -188,24 +209,21 @@ class TrainingScreen:
                 #updating the model options based on the task type
                 update_model_options()
 
+                #resetting model random state combo box
+                model_random_state_combo.pack_forget()
+                config.model_random_state = None
+                print(f"Model Random State: {config.model_random_state}")
+
             #debugging
             print(f"Task Type: {config.task_type}")
 
         overide_task_check_box = ctk.CTkCheckBox(task_selection_frame, text="Overide", variable=overide_task_var, command=overide_task_command, font=("Arial", 14))
         overide_task_check_box.pack(padx=10, pady=15)
 
-        #function to update the task type when selected from the combo box
-        def update_task_type(choice):
-            config.task_type = choice
-
-            #debugging
-            print(f"Task Type: {config.task_type}")
-
-            update_model_options()
-        
-        task_type_combo_box.configure(command=update_task_type)
-
         ####################################
+
+
+        
 
         #model selection section
         ####################################
@@ -222,13 +240,13 @@ class TrainingScreen:
         def update_model_options():
 
             if config.task_type == "Classification":
-                model_combo_box.configure(values=["Logistic Regression", "Random Forest Classifier", "Gradient Boosting Classifier"])
+                model_combo_box.configure(values=["Logistic Regression", "Decision Tree Classifier", "Random Forest Classifier"])
                 model_combo_box.set("Select Model")
                 config.selected_model = None
                 print(f"Selected Model: {config.selected_model}")
             
             elif config.task_type == "Regression":
-                model_combo_box.configure(values=["Linear Regression", "Random Forest Regressor", "Gradient Boosting Regressor"])
+                model_combo_box.configure(values=["Linear Regression", "Decision Tree Regressor", "Random Forest Regressor"])
                 model_combo_box.set("Select Model")
                 config.selected_model = None
                 print(f"Selected Model: {config.selected_model}")
@@ -237,9 +255,17 @@ class TrainingScreen:
         #running it when the screen loads
         update_model_options()
 
-        #saving the selected model to config
+        #funtion for model combo box used to save the selected model to config and manage model random state combo box
         def save_selected_model(choice):
             config.selected_model = choice
+
+            #showing the model random state combo box only for decision tree and random forest models
+            if choice == "Decision Tree Regressor" or choice == "Decision Tree Classifier" or choice == "Random Forest Regressor" or choice == "Random Forest Classifier":
+                model_random_state_combo.pack(side="left", padx=10, pady=10)
+            else:
+                model_random_state_combo.pack_forget()
+                config.model_random_state = None
+                print(f"Model Random State: {config.model_random_state}")
 
             #debugging
             print(f"Selected Model: {config.selected_model}")
@@ -247,10 +273,37 @@ class TrainingScreen:
         model_combo_box.configure(command=save_selected_model)
 
         config.trained_model = None
+        ####################################
+
+        
+        #combo box for model random state
+        ###########################################
+        model_random_state_combo = ctk.CTkComboBox(model_selection_frame, values=["None", "0", "1", "21", "42", "99", "123", "2025"], font=("Arial", 14), width=180, state="readonly")
+        model_random_state_combo.set("Random State: None")
+        model_random_state_combo.pack_forget()
+        
+        #default model random state
+        config.model_random_state = None
+        
+        #function to update the model random state based on the selection
+        def update_model_random_state(choice):
+            if choice == "None":
+                model_random_state_combo.set("Random State: None")
+                config.model_random_state = None
+            else:
+                model_random_state_combo.set(f"Random State: {choice}")
+                config.model_random_state = int(choice)
+
+            #debugging
+            print(f"Model Random State: {config.model_random_state}")
+
+        model_random_state_combo.configure(command=update_model_random_state)
+        print(f"Model Random State: {config.model_random_state}")
 
         ###############################################################
 
         
+        #function for next button
         def next_button_command():
 
             #checking if a model is selected before proceeding

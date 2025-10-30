@@ -60,6 +60,7 @@ y_test = None
 task_type = None#
 selected_model = None
 trained_model = None
+model_random_state = None
 
 #predictions
 predictions = None
