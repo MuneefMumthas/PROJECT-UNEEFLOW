@@ -50,6 +50,7 @@ class ImportScreen:
         config.current_step = "step 1"
 
         file_path = filedialog.askopenfilename(filetypes=[("CSV files", "*.csv")])
+        
         if not file_path:
             return
 
@@ -58,6 +59,7 @@ class ImportScreen:
             
             #read CSV file
             config.df = pd.read_csv(file_path)
+            config.file_name = file_path.split("/")[-1]
 
             #calling the function to display the dataframe
             DFPreviewScreen().show_dataframe(config.df)
@@ -81,7 +83,7 @@ class ImportScreen:
 
             #read excel file
             config.df = pd.read_excel(file_path, sheet_name=0, engine="openpyxl")
-
+            config.file_name = file_path.split("/")[-1]
             #calling the function to display the dataframe
             DFPreviewScreen().show_dataframe(config.df)
             #clearing the saved actions as the dataframe has changed
@@ -105,6 +107,7 @@ class ImportScreen:
 
             #read json file
             config.df = pd.read_json(file_path, orient="records")
+            config.file_name = file_path.split("/")[-1]
 
             #calling the function to display the dataframe
             DFPreviewScreen().show_dataframe(config.df)

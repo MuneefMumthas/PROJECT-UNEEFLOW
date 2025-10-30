@@ -98,25 +98,25 @@ class DFPreviewScreen:
 
         #setting the name to differentiate between different dataframe previews
         if config.current_step == "step 1":
-            current_dataset = "Dataset Preview"
+            current_dataset = "Dataset"
 
         elif config.current_step == "step 2":
-            current_dataset = "Dataset Preview"
+            current_dataset = "Dataset"
 
         elif config.current_step == "step 3":
-            current_dataset = "Refined Dataset Preview"
+            current_dataset = "Refined Dataset"
 
         elif config.current_step == "step 4":
-            current_dataset = "Cleaned Dataset Preview"
+            current_dataset = "Cleaned Dataset"
 
         elif config.current_step == "step 5":
-            current_dataset = "Encoded Dataset Preview"
+            current_dataset = "Encoded Dataset"
         
         else:
-            current_dataset = "Dataset Preview"
+            current_dataset = "Dataset"
 
         #heading lable
-        heading_label = ctk.CTkLabel(top_frame, text=f"{current_dataset}", font=("Arial", 20, "bold"))
+        heading_label = ctk.CTkLabel(top_frame, text=f"{current_dataset} Preview", font=("Arial", 20, "bold"))
         heading_label.pack(side="left", expand=True)
 
         #Next button
@@ -275,10 +275,10 @@ class DFPreviewScreen:
                 return
             
             #folder name
-            folder_name = "UNEEFLOW Data Profile Report"
+            folder_name = f"UNEEFLOW {config.file_name} {current_dataset} Profile Report"
 
             #file name
-            html_file_name = "UNEEFLOW Data Profile Report.html"
+            html_file_name = f"UNEEFLOW {config.file_name} {current_dataset} Profile Report.html"
             
             #creating the destination folder path
             destination_folder = destination_parent / folder_name

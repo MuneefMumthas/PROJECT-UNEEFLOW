@@ -12,7 +12,39 @@ class ExportScreen:
     def __init__(self):
         pass
 
-    
+    def export_pkl(self):
+        
+        #validating if there is a trained model to export
+        if config.pipe is None:
+            messagebox.showerror("Error", "No trained model found to export.")
+            return
+        
+        else:
+            
+            file_path = filedialog.asksaveasfilename(defaultextension=".pkl", filetypes=[("Pickle files", "*.pkl")], title="Save Trained Model")
+
+            if not file_path:
+                return
+
+            try:
+                export_package = {
+                    'model_pipeline': config.pipe,
+                    'feature_columns': config.selected_input_variables,
+                    'encoders_used_for_features': config.saved_categorical_encoding,
+                    'target_variable': config.selected_target_variable,
+                    'target_label_encoder': config.label_encoder if config.label_encoder else None,
+                    'encoded_labels': config.target_class_labels if config.target_class_labels else None
+                    
+                }
+
+                joblib.dump(export_package, file_path)
+                messagebox.showinfo("Success", f"Model exported successfully to {file_path}")
+
+            
+            except Exception as e:
+                messagebox.showerror("Error", f"Failed to export model: {str(e)}")
+
+
     def show_export_screen(self):
 
         config.current_step = "step 8"
@@ -65,7 +97,7 @@ class ExportScreen:
         export_section_frame = ctk.CTkFrame(center_frame, fg_color="gray8", height=220)
         export_section_frame.pack(anchor="center", pady=10, fill="both")
 
-        export_button = ctk.CTkButton(export_section_frame, text="Export Model", font=("Arial", 16), width=200, height=40, command=None)
+        export_button = ctk.CTkButton(export_section_frame, text="Export Model", font=("Arial", 16), width=200, height=40, command=self.export_pkl)
         export_button.pack(pady=20)
 
         loading_frame.pack_forget()

@@ -72,6 +72,8 @@ target_class_labels = None
 pipe = None
 label_encoder = None
 
+file_name = None
+
 #function to reset the config when needed
 def reset_config():
     global df, df_selected, df_handled_missing_values, df_encoded, df_not_encoded
@@ -84,6 +86,7 @@ def reset_config():
     global trained_model
     global predictions
     global col_transformer, ohe_columns, ordinal_encode_cols, transformers, target_class_labels, pipe, label_encoder
+    global file_name
 
     #reseting necessary variables to their initial state
     #data frames
@@ -126,3 +129,5 @@ def reset_config():
     target_class_labels = None
     pipe = None
     label_encoder = None
+
+    file_name = None

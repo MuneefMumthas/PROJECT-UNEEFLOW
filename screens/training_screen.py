@@ -151,10 +151,10 @@ class TrainingScreen:
         task_type_combo_box = ctk.CTkComboBox(task_selection_frame, values=["Regression", "Classification"], font=("Arial", 14), width=150, state="readonly")
         task_type_combo_box.pack(side="left", pady=10, padx=10)
 
-        #finding the task type based on the target variable using sklearn
+        #finding the task type based on the target variable using sklearn type_of_target
         from sklearn.utils.multiclass import type_of_target
 
-        target_type = type_of_target(config.df_encoded[config.selected_target_variable])
+        target_type = type_of_target(config.df_handled_missing_values[config.selected_target_variable])
 
         def set_task_type():
             if  target_type in ['binary', 'multiclass', 'multilabel-indicator']:
