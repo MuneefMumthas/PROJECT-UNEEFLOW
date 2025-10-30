@@ -273,51 +273,53 @@ class DFPreviewScreen:
             destination_parent = Path(filedialog.askdirectory(title="Select folder to save the profile report"))
             if not destination_parent:
                 return
-            
-            #folder name
-            folder_name = f"UNEEFLOW {config.file_name} {current_dataset} Profile Report"
 
             #file name
-            html_file_name = f"UNEEFLOW {config.file_name} {current_dataset} Profile Report.html"
+            file_name= f"UNEEFLOW {config.file_name} {current_dataset} Profile Report"
+            html_file_name = f"{file_name}.html"
             
             #creating the destination folder path
-            destination_folder = destination_parent / folder_name
-            destination_file = destination_folder/ html_file_name
+            destination_file = destination_parent/ html_file_name
 
             #error handling
             try:
-                destination_folder.mkdir()
-                shutil.copy2(tmp_html_path, destination_file)
-                messagebox.showinfo("Success", f"Profile report saved to:\n{destination_folder}")
-
-            except FileExistsError:
-                overwrite = messagebox.askyesnocancel(
-                    "Folder Exists",
-                    f"The folder '{folder_name}' already exists at the destination.\nDo you want to replace it?\n"
+                #checking if the file already exists
+                if destination_file.exists():
+                    #if the file exists, asking the user if they want to overwrite it or create a copy
+                    overwrite = messagebox.askyesnocancel(
+                    "File Exists",
+                    f"The file '{html_file_name}' already exists at the destination.\nDo you want to replace it?\n"
                     "Yes: Replace it\n"
                     "No: Save a copy with a numbered suffix\n"
                     "Cancel: Do nothing"
-                )
-                if overwrite is True:
-                    shutil.rmtree(destination_folder)
-                    destination_folder.mkdir()
-                    shutil.copy2(tmp_html_path, destination_file)
-                    messagebox.showinfo("Success", f"Profile report overwritten at:\n{destination_folder}")
+                    )
 
-                if overwrite is False:
-                    #creating copies with numbered suffixes
-                    i = 1
-                    while True:
-                        new_folder = destination_parent / f"{folder_name} ({i})"
-                        if not new_folder.exists():
-                            new_folder.mkdir()
-                            shutil.copy2(tmp_html_path, new_folder / html_file_name)
-                            messagebox.showinfo("Success", f"Profile report saved to:\n{new_folder}")
-                            break
-                        i += 1
-                
+                    #overwriting the existing file
+                    if overwrite is True:
+                        shutil.copy2(tmp_html_path, destination_file)
+                        messagebox.showinfo("Success", f"Profile report overwritten:\n{destination_file}")
+                    
+                    #creating a copy with numbered suffix
+                    elif overwrite is False:
+                        #creating copies with numbered suffixes
+                        i = 1
+                        while True:
+                            #creating new file name with suffix
+                            new_file = destination_parent / f"{file_name} ({i}).html"
+                            if not new_file.exists():
+                                shutil.copy2(tmp_html_path, new_file)
+                                messagebox.showinfo("Success", f"Profile report saved as:\n{new_file}")
+                                break
+                            i += 1
+
+                    #cancelling the save operation
+                    else:
+                        messagebox.showinfo("Cancelled", "Save operation was cancelled.")
+                        
+                #if the file does not exist creating it directly
                 else:
-                    messagebox.showinfo("Cancelled", "Save operation was cancelled.")
+                    shutil.copy2(tmp_html_path, destination_file)
+                    messagebox.showinfo("Success", f"Profile report saved to:\n{destination_file}")
 
             except Exception as e:
                 messagebox.showerror("Error", f"Failed to save profile report:\n{e}")
