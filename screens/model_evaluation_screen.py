@@ -78,6 +78,7 @@ class EvaluationScreen:
             "Features/Input Variables": ", ".join(config.selected_input_variables),
             "Task Type":config.task_type,
             "Selected Model": config.selected_model,
+            "Random State for Model": config.model_random_state if config.model_random_state is not None else "None",
             "Train Size": f"{round(config.train_size * 100)}%",
             "Test Size": f"{round(config.test_size * 100)}%",
             "Random State for Data Split": config.split_random_state if config.split_random_state is not None else "None"
