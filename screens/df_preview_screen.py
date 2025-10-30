@@ -115,7 +115,7 @@ class DFPreviewScreen:
         else:
             current_dataset = "Dataset"
 
-        #heading lable
+        #heading label
         heading_label = ctk.CTkLabel(top_frame, text=f"{current_dataset} Preview", font=("Arial", 20, "bold"))
         heading_label.pack(side="left", expand=True)
 

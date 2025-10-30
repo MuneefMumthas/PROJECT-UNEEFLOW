@@ -43,7 +43,7 @@ class TrainingScreen:
         back_button = ctk.CTkButton(top_frame, text="Back", font=("Arial", 14), command=back_to_preview)
         back_button.pack(side="left",padx=10)
 
-        #heading lable
+        #heading label
         heading_label = ctk.CTkLabel(top_frame, text="Step 6: Training", font=("Arial", 20, "bold"))
         heading_label.pack(side="left", expand=True)
 
@@ -73,8 +73,8 @@ class TrainingScreen:
         train_test_frame = ctk.CTkFrame(train_test_split_section_frame, fg_color="gray8")
         train_test_frame.pack(anchor="center")
 
-        test_size_lable = ctk.CTkLabel(train_test_frame, text="Test Size: ", font=("Arial", 14))
-        test_size_lable.pack(side="left", padx=5, pady=10)
+        test_size_label = ctk.CTkLabel(train_test_frame, text="Test Size: ", font=("Arial", 14))
+        test_size_label.pack(side="left", padx=5, pady=10)
 
         test_size_combo = ctk.CTkComboBox(train_test_frame, values=["10%", "15%", "20%", "25%", "30%", "35%", "40%", "45%", "50%"], font=("Arial", 14), width=100, state="readonly")
         test_size_combo.set("20%")
@@ -87,17 +87,17 @@ class TrainingScreen:
         config.test_size = int(test_size_combo.get().replace("%", "")) / 100
         config.train_size = 1 - config.test_size 
 
-        train_size_lable = ctk.CTkLabel(train_test_frame, text="Train Size: ", font=("Arial", 14))
-        train_size_lable.pack(side="left", padx=10, pady=10)
+        train_size_label = ctk.CTkLabel(train_test_frame, text="Train Size: ", font=("Arial", 14))
+        train_size_label.pack(side="left", padx=10, pady=10)
 
-        train_size_value_lable = ctk.CTkLabel(train_test_frame, text=f"{round(config.train_size * 100)}%", font=("Arial", 14), text_color="gray")
-        train_size_value_lable.pack(side="left", padx=5, pady=10)
+        train_size_value_label = ctk.CTkLabel(train_test_frame, text=f"{round(config.train_size * 100)}%", font=("Arial", 14), text_color="gray")
+        train_size_value_label.pack(side="left", padx=5, pady=10)
 
         #funtion to update the test and train size
         def update_sizes(choice):
             config.test_size = int(choice.replace("%", "")) / 100
             config.train_size = 1 - config.test_size 
-            train_size_value_lable.configure(text=f"{round(config.train_size * 100)}%")
+            train_size_value_label.configure(text=f"{round(config.train_size * 100)}%")
 
             #debugging
             print(f"Test Size: {config.test_size}, Train Size: {config.train_size}")

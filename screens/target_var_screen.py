@@ -104,16 +104,16 @@ class TargetVarScreen:
             back_button.configure(state="disabled")
             next_button.configure(state="disabled")
 
-            response_lable = ctk.CTkLabel(middle_frame, text="", text_color="#3a7ebf", wraplength=500, font=("Arial", 14), justify="left")
+            response_label = ctk.CTkLabel(middle_frame, text="", text_color="#3a7ebf", wraplength=500, font=("Arial", 14), justify="left")
 
-            response_lable.pack(side="bottom", pady=10)
+            response_label.pack(side="bottom", pady=10)
 
             #prompting the AI to answer the question
             config.chat_bot.ask(
                 "You are a concise assistant. Never reveal your chain-of-thought—"
                 "only output the single-sentence answer for someone with no coding knowledge.\n\n"
                 "Why do we need to select a target variable for machine learning?\n\n", 
-                response_lable, progress_bar, back_button, next_button
+                response_label, progress_bar, back_button, next_button
             )
 
 

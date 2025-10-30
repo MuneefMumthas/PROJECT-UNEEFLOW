@@ -46,7 +46,7 @@ class EvaluationScreen:
         back_button = ctk.CTkButton(top_frame, text="Back", font=("Arial", 14), command=lambda: TrainingScreen().show_training_screen())
         back_button.pack(side="left",padx=10)
 
-        #heading lable
+        #heading label
         heading_label = ctk.CTkLabel(top_frame, text="Step 7: Model Evaluation", font=("Arial", 20, "bold"))
         heading_label.pack(side="left", expand=True)
 
@@ -169,9 +169,9 @@ class EvaluationScreen:
             back_button.configure(state="disabled")
             next_button.configure(state="disabled")
 
-            response_lable = ctk.CTkLabel(ai_review_frame, text="", text_color="#3a7ebf", wraplength=600, font=("Arial", 14), justify="left")
+            response_label = ctk.CTkLabel(ai_review_frame, text="", text_color="#3a7ebf", wraplength=600, font=("Arial", 14), justify="left")
 
-            response_lable.pack(side="bottom", pady=10)
+            response_label.pack(side="bottom", pady=10)
 
             #prompting the AI to answer the question
             config.chat_bot.ask(
@@ -180,7 +180,7 @@ class EvaluationScreen:
                 f"Summarise the ML model's performance. limit to the context given.\n\n"
                 f"Model Details: {model_details}\n"
                 f"Performance Metrics: {metrics}\n\n", 
-                response_lable, progress_bar, back_button, next_button
+                response_label, progress_bar, back_button, next_button
             )
 
             ai_review_frame._scrollbar.grid()

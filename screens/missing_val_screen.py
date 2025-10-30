@@ -86,7 +86,7 @@ class MissingValScreen:
         back_button = ctk.CTkButton(top_frame, text="Back", font=("Arial", 14), command=lambda: InputVarScreen().show_input_var_screen())
         back_button.pack(side="left",padx=10)
 
-        #heading lable
+        #heading label
         heading_label = ctk.CTkLabel(top_frame, text="Step 4: Handling Missing Values", font=("Arial", 20, "bold"))
         heading_label.pack(side="left", expand=True)
 
@@ -144,7 +144,7 @@ class MissingValScreen:
                 no_missing_label = ctk.CTkLabel(border_frame, text="No Missing Values", text_color="green", font=("Arial", 16), bg_color="gray8")
                 no_missing_label.grid(row=0, column=1, sticky="w", padx=10, pady=5)
 
-                #lable for no action needed
+                #label for no action needed
                 no_action_label = ctk.CTkLabel(border_frame, text="No Action Needed", text_color="gray50", font=("Arial", 16), bg_color="gray8")
                 no_action_label.grid(row=0, column=2, sticky="w", padx=10, pady=5)
             

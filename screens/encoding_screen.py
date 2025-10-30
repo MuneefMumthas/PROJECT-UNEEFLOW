@@ -46,7 +46,7 @@ class EncodingScreen:
         back_button = ctk.CTkButton(top_frame, text="Back", font=("Arial", 14), command=back_to_preview)
         back_button.pack(side="left",padx=10)
 
-        #heading lable
+        #heading label
         heading_label = ctk.CTkLabel(top_frame, text="Step 5: Encoding", font=("Arial", 20, "bold"))
         heading_label.pack(side="left", expand=True)
 
@@ -57,10 +57,6 @@ class EncodingScreen:
         #middle frame for content
         middle_frame = ctk.CTkFrame(entire_encoding_section, fg_color="gray10", height=600)
         middle_frame.pack(pady=30)
-
-        #bulk button to bulk select actions
-        #self.bulk_button =ctk.CTkSegmentedButton(middle_frame, values=["Lable All", "Ordinal All"], command=None)
-        #self.bulk_button.pack(pady=10)
 
 
         scroll_frame = ctk.CTkScrollableFrame(middle_frame, width=700, height=500, fg_color="transparent")
@@ -192,7 +188,7 @@ class EncodingScreen:
                 if not is_numeric_dtype(target_series):
                     choice = config.saved_target_encoding[target]
                     
-                    #lable encoding
+                    #label encoding
                     if choice == "Label Encoding":
                         le = LabelEncoder()
                         config.df_encoded[target] = le.fit_transform(config.df_encoded[target])
@@ -275,16 +271,16 @@ class EncodingScreen:
             back_button.configure(state="disabled")
             next_button.configure(state="disabled")
 
-            response_lable = ctk.CTkLabel(ai_help_frame, text="", text_color="#3a7ebf", wraplength=650, font=("Arial", 14), justify="left")
+            response_label = ctk.CTkLabel(ai_help_frame, text="", text_color="#3a7ebf", wraplength=650, font=("Arial", 14), justify="left")
 
-            response_lable.pack(side="bottom", pady=10)
+            response_label.pack(side="bottom", pady=10)
 
             #prompting the AI to answer the question
             config.chat_bot.ask(
                 "You are a concise assistant. Never reveal your chain-of-thought—"
                 "only output the single-sentence answer for someone with no coding knowledge.\n\n"
-                "when to use lable encoding, when to use ordinal encoding, and when to use one-hot encoding?\n\n", 
-                response_lable, progress_bar, back_button, next_button
+                "when to use label encoding, when to use ordinal encoding, and when to use one-hot encoding?\n\n", 
+                response_label, progress_bar, back_button, next_button
             )
 
             ai_help_frame._scrollbar.grid()

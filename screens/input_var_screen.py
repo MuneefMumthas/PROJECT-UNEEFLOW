@@ -53,7 +53,7 @@ class InputVarScreen:
         back_button = ctk.CTkButton(top_frame, text="Back", font=("Arial", 14), command=lambda: TargetVarScreen().show_target_var_screen())
         back_button.pack(side="left",padx=10)
 
-        #heading lable
+        #heading label
         heading_label = ctk.CTkLabel(top_frame, text="Step 3: Select Input Variables", font=("Arial", 20, "bold"))
         heading_label.pack(side="left", expand=True)
 

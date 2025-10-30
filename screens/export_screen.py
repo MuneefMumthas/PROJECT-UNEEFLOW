@@ -13,13 +13,15 @@ class ExportScreen:
 
         #creating the export package at the initialization of the screen
         self.export_package = {
-                    'model_pipeline': config.pipe,
-                    'feature_columns': config.selected_input_variables,
-                    'encoders_used_for_features': config.saved_categorical_encoding,
+
                     'target_variable': config.selected_target_variable,
                     'target_label_encoder': config.label_encoder if config.label_encoder else None,
-                    'encoded_labels': config.target_class_labels if config.target_class_labels else None
-                    
+                    'label_encoded_target_labels': config.target_class_labels if config.target_class_labels else None,
+                    'feature_columns': config.selected_input_variables,
+                    'encoders_used_for_features': config.saved_categorical_encoding,
+                    'column_transformers': config.col_transformer,
+                    'model_pipeline': config.pipe    
+
                 }
 
     def export_pkl(self):
@@ -80,7 +82,7 @@ class ExportScreen:
         back_button = ctk.CTkButton(top_frame, text="Back", font=("Arial", 14), command=lambda: EvaluationScreen().show_evaluation_screen())
         back_button.pack(side="left",padx=10)
 
-        #heading lable
+        #heading label
         heading_label = ctk.CTkLabel(top_frame, text="Step 8: Export Model", font=("Arial", 20, "bold"))
         heading_label.pack(side="left", expand=True)
 
@@ -92,15 +94,26 @@ class ExportScreen:
         middle_frame = ctk.CTkFrame(entire_export_section, fg_color="gray10")
         middle_frame.pack(fill="both",pady=(20,0))
 
-        center_frame = ctk.CTkFrame(middle_frame, width=700, height=700, fg_color="gray9")
+        center_frame = ctk.CTkFrame(middle_frame, width=700, height=700, fg_color="gray10")
         center_frame.pack(padx=50, pady=10, fill="both", expand=True)
 
         #export section
         ################################
-        export_section_frame = ctk.CTkFrame(center_frame, fg_color="gray8", height=220, width=600)
+        export_section_frame = ctk.CTkScrollableFrame(center_frame, fg_color="gray8", height=550)
         export_section_frame.pack(anchor="center", pady=10, fill="both")
 
-        export_button = ctk.CTkButton(export_section_frame, text="Export Model", font=("Arial", 16), width=200, height=40, command=self.export_pkl)
+        #heading
+        export_heading_label = ctk.CTkLabel(export_section_frame, text="Pickle (.pkl) File Contents", font=("Arial", 18, "bold"))
+        export_heading_label.pack(pady=10)
+
+        pkl_contents = "".join( f"- {col.capitalize()}: {content}\n\n" for col, content in self.export_package.items())
+                            
+        #label to show whats being exported
+        export_contents_label = ctk.CTkLabel(export_section_frame, text=f"{pkl_contents}", font=("Arial", 16), wraplength=580, justify="left")
+        export_contents_label.pack(pady=10)
+
+        #export button
+        export_button = ctk.CTkButton(center_frame, text="Export Model", font=("Arial", 16), width=150, height=35, command=self.export_pkl)
         export_button.pack(pady=20)
 
         loading_frame.pack_forget()
