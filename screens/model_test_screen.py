@@ -92,8 +92,45 @@ class ModelTestScreen:
         middle_frame = ctk.CTkFrame(entire_test_section, fg_color="gray10")
         middle_frame.pack(fill="both",pady=(20,0))
 
-        center_frame = ctk.CTkFrame(middle_frame, width=700, height=700, fg_color="gray10")
-        center_frame.pack(padx=50, pady=10, fill="both", expand=True)
+
+        #scroll frame
+        scroll_frame = ctk.CTkScrollableFrame(middle_frame, width=700, height=500, fg_color="transparent")
+        scroll_frame.pack(padx=10, pady=10, fill="both", expand=True)
+
+        #creating 3 columns in the scrollable frame
+        scroll_frame.columnconfigure(0, weight=1)
+
+
+        #features from the model pkl
+        feature_cols = config.model_package.get("feature_columns", [])
+
+        #hiding the scrollbar if there are 8 columns or less
+        if len(feature_cols) > 8:
+            scroll_frame._scrollbar.grid()
+        else:
+            scroll_frame._scrollbar.grid_remove()
+
+        for i, col in enumerate(feature_cols):
+
+            #creating border for each row using a lower height frame
+            border_frame = ctk.CTkFrame(scroll_frame, fg_color="gray8", border_color="gray10", border_width=1)
+            border_frame.grid(row=i, column=0, columnspan=3, sticky="ew")
+            
+            #making the columns equal width for better alignment
+            for col_idx in (0, 1, 2):
+                border_frame.grid_columnconfigure(col_idx, weight=1, uniform="cols")
+
+
+            #column name label
+            col_name_label = ctk.CTkLabel(border_frame, text=f"{col}: ", font=("Arial", 16), text_color="white", wraplength=180, bg_color="gray8")
+            col_name_label.grid(row=0, column=0, sticky="w", padx=10, pady=(15,15))
+
+            #entry box
+            col_entry = ctk.CTkEntry(border_frame, width=250, placeholder_text=f"Enter {col}")
+            col_entry.grid(row=0, column=2, sticky="w", padx=10, pady=5)
+
+
+
 
 
         loading_frame.pack_forget()
