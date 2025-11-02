@@ -78,6 +78,8 @@ file_name = None
 #flag to confirm if the export was successful
 export_confirmation = False
 
+model_package = None
+
 
 #function to reset the config when needed
 def reset_config():
