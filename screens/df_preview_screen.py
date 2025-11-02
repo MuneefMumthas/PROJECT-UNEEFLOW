@@ -278,13 +278,13 @@ class DFPreviewScreen:
             file_name= f"UNEEFLOW {config.file_name} {current_dataset} Profile Report"
             html_file_name = f"{file_name}.html"
             
-            #creating the destination folder path
-            destination_file = destination_parent/ html_file_name
+            #creating the destination file path
+            destination_file_path = destination_parent / html_file_name
 
             #error handling
             try:
                 #checking if the file already exists
-                if destination_file.exists():
+                if destination_file_path.exists():
                     #if the file exists, asking the user if they want to overwrite it or create a copy
                     overwrite = messagebox.askyesnocancel(
                     "File Exists",
@@ -296,8 +296,8 @@ class DFPreviewScreen:
 
                     #overwriting the existing file
                     if overwrite is True:
-                        shutil.copy2(tmp_html_path, destination_file)
-                        messagebox.showinfo("Success", f"Profile report overwritten:\n{destination_file}")
+                        shutil.copy2(tmp_html_path, destination_file_path)
+                        messagebox.showinfo("Success", f"Profile report overwritten:\n{destination_file_path}")
                     
                     #creating a copy with numbered suffix
                     elif overwrite is False:
@@ -305,10 +305,10 @@ class DFPreviewScreen:
                         i = 1
                         while True:
                             #creating new file name with suffix
-                            new_file = destination_parent / f"{file_name} ({i}).html"
-                            if not new_file.exists():
-                                shutil.copy2(tmp_html_path, new_file)
-                                messagebox.showinfo("Success", f"Profile report saved as:\n{new_file}")
+                            new_file_name_path = destination_parent / f"{file_name} ({i}).html"
+                            if not new_file_name_path.exists():
+                                shutil.copy2(tmp_html_path, new_file_name_path)
+                                messagebox.showinfo("Success", f"Profile report saved as:\n{new_file_name_path}")
                                 break
                             i += 1
 
@@ -318,8 +318,8 @@ class DFPreviewScreen:
                         
                 #if the file does not exist creating it directly
                 else:
-                    shutil.copy2(tmp_html_path, destination_file)
-                    messagebox.showinfo("Success", f"Profile report saved to:\n{destination_file}")
+                    shutil.copy2(tmp_html_path, destination_file_path)
+                    messagebox.showinfo("Success", f"Profile report saved to:\n{destination_file_path}")
 
             except Exception as e:
                 messagebox.showerror("Error", f"Failed to save profile report:\n{e}")

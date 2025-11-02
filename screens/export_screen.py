@@ -33,21 +33,62 @@ class ExportScreen:
         
         else:
             
-            #file_path = filedialog.asksaveasfilename(defaultextension=".pkl", filetypes=[("Pickle files", "*.pkl")], title="Save Trained Model")
-            file_path = Path(filedialog.askdirectory(title="Select Folder to Save Model")) / f"UNEEFLOW {config.file_name} Trained on {config.selected_model} Model.pkl"
-            if not file_path:
+            #asking the user to select the destination folder
+            destination_parent = Path(filedialog.askdirectory(title="Select Folder to Save Model"))
+
+            if not destination_parent:
                 return
-
-            try:
-                
-                #exporting the model using joblib
-                joblib.dump(self.export_package, file_path)
-                messagebox.showinfo("Success", f"Model exported successfully to {file_path}")
-
             
+            #file name
+            file_name = f"UNEEFLOW {config.file_name} Trained on {config.selected_model} Model"
+            pkl_file_name = f"{file_name}.pkl"
+
+            #creating the destination fild path
+            destination_file_path = destination_parent / pkl_file_name
+
             #error handling
+            try:
+                #checking if the file already exists
+                if destination_file_path.exists():
+                    #if the file exists, asking the user if they want to overwrite it or create a copy
+                    overwrite = messagebox.askyesnocancel(
+                    "File Exists",
+                    f"The file '{pkl_file_name}' already exists at the destination.\nDo you want to replace it?\n"
+                    "Yes: Replace it\n"
+                    "No: Save a copy with a numbered suffix\n"
+                    "Cancel: Do nothing"
+                    )
+
+                    #overwriting the existing file
+                    if overwrite is True:
+                        joblib.dump(self.export_package, destination_file_path)
+                        messagebox.showinfo("Success", f"Model.pkl overwritten:\n{destination_file_path}")
+                    
+                    #creating a copy with numbered suffix
+                    elif overwrite is False:
+                        #creating copies with numbered suffixes
+                        i = 1
+                        while True:
+                            #creating new file name with suffix
+                            new_file_name_path = destination_parent / f"{file_name} ({i}).pkl"
+                            if not new_file_name_path.exists():
+                                joblib.dump(self.export_package, new_file_name_path)
+                                messagebox.showinfo("Success", f"Model.pkl saved as:\n{new_file_name_path}")
+                                break
+                            i += 1
+
+                    #cancelling the save operation
+                    else:
+                        messagebox.showinfo("Cancelled", "Save operation was cancelled.")
+                        
+                #if the file does not exist creating it directly
+                else:
+                    joblib.dump(self.export_package, destination_file_path)
+                    messagebox.showinfo("Success", f"Model.pkl saved to:\n{destination_file_path}")
+
             except Exception as e:
-                messagebox.showerror("Error", f"Failed to export model: {str(e)}")
+                messagebox.showerror("Error", f"Failed to save profile report:\n{e}")
+
 
 
     def show_export_screen(self):
