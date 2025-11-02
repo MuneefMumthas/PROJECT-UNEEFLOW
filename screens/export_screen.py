@@ -24,6 +24,8 @@ class ExportScreen:
 
                 }
 
+    
+    #function to export the trained model as a pickle file
     def export_pkl(self):
         
         #validating if there is a trained model to export
@@ -62,6 +64,7 @@ class ExportScreen:
                     #overwriting the existing file
                     if overwrite is True:
                         joblib.dump(self.export_package, destination_file_path)
+                        config.export_confirmation = True
                         messagebox.showinfo("Success", f"Model.pkl overwritten:\n{destination_file_path}")
                     
                     #creating a copy with numbered suffix
@@ -73,6 +76,7 @@ class ExportScreen:
                             new_file_name_path = destination_parent / f"{file_name} ({i}).pkl"
                             if not new_file_name_path.exists():
                                 joblib.dump(self.export_package, new_file_name_path)
+                                config.export_confirmation = True
                                 messagebox.showinfo("Success", f"Model.pkl saved as:\n{new_file_name_path}")
                                 break
                             i += 1
@@ -84,10 +88,50 @@ class ExportScreen:
                 #if the file does not exist creating it directly
                 else:
                     joblib.dump(self.export_package, destination_file_path)
+                    config.export_confirmation = True
                     messagebox.showinfo("Success", f"Model.pkl saved to:\n{destination_file_path}")
 
             except Exception as e:
                 messagebox.showerror("Error", f"Failed to save profile report:\n{e}")
+    
+    
+    #this function will be set to the next button to finish the flow
+    def finish_flow(self):
+        
+        
+        if config.export_confirmation == True:
+
+            #confirmation if the model is exported
+            if not messagebox.askyesno(
+                "Flow Complete",
+                "The model has been successfully exported.\nDo you want to go back to the main menu? (this cannot be undone)"
+                ):
+                return
+            
+            #removing all widgets from the window
+            for widget in config.main_window.winfo_children():
+                widget.destroy()
+            
+            #going back to the main menu
+            from screens.main_menu_screen import MainMenuScreen
+            MainMenuScreen().main_menu()
+        
+        elif config.export_confirmation == False:
+
+            #confirmation if the model is not exported
+            if not messagebox.askyesno(
+                "Confirm Exit",
+                "You have not exported your model.\nDo you still want to exit the flow? (this cannot be undone)"
+                ):
+                return
+            
+            #removing all widgets from the window
+            for widget in config.main_window.winfo_children():
+                widget.destroy()
+            
+            #going back to the main menu
+            from screens.main_menu_screen import MainMenuScreen
+            MainMenuScreen().main_menu()
 
 
 
@@ -127,9 +171,9 @@ class ExportScreen:
         heading_label = ctk.CTkLabel(top_frame, text="Step 8: Export Model", font=("Arial", 20, "bold"))
         heading_label.pack(side="left", expand=True)
 
-        #Next button
-        next_button = ctk.CTkButton(top_frame, text="Next", font=("Arial", 14), command=None)
-        next_button.pack(side="right", padx=10)
+        #Finish button
+        finish_button = ctk.CTkButton(top_frame, text="Finish", font=("Arial", 14), command=self.finish_flow)
+        finish_button.pack(side="right", padx=10)
 
         #middle frame for content
         middle_frame = ctk.CTkFrame(entire_export_section, fg_color="gray10")

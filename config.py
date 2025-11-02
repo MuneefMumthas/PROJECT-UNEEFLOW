@@ -75,6 +75,10 @@ label_encoder = None
 
 file_name = None
 
+#flag to confirm if the export was successful
+export_confirmation = False
+
+
 #function to reset the config when needed
 def reset_config():
     global df, df_selected, df_handled_missing_values, df_encoded, df_not_encoded
@@ -87,7 +91,7 @@ def reset_config():
     global trained_model
     global predictions
     global col_transformer, ohe_columns, ordinal_encode_cols, transformers, target_class_labels, pipe, label_encoder
-    global file_name
+    global file_name, export_confirmation
 
     #reseting necessary variables to their initial state
     #data frames
@@ -132,3 +136,4 @@ def reset_config():
     label_encoder = None
 
     file_name = None
+    export_confirmation = False

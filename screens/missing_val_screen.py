@@ -247,7 +247,7 @@ class MissingValScreen:
                 if not messagebox.askyesno(
                     "Confirm",
                     "You’ve selected actions for every column.\nProceed to apply them?"
-                ):
+                    ):
                     return
 
                 

@@ -10,6 +10,7 @@ class MainMenuScreen:
 
     #Method for main menu
     def main_menu(self):
+
         from screens.import_screen import ImportScreen
         #Buttons
         build_model_button = ctk.CTkButton(config.main_window, text="Build a Model", font=("Arial", 14), command=lambda: ImportScreen().show_import_screen(), width=200, height=50)

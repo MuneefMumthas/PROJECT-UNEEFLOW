@@ -138,6 +138,10 @@ class TrainingBackend:
             #stoping the progress bar and moving to the evaluation screen
             training_progess_bar.stop()
 
+            #unchecking the export confirmation flag for future exports
+            config.export_confirmation = False
+
+            #moving to the evaluation screen
             from screens.model_evaluation_screen import EvaluationScreen
             EvaluationScreen().show_evaluation_screen()
             
