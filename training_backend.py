@@ -84,6 +84,13 @@ class TrainingBackend:
             y = config.df_not_encoded[config.selected_target_variable]
             print(y.head())
 
+            #cleaning the category cols by removing the spaces and also lowercasing them before training
+            for col in config.saved_categorical_encoding:
+                if col in X.columns:
+                    X[col] = ( X[col].str.strip().str.lower())
+            
+            print(X.head())
+
             #if classification stratify the split based on the target variable to maintain class distribution
             strat = y if config.task_type == "Classification" else None
 

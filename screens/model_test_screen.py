@@ -60,6 +60,12 @@ class ModelTestScreen:
                 )
                 return
             
+            #assigning the objects of the pkl file to self variables
+            self.pipe = config.model_package.get("model_pipeline", None)
+            self.features = config.model_package.get("feature_columns", [])
+            self.target_lable_encoder = config.model_package.get("target_label_encoder", None)
+            self.saved_categorical_encoding = config.model_package.get("encoders_used_for_features", {})
+
 
         #error handling
         except Exception as e:
@@ -112,16 +118,17 @@ class ModelTestScreen:
         scroll_frame.columnconfigure(0, weight=1)
 
 
-        #features from the model pkl
-        feature_cols = config.model_package.get("feature_columns", [])
-
         #hiding the scrollbar if there are 8 columns or less
-        if len(feature_cols) > 8:
+        if len(self.features) > 8:
             scroll_frame._scrollbar.grid()
         else:
             scroll_frame._scrollbar.grid_remove()
 
-        for i, col in enumerate(feature_cols):
+        #dictionary to save the entry boxes for each column
+        self.entry_boxes = {}
+
+        #iterating through each features from the model pkl
+        for i, col in enumerate(self.features):
 
             #creating border for each row using a lower height frame
             border_frame = ctk.CTkFrame(scroll_frame, fg_color="gray8", border_color="gray10", border_width=1)
@@ -139,13 +146,14 @@ class ModelTestScreen:
             #entry box
             col_entry = ctk.CTkEntry(border_frame, width=250, placeholder_text=f"Enter {col}")
             col_entry.grid(row=0, column=2, sticky="w", padx=10, pady=5)
+            self.entry_boxes[col] = col_entry
 
         #frame for prediction section
         prediction_frame = ctk.CTkFrame(middle_frame, fg_color="gray10")
         prediction_frame.pack(fill="both")
         
         #prediction button
-        predict_button = ctk.CTkButton(prediction_frame, text="Predict", font=("Arial", 14), command=None)
+        predict_button = ctk.CTkButton(prediction_frame, text="Predict", font=("Arial", 14), command=lambda: self.predict(prediction_lable))
         predict_button.pack(side="bottom", pady=(15,20))
 
         #lable for prediction
@@ -155,3 +163,49 @@ class ModelTestScreen:
 
         loading_frame.pack_forget()
         entire_test_section.pack(fill="both", expand=True)
+
+    def predict(self, result_label: ctk.CTkLabel):
+        
+
+        #dictionary to store user input for each features
+        data_dict = {}
+
+        for col in self.features:
+            entry_box = self.entry_boxes.get(col)
+            value = entry_box.get().strip()
+
+
+            #checking if the column is encoded to keep the value as a string
+            #lower casing as the model was trained on lowercased values
+            if col in self.saved_categorical_encoding:
+                data_dict[col] = value.lower()
+
+            #converting str to numerical if the col is numerical and not encoded before
+            else:
+                try:
+                    data_dict[col] = float(value)
+
+                except Exception as e:
+                    messagebox.showerror("Invalid Input", f"{e}\nPlease enter a numeric value for {col}")
+                    return
+
+        df = pd.DataFrame([data_dict], columns=self.features)
+
+        #predicting
+        try:
+            prediction = self.pipe.predict(df)
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to predict:\n{e}")
+            return
+
+        #inverse transforming if there is a label encoder
+        final_pred = prediction[0]
+
+        if self.target_lable_encoder is not None:
+            try:
+                final_pred = self.target_lable_encoder.inverse_transform(prediction)[0]
+            except Exception as e:
+                messagebox.showerror("Error", f"Failed to predict:\n{e}")
+                return
+
+        result_label.configure(text=f"{final_pred}")

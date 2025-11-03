@@ -233,7 +233,7 @@ class EncodingScreen:
 
                 #ordinal encoding transformer
                 if config.ordinal_encode_cols:
-                    config.transformers.append(('OrdinalEncoding', OrdinalEncoder(handle_unknown='ignore'), config.ordinal_encode_cols))
+                    config.transformers.append(('OrdinalEncoding', OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1), config.ordinal_encode_cols))
 
                 #creating the column transformer with both encoding methods
                 config.col_transformer = ColumnTransformer(transformers=config.transformers, remainder='passthrough')
