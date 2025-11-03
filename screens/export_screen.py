@@ -14,6 +14,7 @@ class ExportScreen:
         #creating the export package at the initialization of the screen
         self.export_package = {
 
+                    'uneeflow_pkl': True,
                     'target_variable': config.selected_target_variable,
                     'target_label_encoder': config.label_encoder if config.label_encoder else None,
                     'label_encoded_target_labels': config.target_class_labels if config.target_class_labels else None,

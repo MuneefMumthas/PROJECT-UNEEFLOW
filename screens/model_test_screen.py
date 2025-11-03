@@ -49,6 +49,18 @@ class ModelTestScreen:
             config.model_package = joblib.load(pkl_path)
             print(config.model_package)
 
+            #checking if the file loaded is from uneeflow to avoid bug if unknown files are imported
+            uneeflow_pkl = config.model_package.get("uneeflow_pkl", False)
+
+            if not uneeflow_pkl:
+                messagebox.showerror(
+                    "Invalid File",
+                    "This file is not a valid UNEEFLOW model.\n"
+                    "Please select a .pkl exported from UNEEFLOW."
+                )
+                return
+            
+
         #error handling
         except Exception as e:
             messagebox.showerror("Error", f"Failed to load file: {e}")
