@@ -166,6 +166,18 @@ class ModelTestScreen:
 
     def predict(self, result_label: ctk.CTkLabel):
         
+        #validating user input
+            
+        #if no input then rising an error message
+        missing_cols = [col for col, entry in self.entry_boxes.items() if not entry.get().strip()]
+
+        #error message
+        if missing_cols:
+            messagebox.showerror(
+                "Missing Input",
+                "Please enter values for these columns:\n" + "\n".join(missing_cols)
+            )
+            return
 
         #dictionary to store user input for each features
         data_dict = {}
