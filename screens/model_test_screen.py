@@ -65,6 +65,7 @@ class ModelTestScreen:
             self.features = config.model_package.get("feature_columns", [])
             self.target_lable_encoder = config.model_package.get("target_label_encoder", None)
             self.saved_categorical_encoding = config.model_package.get("encoders_used_for_features", {})
+            self.target = config.model_package.get("target_variable", None)
 
 
         #error handling
@@ -160,23 +161,22 @@ class ModelTestScreen:
                 predict_clear_segmented_button.set(None)
 
 
-            elif value == "Clear":
+            elif value == "Clear All":
 
-                #clearing input boxes and re enabling them
+                #clearing input boxes
                 for entry in self.entry_boxes.values():
-                    entry.configure(state="normal")
                     entry.delete(0, "end")
 
                 #clearing the label
-                prediction_lable.configure(text="")
+                prediction_lable.configure(text=f"{self.target}")
 
                 predict_clear_segmented_button.set(None)
 
-        predict_clear_segmented_button = ctk.CTkSegmentedButton(prediction_frame, values=["Predict", "Clear"], command=predict_clear_command, font=("Arial", 16 ))
+        predict_clear_segmented_button = ctk.CTkSegmentedButton(prediction_frame, values=["Predict", "Clear All"], command=predict_clear_command, font=("Arial", 16 ))
         predict_clear_segmented_button.pack(side="bottom", pady=(15,20))
 
         #lable for prediction
-        prediction_lable = ctk.CTkLabel(prediction_frame, text="Answer", font=("Arial", 20, "bold"), text_color= "#3a7ebf")
+        prediction_lable = ctk.CTkLabel(prediction_frame, text=f"{self.target}", font=("Arial", 20, "bold"), text_color= "#3a7ebf")
         prediction_lable.pack(side="bottom", pady=(20,10))
 
 
@@ -239,8 +239,5 @@ class ModelTestScreen:
                 messagebox.showerror("Error", f"Failed to predict:\n{e}")
                 return
 
-        result_label.configure(text=f"{final_pred}")
+        result_label.configure(text=f"{self.target}:  {final_pred}")
         
-        #disabling the entry boxes after prediction
-        for entry in self.entry_boxes.values():
-            entry.configure(state="disabled")
