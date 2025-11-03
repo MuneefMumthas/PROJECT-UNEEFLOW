@@ -152,9 +152,27 @@ class ModelTestScreen:
         prediction_frame = ctk.CTkFrame(middle_frame, fg_color="gray10")
         prediction_frame.pack(fill="both")
         
-        #prediction button
-        predict_button = ctk.CTkButton(prediction_frame, text="Predict", font=("Arial", 14), command=lambda: self.predict(prediction_lable))
-        predict_button.pack(side="bottom", pady=(15,20))
+        #function for segmented button for prediction and 
+        def predict_clear_command(value):
+            if value == "Predict":
+                self.predict(prediction_lable)
+                predict_clear_segmented_button.set(None)
+
+
+            elif value == "Clear":
+
+                #clearing input boxes and re enabling them
+                for entry in self.entry_boxes.values():
+                    entry.configure(state="normal")
+                    entry.delete(0, "end")
+
+                #clearing the label
+                prediction_lable.configure(text="")
+
+                predict_clear_segmented_button.set(None)
+
+        predict_clear_segmented_button = ctk.CTkSegmentedButton(prediction_frame, values=["Predict", "Clear"], command=predict_clear_command, font=("Arial", 16 ))
+        predict_clear_segmented_button.pack(side="bottom", pady=(15,20))
 
         #lable for prediction
         prediction_lable = ctk.CTkLabel(prediction_frame, text="Answer", font=("Arial", 20, "bold"), text_color= "#3a7ebf")
@@ -221,3 +239,7 @@ class ModelTestScreen:
                 return
 
         result_label.configure(text=f"{final_pred}")
+        
+        #disabling the entry boxes after prediction
+        for entry in self.entry_boxes.values():
+            entry.configure(state="disabled")
