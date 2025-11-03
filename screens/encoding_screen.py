@@ -56,7 +56,7 @@ class EncodingScreen:
 
         #middle frame for content
         middle_frame = ctk.CTkFrame(entire_encoding_section, fg_color="gray10", height=600)
-        middle_frame.pack(pady=30)
+        middle_frame.pack(pady=0)
 
 
         scroll_frame = ctk.CTkScrollableFrame(middle_frame, width=700, height=500, fg_color="transparent")
@@ -233,7 +233,7 @@ class EncodingScreen:
 
                 #ordinal encoding transformer
                 if config.ordinal_encode_cols:
-                    config.transformers.append(('OrdinalEncoding', OrdinalEncoder(), config.ordinal_encode_cols))
+                    config.transformers.append(('OrdinalEncoding', OrdinalEncoder(handle_unknown='ignore'), config.ordinal_encode_cols))
 
                 #creating the column transformer with both encoding methods
                 config.col_transformer = ColumnTransformer(transformers=config.transformers, remainder='passthrough')

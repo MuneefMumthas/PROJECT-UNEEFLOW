@@ -101,11 +101,10 @@ class ModelTestScreen:
         next_button.pack(side="right", padx=10)
 
         #middle frame for content
-        middle_frame = ctk.CTkFrame(entire_test_section, fg_color="gray10")
-        middle_frame.pack(fill="both",pady=(20,0))
+        middle_frame = ctk.CTkFrame(entire_test_section, fg_color="gray10", height=600)
+        middle_frame.pack(pady=0)
 
 
-        #scroll frame
         scroll_frame = ctk.CTkScrollableFrame(middle_frame, width=700, height=500, fg_color="transparent")
         scroll_frame.pack(padx=10, pady=10, fill="both", expand=True)
 
@@ -141,8 +140,17 @@ class ModelTestScreen:
             col_entry = ctk.CTkEntry(border_frame, width=250, placeholder_text=f"Enter {col}")
             col_entry.grid(row=0, column=2, sticky="w", padx=10, pady=5)
 
+        #frame for prediction section
+        prediction_frame = ctk.CTkFrame(middle_frame, fg_color="gray10")
+        prediction_frame.pack(fill="both")
+        
+        #prediction button
+        predict_button = ctk.CTkButton(prediction_frame, text="Predict", font=("Arial", 14), command=None)
+        predict_button.pack(side="bottom", pady=(15,20))
 
-
+        #lable for prediction
+        prediction_lable = ctk.CTkLabel(prediction_frame, text="Answer", font=("Arial", 20, "bold"), text_color= "#3a7ebf")
+        prediction_lable.pack(side="bottom", pady=(20,10))
 
 
         loading_frame.pack_forget()
