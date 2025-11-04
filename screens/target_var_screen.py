@@ -52,7 +52,7 @@ class TargetVarScreen:
 
         #middle frame for content
         middle_frame = ctk.CTkFrame(entire_targetvar_section, fg_color="gray10")
-        middle_frame.pack(pady=30)
+        middle_frame.pack(pady=30, fill="both", expand=True)
 
         #dropdown selection for the target variable
         dropdown_frame = ctk.CTkFrame(middle_frame, fg_color="gray10")
@@ -97,7 +97,7 @@ class TargetVarScreen:
             
             #progress bar
             progress_bar = ctk.CTkProgressBar(middle_frame, mode="indeterminate", width=100)
-            progress_bar.pack(side="bottom", pady=10)
+            progress_bar.pack(side="top", pady=10)
             progress_bar.start()
 
             #disabling the back and next buttons while waiting for the AI response
@@ -105,21 +105,20 @@ class TargetVarScreen:
             next_button.configure(state="disabled")
 
             response_label = ctk.CTkLabel(middle_frame, text="", text_color="#3a7ebf", wraplength=500, font=("Arial", 14), justify="left")
-
-            response_label.pack(side="bottom", pady=10)
+            response_label.pack(side="top", pady=10)
 
             #prompting the AI to answer the question
             config.chat_bot.ask(
-                "You are a concise assistant. Never reveal your chain-of-thought—"
-                "only output the single-sentence answer for someone with no coding knowledge.\n\n"
-                "Why do we need to select a target variable for machine learning?\n\n", 
+                "You are a concise assistant."
+                "only output the answer for someone with no coding knowledge.\n\n"
+                "Summarise in 1 paragraph Why do we need to select a target variable for machine learning?\n\n", 
                 response_label, progress_bar, back_button, next_button
             )
 
 
         #Ask ai button
-        ai_button = ctk.CTkButton(middle_frame, text="Why?, Ask UneeSeek AI", font=("Arial", 14), command=lambda: prompt())
-        ai_button.pack(side="bottom", pady=10)
+        ai_button = ctk.CTkButton(middle_frame, text="Why?, Ask UneePhi", font=("Arial", 14), command=lambda: prompt())
+        ai_button.pack(side="top", pady=10)
 
         #forget
         loading_frame.pack_forget()

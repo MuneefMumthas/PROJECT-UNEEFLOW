@@ -13,7 +13,7 @@ class ChatBot:
         if hasattr(self, 'initialized') and self.initialized:
             return
         
-        path    = "model/DeepSeek-R1-0528-Qwen3-8B-Q4_K_M.gguf"
+        path    = "model/Phi-3.5-mini-instruct-Q4_K_M.gguf"
         threads = max(2, (os.cpu_count() or 6) - 4)
 
         #loading the model
@@ -46,7 +46,7 @@ class ChatBot:
 
             with self.lock:
 
-                for chunk in self.llm(prompt, max_tokens=256, temperature=0.0, stop=stop, stream=True):
+                for chunk in self.llm(prompt, max_tokens=512, temperature=0.0, stop=stop, stream=True):
                     text = chunk['choices'][0].get('text', '')
                     if text:
                         if not started:
@@ -60,7 +60,7 @@ class ChatBot:
                         current_text = ''.join(text_buffer)
                         
                         #using the streaming text update to show the text as it is being generated
-                        config.main_window.after(0, lambda t=current_text: label.configure(text=f"UneeSeek: {t}"))
+                        config.main_window.after(0, lambda t=current_text: label.configure(text=f"UneePhi: {t}"))
 
                 #using animate_text to reveal the full text with typing effect
                 # if progress_bar is not None:

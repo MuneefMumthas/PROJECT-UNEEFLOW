@@ -172,13 +172,20 @@ class EvaluationScreen:
             response_label = ctk.CTkLabel(ai_review_frame, text="", text_color="#3a7ebf", wraplength=600, font=("Arial", 14), justify="left")
 
             response_label.pack(side="bottom", pady=10)
+            
+            model_details_for_feedback = {
+            
+                "Target Variable": config.selected_target_variable,
+                "Task Type": config.task_type,
+                "Selected Model": config.selected_model,
+            }
 
             #prompting the AI to answer the question
             config.chat_bot.ask(
-                "You are a concise assistant. Never reveal your chain-of-thought—"
-                "only output the single-sentence answer for someone with no coding knowledge.\n\n"
-                f"Summarise the ML model's performance. limit to the context given.\n\n"
-                f"Model Details: {model_details}\n"
+                "You are a concise assistant."
+                "only output the answer for someone with no coding knowledge.\n\n"
+                "Summarise in 1 paragraph the ML model's performance\n\n"
+                f"Model Details: {model_details_for_feedback}\n"
                 f"Performance Metrics: {metrics}\n\n", 
                 response_label, progress_bar, back_button, next_button
             )
@@ -187,7 +194,7 @@ class EvaluationScreen:
 
 
         #Ask ai button
-        ai_button = ctk.CTkButton(ai_review_frame, text="Get Insights with UneeSeek AI", font=("Arial", 14), command=lambda: prompt())
+        ai_button = ctk.CTkButton(ai_review_frame, text="Get Insights with UneePhi", font=("Arial", 14), command=lambda: prompt())
         ai_button.pack(side="bottom", pady=10)
 
         loading_frame.pack_forget()

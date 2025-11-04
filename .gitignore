@@ -1,2 +1,2 @@
-model/DeepSeek-R1-0528-Qwen3-8B-Q4_K_M.gguf
-model/gemma-3-1b-it-BF16.gguf
+models used for testing/tinyllama-1.1b-chat-v1.0.Q8_0.gguf
+models used for testing/DeepSeek-R1-0528-Qwen3-8B-Q4_K_M.gguf

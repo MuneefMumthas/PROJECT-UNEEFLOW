@@ -277,9 +277,9 @@ class EncodingScreen:
 
             #prompting the AI to answer the question
             config.chat_bot.ask(
-                "You are a concise assistant. Never reveal your chain-of-thought—"
-                "only output the single-sentence answer for someone with no coding knowledge.\n\n"
-                "when to use label encoding, when to use ordinal encoding, and when to use one-hot encoding?\n\n", 
+                "You are a concise assistant."
+                "Only output a single short paragraph that explains the concept in simple terms for someone with no coding knowledge.\n\n"
+                "Explain when to use label encoding, ordinal encoding (rank), and one-hot encoding. (ALL in 1 paragraph please)\n\n", 
                 response_label, progress_bar, back_button, next_button
             )
 
@@ -287,7 +287,7 @@ class EncodingScreen:
 
 
         #Ask ai button
-        ai_button = ctk.CTkButton(ai_help_frame, text="Whats the difference?, Ask UneeSeek AI", font=("Arial", 14), command=lambda: prompt())
+        ai_button = ctk.CTkButton(ai_help_frame, text="Whats the difference?, Ask UneePhi", font=("Arial", 14), command=lambda: prompt())
         ai_button.pack(side="bottom", pady=10)
 
         loading_frame.pack_forget()
