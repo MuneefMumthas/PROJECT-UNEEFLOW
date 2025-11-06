@@ -3,3 +3,27 @@
 ## Link to UneeFlow setup file:
 
 https://drive.google.com/file/d/1Acu0wIWMSZWa17eJVQQaBPHEqxSjOAks/view?usp=sharing
+
+### The setup file requires a password, contact me to get access after reading the copyright policy !
+
+## License
+
+UneeFlow Educational Use Licence
+Copyright © 2025 Muneef Mumthas. All Rights Reserved.
+
+This software, known as “UneeFlow”, is licensed for non-commercial educational and research purposes only.
+
+You may:
+- Use and share the software within educational, academic, or research environments.
+- Reference or demonstrate it in coursework, projects, or presentations.
+
+You may NOT:
+- Use this software or any part of it for any commercial, for-profit, or monetised purpose.
+- Sell, rent, or include this software in any commercial product or service.
+- Distribute, modify, or rebrand this software without prior written consent from the copyright holder.
+- Remove or alter any copyright, ownership, or attribution notices.
+
+The software is provided “as is,” without warranty of any kind. The author assumes no responsibility for any damages resulting from the use or inability to use the software.
+
+For commercial licensing, partnership, or special permissions, contact:
+code.unee@gmail.com
