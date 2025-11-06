@@ -108,14 +108,11 @@ class ExportScreen:
                 "The model has been successfully exported.\nDo you want to go back to the main menu? (this cannot be undone)"
                 ):
                 return
-            
-            #removing all widgets from the window
-            for widget in config.main_window.winfo_children():
-                widget.destroy()
+ 
             
             #going back to the main menu
             from screens.main_menu_screen import MainMenuScreen
-            MainMenuScreen().main_menu()
+            MainMenuScreen().back_to_main_menu()
         
         elif config.export_confirmation == False:
 
@@ -126,13 +123,9 @@ class ExportScreen:
                 ):
                 return
             
-            #removing all widgets from the window
-            for widget in config.main_window.winfo_children():
-                widget.destroy()
-            
             #going back to the main menu
             from screens.main_menu_screen import MainMenuScreen
-            MainMenuScreen().main_menu()
+            MainMenuScreen().back_to_main_menu()
 
 
 

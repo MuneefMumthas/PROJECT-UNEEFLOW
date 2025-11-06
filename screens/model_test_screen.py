@@ -103,9 +103,21 @@ class ModelTestScreen:
         heading_label = ctk.CTkLabel(top_frame, text="Enter Data to Predict", font=("Arial", 20, "bold"))
         heading_label.pack(side="left", expand=True)
 
-        from screens.main_menu_screen import MainMenuScreen
+        def back_to_main_menu():
+
+            #confirmation
+            if not messagebox.askyesno(
+                "Confirmation",
+                "Are you sure you want to go back to the main menu?"
+                ):
+                return
+            
+            #going back to the main menu
+            from screens.main_menu_screen import MainMenuScreen
+            MainMenuScreen().back_to_main_menu()
+
         #main menu button
-        main_menu_button = ctk.CTkButton(top_frame, text="Main Menu", font=("Arial", 14), command=lambda: MainMenuScreen().back_to_main_menu())
+        main_menu_button = ctk.CTkButton(top_frame, text="Main Menu", font=("Arial", 14), command=lambda: back_to_main_menu())
         main_menu_button.pack(side="right", padx=10)
 
         #middle frame for content
