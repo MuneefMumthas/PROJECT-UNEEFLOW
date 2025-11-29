@@ -21,6 +21,7 @@ class DFPreviewScreen:
     def __init__(self):
         pass
 
+
     #Dataset preview function
 
     #methods to generalize the back and next buttons in the dataframe preview screen

@@ -78,6 +78,7 @@ class ImportScreen:
         if not file_path:
             return
 
+
         try:
             config.reset_config()
 

@@ -6,6 +6,7 @@ model = "model/DeepSeek-R1-0528-Qwen3-8B-Q4_K_M.gguf"
 llm = Llama(model_path=model, n_threads=min(max(os.cpu_count() or 4, 4), 16), verbose=True, n_ctx=4096,
     n_batch=512,)
 
+
 #promt to generate a answer
 prompt1 = (
     "You are a concise assistant. Never reveal your chain-of-thought—"

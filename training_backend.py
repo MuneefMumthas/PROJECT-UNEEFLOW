@@ -103,6 +103,7 @@ class TrainingBackend:
             config.pipe.fit(config.X_train, config.y_train)
 
 
+
             print(f"{config.selected_model} Model trained successfully.")
 
         #worker function to run the training in a separate thread

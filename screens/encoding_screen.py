@@ -138,6 +138,7 @@ class EncodingScreen:
             combo.grid(row=0, column=2, sticky="w", padx=10, pady=5)
             actions[col] = combo
 
+
         #print("category encoding: ", config.saved_categorical_encoding)
         #print("target encoding: ", config.saved_target_encoding)
 

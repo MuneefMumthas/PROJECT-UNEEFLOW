@@ -80,6 +80,7 @@ class TrainingScreen:
         test_size_combo.set("20%")
         test_size_combo.pack(side="left", padx=5, pady=10)
 
+
         #default values for train test split
         config.test_size = 0.2
         config.train_size = 0.8

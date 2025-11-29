@@ -253,3 +253,4 @@ class ModelTestScreen:
 
         result_label.configure(text=f"{self.target}:  {final_pred}")
         
+

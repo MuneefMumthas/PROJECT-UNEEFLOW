@@ -180,6 +180,7 @@ class EvaluationScreen:
                 "Selected Model": config.selected_model,
             }
 
+
             #prompting the AI to answer the question
             config.chat_bot.ask(
                 "You are a concise assistant."

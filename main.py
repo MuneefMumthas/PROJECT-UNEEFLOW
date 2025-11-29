@@ -30,6 +30,7 @@ ctk.set_default_color_theme(config.uneeflow_ctk_theme)
 #Method  to center a window as tkinter does not have a built-in method for this
 def center_window(window, width, height):
 
+
     #getiing the wndow scaling
     scaling = window._get_window_scaling()
     

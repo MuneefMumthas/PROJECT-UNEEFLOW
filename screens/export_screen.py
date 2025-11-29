@@ -26,6 +26,7 @@ class ExportScreen:
                 }
 
     
+    
     #function to export the trained model as a pickle file
     def export_pkl(self):
         

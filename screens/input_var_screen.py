@@ -88,6 +88,7 @@ class InputVarScreen:
         select_all_button = ctk.CTkSegmentedButton(scroll_frame, values=["✅", "❎"], command=None)
         select_all_button.grid(row=0, column=1, padx=10, pady=10)
 
+
         #function for selecting/deselecting all checkboxes
         def selection_command(value):
             

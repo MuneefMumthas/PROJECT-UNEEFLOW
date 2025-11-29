@@ -7,6 +7,7 @@ import os
 class ChatBot:
     
     
+    
     #converting the gguf model to a class so that it can be used in multiple screens without loading it again and again
     
     def __init__(self):

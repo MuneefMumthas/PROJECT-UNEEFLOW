@@ -12,6 +12,7 @@ class MainMenuScreen:
     #Method for main menu
     def main_menu(self):
 
+
         #main frame
         main_frame = ctk.CTkFrame(config.main_window, fg_color="gray10")
         main_frame.pack(fill="both", expand=True)

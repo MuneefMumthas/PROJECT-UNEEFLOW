@@ -159,6 +159,7 @@ class MissingValScreen:
                 nunique  = column_data.nunique(dropna=True)
                 frac_nunique   = nunique / len(column_data)
 
+
                 #continuous numeric data
                 if is_numeric_dtype(column_data) and nunique > 10 and frac_nunique > 0.05:
                     options = [ 

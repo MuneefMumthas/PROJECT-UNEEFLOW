@@ -116,6 +116,7 @@ class TargetVarScreen:
             )
 
 
+
         #Ask ai button
         ai_button = ctk.CTkButton(middle_frame, text="Why?, Ask UneePhi", font=("Arial", 14), command=lambda: prompt())
         ai_button.pack(side="top", pady=10)
