@@ -2,7 +2,7 @@
 
 ## Link to UneeFlow setup file:
 
-Head to Releases tab
+Head to [Releases](https://github.com/MuneefMumthas/PROJECT-UNEEFLOW/releases/) tab
 
 ## License
 
