@@ -2,9 +2,7 @@
 
 ## Link to UneeFlow setup file:
 
-https://drive.google.com/file/d/1Acu0wIWMSZWa17eJVQQaBPHEqxSjOAks/view?usp=sharing
-
-### The setup file requires a password, contact me to get access after reading the copyright policy !
+Head to Releases tab
 
 ## License
 
