@@ -3,3 +3,5 @@ models used for testing/DeepSeek-R1-0528-Qwen3-8B-Q4_K_M.gguf
 model/Phi-3.5-mini-instruct-Q4_K_M.gguf
 distribution/UneeFlow executable/*
 distribution/UneeFlow_Setup.exe
+distribution/uneeflow setup script.iss
+distribution

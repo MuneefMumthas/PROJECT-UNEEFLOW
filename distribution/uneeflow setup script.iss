@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "UneeFlow"
-#define MyAppVersion "1.0"
+#define MyAppVersion "1.0.0"
 #define MyAppPublisher "Muneef Mumthas"
 #define MyAppURL "https://github.com/MuneefMumthas"
 #define MyAppExeName "UneeFlow.exe"
@@ -36,8 +36,6 @@ PrivilegesRequiredOverridesAllowed=dialog
 OutputDir=C:\Users\munee\Desktop
 OutputBaseFilename=UneeFlow_Setup
 SetupIconFile=C:\Users\munee\Desktop\University Assignments\Year 3 - Level 6\PROJECT-UNEEFLOW\assets\U Logo.ico
-Password=22206529
-Encryption=yes
 SolidCompression=yes
 WizardStyle=modern
 
